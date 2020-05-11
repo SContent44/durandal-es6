@@ -10,15 +10,15 @@ export default [
         },
         nav: true,
     },
-    {
-        route: "flickr",
-        title: "Flickr",
-        moduleName: "Flickr",
-        moduleId: () => {
-            return import(/* webpackChunkName: "flickr-viewmodel" */ "./flickr/flickr");
-        },
-        nav: true,
-    },
+    // {
+    //     route: "flickr",
+    //     title: "Flickr",
+    //     moduleName: "Flickr",
+    //     moduleId: () => {
+    //         return import(/* webpackChunkName: "flickr-viewmodel" */ "./flickr/flickr");
+    //     },
+    //     nav: true,
+    // },
     {
         route: "router*details",
         hash: "#router",
