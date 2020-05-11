@@ -1,4 +1,5 @@
-﻿import { app } from "durandal/core";
+﻿import ko from "knockout";
+import { app } from "durandal/core";
 import router from "durandal/plugins/router";
 
 import viewTemplate from "./shell.html";
@@ -8,6 +9,18 @@ class ShellViewModel {
     constructor() {
         this.view = viewTemplate;
         this.viewName = "Shell";
+
+        this.isExpanded = ko.observable(false);
+        this.toggle = () => {
+            this.isExpanded(!this.isExpanded());
+        };
+        this.closeToggle = () => {
+            const toggleInput = document.getElementsByClassName("navbar-toggle")[0];
+            if (toggleInput && this.isExpanded()) {
+                toggleInput.click();
+            }
+            return true;
+        };
     }
 
     // eslint-disable-next-line class-methods-use-this

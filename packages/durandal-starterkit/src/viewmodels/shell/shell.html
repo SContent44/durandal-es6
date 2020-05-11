@@ -4,6 +4,7 @@
             <button
                 type="button"
                 class="navbar-toggle"
+                data-bind="click: $root.toggle"
                 data-toggle="collapse"
                 data-target="#bs-example-navbar-collapse-1"
             >
@@ -21,7 +22,7 @@
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav" data-bind="foreach: router.navigationModel">
                 <li data-bind="css: { active: isActive }">
-                    <a data-bind="attr: { href: hash }, text: title"></a>
+                    <a data-bind="attr: { href: hash }, text: title, click: $root.closeToggle"></a>
                 </li>
             </ul>
 
