@@ -1,3 +1,6 @@
+import $ from "jquery";
+import "jquery-migrate";
+
 import ko from "knockout";
 // eslint-disable-next-line no-unused-vars
 import validation from "knockout.validation";
