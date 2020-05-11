@@ -1,0 +1,26 @@
+<section>
+    <h1>Using the compose binding</h1>
+    <p>Shared context input: <input data-bind="value: $root.sharedInput" /></p>
+    <p>Own context input: <input data-bind="value: $root.ownInput" /></p>
+
+    <h2>Shared context</h2>
+    <p>
+        <code>data-bind="compose:sharedVMScreen</code> where <code>sharedVMScreen</code> is the just the html template
+        directly passed in.
+    </p>
+    <div data-bind="compose:sharedVMScreen"></div>
+
+    <h2>Own context with a function that returns an object</h2>
+    <p>
+        <code>data-bind="compose:ownVMScreen()</code> where <code>ownVMScreen()</code> is a function that return an
+        object with which has a view property on it.
+    </p>
+    <div data-bind="compose:ownVMScreen()"></div>
+
+    <h2>Own context that is an object</h2>
+    <p>
+        <code>data-bind="compose:anotherOwnVMScreen</code> where <code>anotherOwnVMScreen</code> is an object with which
+        has a view property on it.
+    </p>
+    <div data-bind="compose:anotherOwnVMScreen"></div>
+</section>

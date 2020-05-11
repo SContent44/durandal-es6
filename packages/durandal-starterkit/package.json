@@ -1,0 +1,31 @@
+{
+    "name": "durandal-starterkit",
+    "version": "3.0.0",
+    "description": "Default starter website that demonstrates behaviour of using Durandal for building a Single Page Application (with Webpack).",
+    "main": "index.html",
+    "scripts": {
+        "serve": "webpack-dev-server -d",
+        "build": "webpack",
+        "webpack-stats": "webpack --profile --json > stats.json",
+        "webpack-analyze": "webpack-bundle-analyzer stats.json"
+    },
+    "keywords": [
+        "Durandal",
+        "SPA",
+        "Webpack",
+        "Starter-Kit"
+    ],
+    "author": "Simon Buckley",
+    "license": "ISC",
+    "dependencies": {},
+    "browserslist": [
+        "Chrome >= 66",
+        "Firefox 41",
+        "Firefox >= 52",
+        "Explorer >= 10",
+        "Safari >= 10",
+        "Edge >= 16",
+        "iOS >= 10",
+        "ChromeAndroid  >= 66"
+    ]
+}

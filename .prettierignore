@@ -1,0 +1,9 @@
+# Portable Network Graphics
+*.png
+
+# Ignore the ignore files
+.gitignore
+.prettierignore
+
+# Ignore genned files
+**/package-lock.json

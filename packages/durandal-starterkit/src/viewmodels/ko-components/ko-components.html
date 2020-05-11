@@ -1,0 +1,29 @@
+<section>
+    <h1>Knockout components</h1>
+    <p>Here are a few very basic components. These components each have their own template and their own stylesheet.</p>
+    <p>
+        The child component has a style for when:
+        <ul>
+          <li>It is displayed alone</li>
+          <li>It is nested under a parent</li>
+          <li>It is nested under a parent that is nested under a grandparent</li>
+        </ul>
+    </p>
+    <h2>Inputs</h2>
+    <p>Grandparent name: <input data-bind="value: $root.grandparentInput" /></p>
+    <p>Parent name: <input data-bind="value: $root.parentInput" /></p>
+    <p>Child name: <input data-bind="value: childInput" /></p>
+
+    <h2>Grand parent (two nested components)</h2>
+    <grandparent
+        params="grandparentValue: grandparentDisplay, 
+                parentValue: parentDisplay,
+                childValue: childDisplay"
+    ></grandparent>
+
+    <h2>Parent (one nest component)</h2>
+    <parent params="parentValue: parentDisplay, childValue: childDisplay"></parent>
+
+    <h2>Child component (no nested components)</h2>
+    <child params="childValue: childDisplay"></child>
+</section>
