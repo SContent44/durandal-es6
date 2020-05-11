@@ -5,7 +5,7 @@
     "main": "index.html",
     "scripts": {
         "serve": "webpack-dev-server -d",
-        "build": "webpack",
+        "build": "webpack --prod",
         "webpack-stats": "webpack --profile --json > stats.json",
         "webpack-analyze": "webpack-bundle-analyzer stats.json"
     },
