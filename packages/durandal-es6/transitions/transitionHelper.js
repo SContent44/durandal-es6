@@ -62,8 +62,10 @@ const animationTypes = [
     "wobble",
 ];
 
+const motionQuery = matchMedia("(prefers-reduced-motion)");
+
 const App = {
-    duration: 1000 * 0.35, // seconds
+    duration: !motionQuery.matches ? 1000 * 0.35 : 0, // seconds - set to 0 if use has accessibility option for reduced animation
     create(receievedSettings) {
         const settings = ensureSettings(receievedSettings);
         return doTrans(settings);
