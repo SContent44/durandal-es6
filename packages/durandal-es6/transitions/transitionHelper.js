@@ -65,7 +65,7 @@ const animationTypes = [
 const motionQuery = matchMedia("(prefers-reduced-motion)");
 
 const App = {
-    duration: !motionQuery.matches ? 1000 * 0.35 : 0, // seconds - set to 0 if use has accessibility option for reduced animation
+    duration: !motionQuery.matches ? 1000 * 0.35 : 0, // seconds - set to 0 if user has accessibility option for reduced animation
     create(receievedSettings) {
         const settings = ensureSettings(receievedSettings);
         return doTrans(settings);
