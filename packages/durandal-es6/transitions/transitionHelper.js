@@ -88,17 +88,12 @@ function doTrans(settings) {
     const outAn = animValue(settings.outAnimation);
     const inAn = animValue(settings.inAnimation);
     let $previousView;
-    const $newView = $(newChild).removeClass([outAn, inAn]).addClass("animated");
+    let $newView = $(newChild).removeClass(outAn); // just need to remove outAn here, keeping the animated class so we don't get a "flash"
 
     return system
         .defer((dfd) => {
             if (newChild) {
-                startTransition();
-            } else {
-                endTransistion();
-            }
-
-            function startTransition() {
+                $newView = $(newChild);
                 if (settings.activeView) {
                     outTransition(inTransition);
                 } else {
@@ -110,27 +105,27 @@ function doTrans(settings) {
                 $previousView = $(activeView);
                 $previousView.addClass("animated");
                 $previousView.addClass(outAn);
-                setTimeout(function () {
+                setTimeout(function setTimeout() {
                     if (callback) {
                         callback();
-                        endTransistion();
                     }
                 }, App.duration);
             }
 
             function inTransition() {
+                if ($previousView) {
+                    $previousView.css("display", "none");
+                }
                 settings.triggerAttach();
-                $newView.css("display", "");
+
+                $newView.addClass("animated"); // moved the adding of the animated class here so it keeps it together
                 $newView.addClass(inAn);
+                $newView.css("display", "");
 
-                setTimeout(() => {
-                    $newView.removeClass(`${inAn} ${outAn} animated`);
-                    endTransistion();
+                setTimeout(function setTimeout() {
+                    $newView.removeClass(`${inAn} animated`); // just need to remove inAn here, that's all we'll have
+                    dfd.resolve(true);
                 }, App.duration);
-            }
-
-            function endTransistion() {
-                dfd.resolve();
             }
         })
         .promise();
