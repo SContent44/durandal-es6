@@ -118,6 +118,24 @@ module.exports = {
             durandal: path.resolve(__dirname, "../durandal-es6"),
         },
     },
+    optimization: {
+        chunkIds: "named",
+        splitChunks: {
+            cacheGroups: {
+                commons: {
+                    chunks: "initial",
+                    minChunks: 2,
+                },
+                vendor: {
+                    test: /node_modules/,
+                    chunks: "initial",
+                    name: "vendor",
+                    priority: 10,
+                    enforce: true,
+                },
+            },
+        },
+    },
     devServer: {
         contentBase: __dirname,
         hot: false,
