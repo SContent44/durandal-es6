@@ -1,4 +1,5 @@
-﻿/* eslint-disable eqeqeq */
+﻿/* eslint-disable no-param-reassign */
+/* eslint-disable eqeqeq */
 import $ from "jquery";
 import system from "./system";
 import viewEngine from "./viewEngine";
@@ -11,22 +12,6 @@ import viewEngine from "./viewEngine";
  * @requires viewEngine
  */
 function ViewLocatorModule() {
-    /**
-     * @param {string} view HTML string for the view
-     * @return {object} Returns the processed markup to be rendered
-     */
-    function getView(view, hash) {
-        let viewToReturn;
-        if (view) {
-            viewToReturn = viewEngine.createView(view, hash);
-        } else {
-            system.error(
-                "No view found on the object. Make sure that you a provide view property that has your html template."
-            );
-        }
-        return viewToReturn;
-    }
-
     // eslint-disable-next-line consistent-return
     function findInElements(nodes, hash) {
         for (let i = 0; i < nodes.length; i += 1) {
@@ -53,6 +38,7 @@ function ViewLocatorModule() {
         locateViewForObject(obj, elementsToSearch) {
             let view;
 
+            // Still able to override the new default behaviour via a getView function
             if (obj.getView) {
                 view = obj.getView();
                 if (view) {
@@ -60,6 +46,7 @@ function ViewLocatorModule() {
                 }
             }
 
+            // The new default behaviour
             // Check if view is current "cached" if cacheViews is on
             const hash = viewEngine.hashCode($.trim(obj.view));
             if (hash && elementsToSearch && elementsToSearch.length > 0) {
@@ -73,8 +60,13 @@ function ViewLocatorModule() {
                 }
             }
 
-            // The new default behaviour
-            view = getView(obj.view, hash);
+            if (obj.view) {
+                view = viewEngine.createView(obj.view, hash);
+            } else {
+                system.error(
+                    "No view found on the object. Make sure that you a provide view property that has your html template."
+                );
+            }
             return this.locateView(view);
         },
         /**
