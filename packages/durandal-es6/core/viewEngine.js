@@ -6,14 +6,14 @@
  * @requires jquery
  */
 function ViewEngineModule() {
-    var parseMarkup;
+    let parseMarkup;
 
     if ($.parseHTML) {
-        parseMarkup = function (html) {
+        parseMarkup = (html) => {
             return $.parseHTML(html);
         };
     } else {
-        parseMarkup = function (html) {
+        parseMarkup = (html) => {
             return $(html).get();
         };
     }
@@ -64,8 +64,9 @@ function ViewEngineModule() {
          */
         ensureSingleElement(allElements) {
             if (!allElements) {
+                // eslint-disable-next-line no-unused-expressions
                 $("<div></div>")[0];
-            } else if (allElements.length == 1) {
+            } else if (allElements.length === 1) {
                 return allElements[0];
             }
 
@@ -73,10 +74,11 @@ function ViewEngineModule() {
 
             for (let i = 0; i < allElements.length; i += 1) {
                 const current = allElements[i];
-                if (current.nodeType != 8) {
-                    if (current.nodeType == 3) {
-                        var result = /\S/.test(current.nodeValue);
+                if (current.nodeType !== 8) {
+                    if (current.nodeType === 3) {
+                        const result = /\S/.test(current.nodeValue);
                         if (!result) {
+                            // eslint-disable-next-line no-continue
                             continue;
                         }
                     }
@@ -110,12 +112,6 @@ function ViewEngineModule() {
             this.cache[id] = view;
         },
         /**
-         * Creates the view based on the view string.
-         * @method createView
-         * @param {string} view The HTML string for the view to be rendered.
-         * @return {object} The processed HTML
-         */
-        /**
          * Used to generate a hash based on the passed in string to be used as the id when storing cached views for createView
          * @param {string} s
          */
@@ -137,6 +133,12 @@ function ViewEngineModule() {
             }
             return hash;
         },
+        /**
+         * Creates the view based on the view string.
+         * @method createView
+         * @param {string} view The HTML string for the view to be rendered.
+         * @return {object} The processed HTML
+         */
         createView(htmlString, hash) {
             const view = $.trim(htmlString);
             const cacheId = hash || this.hashCode(view);
