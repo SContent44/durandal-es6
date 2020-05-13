@@ -14,13 +14,14 @@ class ShellViewModel {
         this.toggle = () => {
             this.isExpanded(!this.isExpanded());
         };
-        this.closeToggle = () => {
+
+        router.on("router:navigation:composition-complete").then(() => {
             const toggleInput = document.getElementsByClassName("navbar-toggle")[0];
             if (toggleInput && this.isExpanded()) {
                 toggleInput.click();
             }
             return true;
-        };
+        });
     }
 
     // eslint-disable-next-line class-methods-use-this
