@@ -1,4 +1,5 @@
-﻿import ko from "knockout";
+﻿/* eslint-disable no-param-reassign */
+import ko from "knockout";
 import system from "./system";
 
 /**
@@ -7,14 +8,13 @@ import system from "./system";
  * @requires knockout
  * @requires system
  */
-export default new binderModule();
 
-function binderModule() {
-    var binder,
-        insufficientInfoMessage = "Insufficient Information to Bind",
-        unexpectedViewMessage = "Unexpected View Type",
-        bindingInstructionKey = "durandal-binding-instruction",
-        koBindingContextKey = "__ko_bindingContext__";
+function BinderModule() {
+    let binder;
+    const insufficientInfoMessage = "Insufficient Information to Bind";
+    const unexpectedViewMessage = "Unexpected View Type";
+    const bindingInstructionKey = "durandal-binding-instruction";
+    const koBindingContextKey = "__ko_bindingContext__";
 
     function normalizeBindingInstruction(result) {
         if (result === undefined) {
@@ -51,10 +51,10 @@ function binderModule() {
             return;
         }
 
-        var viewName = view.getAttribute("data-view");
+        const viewName = view.getAttribute("data-view");
 
         try {
-            var instruction;
+            let instruction;
 
             if (obj && obj.binding) {
                 instruction = obj.binding(view);
@@ -77,9 +77,10 @@ function binderModule() {
             }
 
             ko.utils.domData.set(view, bindingInstructionKey, instruction);
+            // eslint-disable-next-line consistent-return
             return instruction;
         } catch (e) {
-            e.message = e.message + ";\nView: " + viewName + ";\nModuleId: " + system.getModuleId(data);
+            e.message = `${e.message};\nView: ${viewName};\nModuleId: ${system.getModuleId(data)}`;
             if (binder.throwOnErrors) {
                 system.error(e);
             } else {
@@ -92,7 +93,7 @@ function binderModule() {
      * @class BinderModule
      * @static
      */
-    return (binder = {
+    binder = {
         /**
          * Called before every binding operation. Does nothing by default.
          * @method binding
@@ -121,7 +122,7 @@ function binderModule() {
          * @param {DOMElement} view The view that was previously bound.
          * @return {object} The object that carries the binding instructions.
          */
-        getBindingInstruction: function (view) {
+        getBindingInstruction(view) {
             return ko.utils.domData.get(view, bindingInstructionKey);
         },
         /**
@@ -132,7 +133,7 @@ function binderModule() {
          * @param {object} [obj] The data to bind to, causing the creation of a child binding context if present.
          * @param {string} [dataAlias] An alias for $data if present.
          */
-        bindContext: function (bindingContext, view, obj, dataAlias) {
+        bindContext(bindingContext, view, obj, dataAlias) {
             if (obj && bindingContext) {
                 bindingContext = bindingContext.createChildContext(
                     obj,
@@ -148,8 +149,12 @@ function binderModule() {
          * @param {object} obj The data to bind to.
          * @param {DOMElement} view The view to bind.
          */
-        bind: function (obj, view) {
+        bind(obj, view) {
             return doBind(obj, view, obj, obj);
         },
-    });
+    };
+
+    return binder;
 }
+
+export default new BinderModule();

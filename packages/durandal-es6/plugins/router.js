@@ -1,4 +1,5 @@
-﻿/* eslint-disable no-shadow */
+﻿/* eslint-disable func-names */
+/* eslint-disable no-shadow */
 /* eslint-disable prefer-spread */
 /* eslint-disable eqeqeq */
 /* eslint-disable no-unused-vars */
@@ -192,7 +193,7 @@ function RouterModule() {
              * Indicates that the router (or a child router) is currently in the process of navigating.
              * @property {KnockoutComputed} isNavigating
              */
-            isNavigating: ko.computed(() => {
+            isNavigating: ko.computed(function () {
                 const current = activeItem();
                 const processing = isProcessing();
                 const currentRouterIsProcesing = !!(
@@ -319,7 +320,7 @@ function RouterModule() {
 
             activator
                 .activateItem(instance, instruction.params, options)
-                .then((succeeded) => {
+                .then(function (succeeded) {
                     if (succeeded) {
                         const previousActivation = currentActivation;
                         const withChild = hasChildRouter(instance, router);
@@ -363,7 +364,7 @@ function RouterModule() {
                         startDeferred = null;
                     }
                 })
-                .fail((err) => {
+                .fail(function (err) {
                     system.error(err);
                 });
         }
@@ -379,7 +380,7 @@ function RouterModule() {
             const resultOrPromise = router.guardRoute(instance, instruction);
             if (resultOrPromise || resultOrPromise === "") {
                 if (resultOrPromise.then) {
-                    resultOrPromise.then((result) => {
+                    resultOrPromise.then(function (result) {
                         if (result) {
                             if (system.isString(result)) {
                                 redirect(result);
@@ -458,7 +459,7 @@ function RouterModule() {
             } else {
                 system
                     .acquire(instruction.config.moduleId)
-                    .then((m) => {
+                    .then(function (m) {
                         const instance = system.resolveObject(m);
 
                         // Check if the module instance's __moduleId__ has been set on the object/function
@@ -475,7 +476,7 @@ function RouterModule() {
 
                         ensureActivation(activeItem, instance, instruction);
                     })
-                    .fail((err) => {
+                    .fail(function (err) {
                         cancelNavigation(null, instruction);
                         system.error(
                             `Failed to load routed module (${instruction.config.moduleId}). Details: ${err.message}`,
@@ -701,7 +702,7 @@ function RouterModule() {
 
         // Allow observable to be used for app.title
         if (ko.isObservable(app.title)) {
-            app.title.subscribe(() => {
+            app.title.subscribe(function () {
                 const instruction = router.activeInstruction();
                 const title = instruction != null ? ko.unwrap(instruction.config.title) : "";
                 setTitle(title);
@@ -896,7 +897,7 @@ function RouterModule() {
                 }
             }
 
-            nav.sort((a, b) => {
+            nav.sort(function (a, b) {
                 return a.nav - b.nav;
             });
             router.navigationModel(nav);
@@ -943,7 +944,7 @@ function RouterModule() {
                 } else if (system.isFunction(config)) {
                     const result = config(instruction);
                     if (result && result.then) {
-                        result.then(() => {
+                        result.then(function () {
                             router.trigger("router:route:before-config", instruction.config, router);
                             router.trigger("router:route:after-config", instruction.config, router);
                             queueInstruction(instruction);
@@ -969,7 +970,7 @@ function RouterModule() {
          * @method reset
          * @chainable
          */
-        router.reset = () => {
+        router.reset = function () {
             // eslint-disable-next-line no-multi-assign
             currentInstruction = currentActivation = undefined;
             router.handlers = [];
@@ -985,7 +986,7 @@ function RouterModule() {
          * @param {string|object} settings If string, the value is used as the base for routes and module ids. If an object, you can specify `route` and `moduleId` separately. In place of specifying route, you can set `fromParent:true` to make routes automatically relative to the parent router's active route.
          * @chainable
          */
-        router.makeRelative = (settings) => {
+        router.makeRelative = function (settings) {
             if (settings.route && !endsWith(settings.route, "/")) {
                 settings.route += "/";
             }
@@ -994,7 +995,7 @@ function RouterModule() {
                 router.relativeToParentRouter = true;
             }
 
-            router.on("router:route:before-config").then((config) => {
+            router.on("router:route:before-config").then(function (config) {
                 // TODO this moduleId behaviour is no longer supported
                 if (settings.moduleId) {
                     config.moduleId = settings.moduleId + config.moduleId;
@@ -1010,21 +1011,21 @@ function RouterModule() {
             });
 
             if (settings.dynamicHash) {
-                router.on("router:route:after-config").then((config) => {
+                router.on("router:route:after-config").then(function (config) {
                     config.routePattern = routeStringToRegExp(
                         config.route ? `${settings.dynamicHash}/${config.route}` : settings.dynamicHash
                     );
                     config.dynamicHash = config.dynamicHash || ko.observable(config.hash);
                 });
 
-                router.on("router:route:before-child-routes").then((instance, instruction, parentRouter) => {
+                router.on("router:route:before-child-routes").then(function (instance, instruction, parentRouter) {
                     const childRouter = instance.router;
 
                     for (let i = 0; i < childRouter.routes.length; i += 1) {
                         const route = childRouter.routes[i];
                         const params = instruction.params.slice(0);
 
-                        route.hash = childRouter.convertRouteToHash(route.route).replace(namedParam, (match) => {
+                        route.hash = childRouter.convertRouteToHash(route.route).replace(namedParam, function (match) {
                             return params.length > 0 ? params.shift() : match;
                         });
 
@@ -1092,9 +1093,9 @@ function RouterModule() {
      * @method activate
      * @return {Promise} A promise that resolves when the router is ready.
      */
-    rootRouter.activate = (options) => {
+    rootRouter.activate = function (options) {
         return system
-            .defer((dfd) => {
+            .defer(function (dfd) {
                 startDeferred = dfd;
                 rootRouter.options = system.extend({ routeHandler: rootRouter.loadUrl }, rootRouter.options, options);
 
@@ -1112,7 +1113,7 @@ function RouterModule() {
 
                 const rootStripper = rootRouter.options.root && new RegExp(`^${rootRouter.options.root}/`);
 
-                $(document).delegate("a", "click", (evt) => {
+                $(document).delegate("a", "click", function (evt) {
                     // ignore default prevented since these are not supposed to behave like links anyway
                     if (evt.isDefaultPrevented()) {
                         return;
@@ -1158,7 +1159,7 @@ function RouterModule() {
      * Deactivate current items and turn history listening off.
      * @method deactivate
      */
-    rootRouter.deactivate = () => {
+    rootRouter.deactivate = function () {
         rootRouter.activeItem(null);
         history.deactivate();
     };
@@ -1167,7 +1168,7 @@ function RouterModule() {
      * Installs the router's custom ko binding handler.
      * @method install
      */
-    rootRouter.install = () => {
+    rootRouter.install = function () {
         ko.bindingHandlers.router = {
             init() {
                 return { controlsDescendantBindings: true };

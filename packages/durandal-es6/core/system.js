@@ -1,27 +1,35 @@
-﻿import $ from "jquery";
+﻿/* eslint-disable prefer-rest-params */
+/* eslint-disable prefer-spread */
+/* eslint-disable func-names */
+/* eslint-disable eqeqeq */
+/* eslint-disable no-bitwise */
+/* eslint-disable no-param-reassign */
+/* eslint-disable no-underscore-dangle */
+/* eslint-disable no-console */
+import $ from "jquery";
 /**
  * The system module encapsulates the most basic features used by other modules.
  * @module system
  * @requires jquery
  */
 function SystemModule() {
-    var isDebugging = false,
-        nativeKeys = Object.keys,
-        hasOwnProperty = Object.prototype.hasOwnProperty,
-        toString = Object.prototype.toString,
-        system,
-        treatAsIE8 = false,
-        nativeIsArray = Array.isArray,
-        slice = Array.prototype.slice;
+    let isDebugging = false;
+    const nativeKeys = Object.keys;
+    const { hasOwnProperty } = Object.prototype;
+    const { toString } = Object.prototype;
+    let treatAsIE8 = false;
+    const nativeIsArray = Array.isArray;
+    const { slice } = Array.prototype;
 
-    //polyfill from https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/Trim
+    // polyfill from https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/Trim
     if (!String.prototype.trim) {
+        // eslint-disable-next-line no-extend-native
         String.prototype.trim = function () {
             return this.replace(/^\s+|\s+$/g, "");
         };
     }
 
-    //see http://patik.com/blog/complete-cross-browser-console-log/
+    // see http://patik.com/blog/complete-cross-browser-console-log/
     // Tell IE9 to use its built-in console
     if (
         Function.prototype.bind &&
@@ -40,18 +48,19 @@ function SystemModule() {
         }
     }
 
-    var noop = function () {};
+    const noop = function () {};
 
-    var log = function () {
+    const log = function () {
         try {
             // Modern browsers
             if (typeof console != "undefined" && typeof console.log == "function") {
                 // Opera 11
                 if (window.opera) {
-                    var i = 0;
+                    let i = 0;
                     while (i < arguments.length) {
-                        console.log("Item " + (i + 1) + ": " + arguments[i]);
-                        i++;
+                        // eslint-disable-next-line prefer-rest-params
+                        console.log(`Item ${i + 1}: ${arguments[i]}`);
+                        i += 1;
                     }
                 }
                 // All other modern browsers
@@ -71,11 +80,12 @@ function SystemModule() {
             }
 
             // IE7 and lower, and other old browsers
+            // eslint-disable-next-line no-empty
         } catch (ignore) {}
     };
 
-    var logError = function (error, err) {
-        var exception;
+    const logError = function (error, err) {
+        let exception;
 
         if (error instanceof Error) {
             exception = error;
@@ -85,7 +95,7 @@ function SystemModule() {
 
         exception.innerError = err;
 
-        //Report the error as an error, not as a log
+        // Report the error as an error, not as a log
         try {
             // Modern browsers (it's only a single item, no need for argument splitting as in log() above)
             if (typeof console != "undefined" && typeof console.error == "function") {
@@ -100,6 +110,7 @@ function SystemModule() {
                 Function.prototype.call.call(console.error, console, exception);
             }
             // IE7 and lower, and other old browsers
+            // eslint-disable-next-line no-empty
         } catch (ignore) {}
 
         throw exception;
@@ -109,33 +120,33 @@ function SystemModule() {
      * @class SystemModule
      * @static
      */
-    system = {
+    const system = {
         /**
          * Durandal's version.
          * @property {string} version
          */
-        version: "2.2.0",
+        version: "3.0.0",
         /**
          * A noop function.
          * @method noop
          */
-        noop: noop,
+        noop,
         /**
          * Gets the module id for the specified object.
          * @method getModuleId
          * @param {object} obj The object whose module id you wish to determine.
          * @return {string} The module id.
          */
-        getModuleId: function (obj) {
+        getModuleId(obj) {
             if (!obj) {
                 return null;
             }
-
-            if (typeof obj == "function" && obj.prototype) {
+            // Check this
+            if (typeof obj === "function" && obj.prototype) {
                 return obj.prototype.__moduleId__;
             }
 
-            if (typeof obj == "string") {
+            if (typeof obj === "string") {
                 return null;
             }
 
@@ -147,17 +158,17 @@ function SystemModule() {
          * @param {object} obj The object whose module id you wish to set.
          * @param {string} id The id to set for the specified object.
          */
-        setModuleId: function (obj, id) {
+        setModuleId(obj, id) {
             if (!obj) {
                 return;
             }
 
-            if (typeof obj == "function" && obj.prototype) {
+            if (typeof obj === "function" && obj.prototype) {
                 obj.prototype.__moduleId__ = id;
                 return;
             }
 
-            if (typeof obj == "string") {
+            if (typeof obj === "string") {
                 return;
             }
 
@@ -169,16 +180,16 @@ function SystemModule() {
          * @param {object} module The module to use to get/create the default object for.
          * @return {object} The default object for the module.
          */
-        resolveObject: function (module) {
+        resolveObject(module) {
             // Check if this is a es6 module default export
-            var moduleToResolve =
+            const moduleToResolve =
                 module && typeof module === "object" && module.__esModule && module.default ? module.default : module;
 
             if (system.isFunction(moduleToResolve)) {
+                // eslint-disable-next-line new-cap
                 return new moduleToResolve();
-            } else {
-                return moduleToResolve;
             }
+            return moduleToResolve;
         },
         /**
          * Gets/Sets whether or not Durandal is in debug mode.
@@ -186,7 +197,7 @@ function SystemModule() {
          * @param {boolean} [enable] Turns on/off debugging.
          * @return {boolean} Whether or not Durandal is current debugging.
          */
-        debug: function (enable) {
+        debug(enable) {
             if (arguments.length == 1) {
                 isDebugging = enable;
                 if (isDebugging) {
@@ -220,7 +231,7 @@ function SystemModule() {
          * @param {boolean} condition The condition to check.
          * @param {string} message The message to report in the error if the condition check fails.
          */
-        assert: function (condition, message) {
+        assert(condition, message) {
             if (!condition) {
                 system.error(new Error(message || "Assert:Failed"));
             }
@@ -231,7 +242,7 @@ function SystemModule() {
          * @param {function} [action] The action to defer. You will be passed the deferred object as a paramter.
          * @return {Deferred} The deferred object.
          */
-        defer: function (action) {
+        defer(action) {
             return $.Deferred(action);
         },
         /**
@@ -239,10 +250,10 @@ function SystemModule() {
          * @method guid
          * @return {string} The guid.
          */
-        guid: function () {
-            var d = new Date().getTime();
+        guid() {
+            let d = new Date().getTime();
             return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function (c) {
-                var r = (d + Math.random() * 16) % 16 | 0;
+                const r = (d + Math.random() * 16) % 16 | 0;
                 d = Math.floor(d / 16);
                 return (c == "x" ? r : (r & 0x7) | 0x8).toString(16);
             });
@@ -254,32 +265,30 @@ function SystemModule() {
          * @param {object|function|Promise<object|function>} module The module to load
          * @return {Promise} A promise for the loaded module(s).
          */
-        acquire: function (moduleToResolve) {
+        acquire(moduleToResolve) {
             if (system.isFunction(moduleToResolve)) {
                 // Still wrapped in the system.defer because the router expects to be returned a promise with a .fail
-                return system.defer(function (dfd) {
-                    return Promise.resolve(moduleToResolve).then((module) => {
-                        // Execute the promise and then resolve or reject the result
-                        if (system.isPromise(module())) {
-                            module().then(
-                                (resolvedModule) => {
-                                    dfd.resolve(resolvedModule);
-                                },
-                                (error) => {
-                                    dfd.reject(error);
-                                }
-                            );
-                        } else {
-                            // If it's not a promise it's a function or an object
-                            dfd.resolve(module);
-                        }
-                    });
+                return system.defer(async (dfd) => {
+                    const module = await Promise.resolve(moduleToResolve);
+                    // Execute the promise and then resolve or reject the result
+                    if (system.isPromise(module())) {
+                        module().then(
+                            (resolvedModule) => {
+                                dfd.resolve(resolvedModule);
+                            },
+                            (error) => {
+                                dfd.reject(error);
+                            }
+                        );
+                    } else {
+                        // If it's not a promise it's a function or an object
+                        dfd.resolve(module);
+                    }
                 });
-            } else {
-                system.error(
-                    "You are not using the durandal-es6 behaviour. Pass in a function that will resolve to return either a function, object, or a promise<functon|object>."
-                );
             }
+            return system.error(
+                "You are not using the durandal-es6 behaviour. Pass in a function that will resolve to return either a function, object, or a promise<functon|object>."
+            );
         },
         /**
          * Extends the first object with the properties of the following objects.
@@ -287,14 +296,16 @@ function SystemModule() {
          * @param {object} obj The target object to extend.
          * @param {object} extension* Uses to extend the target object.
          */
-        extend: function (obj) {
-            var rest = slice.call(arguments, 1);
+        extend(obj) {
+            // eslint-disable-next-line prefer-rest-params
+            const rest = slice.call(arguments, 1);
 
-            for (var i = 0; i < rest.length; i++) {
-                var source = rest[i];
+            for (let i = 0; i < rest.length; i += 1) {
+                const source = rest[i];
 
                 if (source) {
-                    for (var prop in source) {
+                    // eslint-disable-next-line guard-for-in, no-restricted-syntax
+                    for (const prop in source) {
                         obj[prop] = source[prop];
                     }
                 }
@@ -308,7 +319,7 @@ function SystemModule() {
          * @param {number} milliseconds The number of milliseconds to wait.
          * @return {Promise}
          */
-        wait: function (milliseconds) {
+        wait(milliseconds) {
             return system
                 .defer(function (dfd) {
                     setTimeout(dfd.resolve, milliseconds);
@@ -325,14 +336,16 @@ function SystemModule() {
      */
     system.keys =
         nativeKeys ||
+        // eslint-disable-next-line func-names
         function (obj) {
             if (obj !== Object(obj)) {
                 throw new TypeError("Invalid object");
             }
 
-            var keys = [];
+            const keys = [];
 
-            for (var key in obj) {
+            // eslint-disable-next-line no-restricted-syntax
+            for (const key in obj) {
                 if (hasOwnProperty.call(obj, key)) {
                     keys[keys.length] = key;
                 }
@@ -359,6 +372,7 @@ function SystemModule() {
      */
     system.isArray =
         nativeIsArray ||
+        // eslint-disable-next-line func-names
         function (obj) {
             return toString.call(obj) == "[object Array]";
         };
@@ -435,17 +449,17 @@ function SystemModule() {
      * @return {boolean} True if matches the type, false otherwise.
      */
 
-    //isArguments, isFunction, isString, isNumber, isDate, isRegExp.
-    var isChecks = ["Arguments", "Function", "String", "Number", "Date", "RegExp"];
+    // isArguments, isFunction, isString, isNumber, isDate, isRegExp.
+    const isChecks = ["Arguments", "Function", "String", "Number", "Date", "RegExp"];
 
     function makeIsFunction(name) {
-        var value = "[object " + name + "]";
-        system["is" + name] = function (obj) {
+        const value = `[object ${name}]`;
+        system[`is${name}`] = function (obj) {
             return toString.call(obj) == value;
         };
     }
 
-    for (var i = 0; i < isChecks.length; i++) {
+    for (let i = 0; i < isChecks.length; i += 1) {
         makeIsFunction(isChecks[i]);
     }
 

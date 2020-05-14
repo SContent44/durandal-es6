@@ -1,4 +1,5 @@
-﻿import $ from "jquery";
+﻿/* eslint-disable func-names */
+import $ from "jquery";
 
 /**
  * The viewEngine module provides information to the viewLocator module which is used to locate the view's source file. The viewEngine also transforms a view id into a view instance.
@@ -9,11 +10,11 @@ function ViewEngineModule() {
     let parseMarkup;
 
     if ($.parseHTML) {
-        parseMarkup = (html) => {
+        parseMarkup = function (html) {
             return $.parseHTML(html);
         };
     } else {
-        parseMarkup = (html) => {
+        parseMarkup = function (html) {
             return $(html).get();
         };
     }

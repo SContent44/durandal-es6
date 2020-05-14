@@ -1,4 +1,7 @@
-﻿import system from "./system";
+﻿/* eslint-disable no-param-reassign */
+/* eslint-disable no-cond-assign */
+/* eslint-disable func-names */
+import system from "./system";
 
 /**
  * Durandal events originate from backbone.js but also combine some ideas from signals.js as well as some additional improvements.
@@ -7,14 +10,14 @@
  * @requires system
  */
 function EventsModule() {
-    var eventSplitter = /\s+/;
-    var Events = function () {};
+    const eventSplitter = /\s+/;
+    const Events = function () {};
 
     /**
      * Represents an event subscription.
      * @class Subscription
      */
-    var Subscription = function (owner, events) {
+    const Subscription = function (owner, events) {
         this.owner = owner;
         this.events = events;
     };
@@ -71,21 +74,26 @@ function EventsModule() {
      * @return {Subscription|Events} A subscription is returned if no callback is supplied, otherwise the events object is returned for chaining.
      */
     Events.prototype.on = function (events, callback, context) {
-        var calls, event, list;
+        let calls;
+        let event;
+        let list;
 
         if (!callback) {
             return new Subscription(this, events);
-        } else {
-            calls = this.callbacks || (this.callbacks = {});
-            events = events.split(eventSplitter);
-
-            while ((event = events.shift())) {
-                list = calls[event] || (calls[event] = []);
-                list.push(callback, context);
-            }
-
-            return this;
         }
+
+        // eslint-disable-next-line prefer-const
+        calls = this.callbacks || (this.callbacks = {});
+        // eslint-disable-next-line no-param-reassign
+        events = events.split(eventSplitter);
+
+        // eslint-disable-next-line no-cond-assign
+        while ((event = events.shift())) {
+            list = calls[event] || (calls[event] = []);
+            list.push(callback, context);
+        }
+
+        return this;
     };
 
     /**
@@ -97,14 +105,17 @@ function EventsModule() {
      * @chainable
      */
     Events.prototype.off = function (events, callback, context) {
-        var event, calls, list, i;
+        let event;
+        let calls;
+        let list;
+        let i;
 
         // No events
         if (!(calls = this.callbacks)) {
             return this;
         }
 
-        //removing all
+        // removing all
         if (!(events || callback || context)) {
             delete this.callbacks;
             return this;
@@ -116,6 +127,7 @@ function EventsModule() {
         while ((event = events.shift())) {
             if (!(list = calls[event]) || !(callback || context)) {
                 delete calls[event];
+                // eslint-disable-next-line no-continue
                 continue;
             }
 
@@ -136,14 +148,21 @@ function EventsModule() {
      * @chainable
      */
     Events.prototype.trigger = function (events) {
-        var event, calls, list, i, length, args, all, rest;
+        let event;
+        let calls;
+        let list;
+        let i;
+        let length;
+        let args;
+        let all;
+        const rest = [];
         if (!(calls = this.callbacks)) {
             return this;
         }
 
-        rest = [];
         events = events.split(eventSplitter);
-        for (i = 1, length = arguments.length; i < length; i++) {
+        for (i = 1, length = arguments.length; i < length; i += 1) {
+            // eslint-disable-next-line prefer-rest-params
             rest[i - 1] = arguments[i];
         }
 
@@ -185,7 +204,7 @@ function EventsModule() {
      * @return {function} Calling the function will invoke the previously specified events on the events object.
      */
     Events.prototype.proxy = function (events) {
-        var that = this;
+        const that = this;
         return function (arg) {
             that.trigger(events, arg);
         };

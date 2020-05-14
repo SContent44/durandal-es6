@@ -1,6 +1,6 @@
-﻿import $ from "jquery";
+﻿/* eslint-disable func-names */
+import $ from "jquery";
 import system from "../core/system";
-import composition from "../core/composition";
 
 /**
  * The entrance transition module.
@@ -61,9 +61,9 @@ function EntranceModule() {
      * @class EntranceModule
      * @constructor
      */
-    const entrance = (context) => {
+    const entrance = function (context) {
         return system
-            .defer((dfd) => {
+            .defer(function (dfd) {
                 function endTransition() {
                     dfd.resolve();
                 }
@@ -90,14 +90,14 @@ function EntranceModule() {
                         bottom: 0,
                     };
 
-                    const startTransition = () => {
+                    const startTransition = function () {
                         scrollIfNeeded();
                         context.triggerAttach();
 
                         if (animation) {
                             removeAnimationClasses(context.child, fadeOnly);
                             context.child.classList.add(fadeOnly ? "entrance-in-fade" : "entrance-in");
-                            setTimeout(() => {
+                            setTimeout(function () {
                                 removeAnimationClasses(context.child, fadeOnly);
                                 if (context.activeView) {
                                     removeAnimationClasses(context.activeView, fadeOnly);

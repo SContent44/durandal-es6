@@ -1,5 +1,11 @@
-﻿import system from "../core/system";
+﻿/* eslint-disable consistent-return */
+/* eslint-disable no-useless-escape */
+/* eslint-disable no-underscore-dangle */
+/* eslint-disable func-names */
+/* eslint-disable no-param-reassign */
+/* eslint-disable no-use-before-define */
 import $ from "jquery";
+import system from "../core/system";
 
 /**
  * This module is based on Backbone's core history support. It abstracts away the low level details of working with browser history and url changes in order to provide a solid foundation for a router.
@@ -7,35 +13,33 @@ import $ from "jquery";
  * @requires system
  * @requires jquery
  */
-export default new historyModule();
-
-function historyModule() {
+function HistoryModule() {
     // Cached regex for stripping a leading hash/slash and trailing space.
-    var routeStripper = /^[#\/]|\s+$/g;
+    const routeStripper = /^[#\/]|\s+$/g;
 
     // Cached regex for stripping leading and trailing slashes.
-    var rootStripper = /^\/+|\/+$/g;
+    const rootStripper = /^\/+|\/+$/g;
 
     // Cached regex for detecting MSIE.
-    var isExplorer = /msie [\w.]+/;
+    const isExplorer = /msie [\w.]+/;
 
     // Cached regex for removing a trailing slash.
-    var trailingSlash = /\/$/;
+    const trailingSlash = /\/$/;
 
     // Update the hash location, either replacing the current entry, or adding
     // a new one to the browser history.
     function updateHash(location, fragment, replace) {
         if (replace) {
-            var href = location.href.replace(/(javascript:|#).*$/, "");
+            const href = location.href.replace(/(javascript:|#).*$/, "");
 
             if (history.history.replaceState) {
-                history.history.replaceState({}, document.title, href + "#" + fragment); // using history.replaceState instead of location.replace to work around chrom bug
+                history.history.replaceState({}, document.title, `${href}#${fragment}`); // using history.replaceState instead of location.replace to work around chrom bug
             } else {
-                location.replace(href + "#" + fragment);
+                location.replace(`${href}#${fragment}`);
             }
         } else {
             // Some browsers require that `hash` contains a leading #.
-            location.hash = "#" + fragment;
+            location.hash = `#${fragment}`;
         }
     }
 
@@ -43,7 +47,7 @@ function historyModule() {
      * @class HistoryModule
      * @static
      */
-    var history = {
+    let history = {
         /**
          * The setTimeout interval used when the browser does not support hash change events.
          * @property {string} interval
@@ -70,7 +74,7 @@ function historyModule() {
      * @return {string} The hash.
      */
     history.getHash = function (window) {
-        var match = (window || history).location.href.match(/#(.*)$/);
+        const match = (window || history).location.href.match(/#(.*)$/);
         return match ? match[1] : "";
     };
 
@@ -85,7 +89,7 @@ function historyModule() {
         if (fragment == null) {
             if (history._hasPushState || !history._wantsHashChange || forcePushState) {
                 fragment = history.location.pathname + history.location.search;
-                var root = history.root.replace(trailingSlash, "");
+                const root = history.root.replace(trailingSlash, "");
                 if (!fragment.indexOf(root)) {
                     fragment = fragment.substr(root.length);
                 }
@@ -118,12 +122,12 @@ function historyModule() {
         history._wantsPushState = !!history.options.pushState;
         history._hasPushState = !!(history.options.pushState && history.history && history.history.pushState);
 
-        var fragment = history.getFragment();
-        var docMode = document.documentMode;
-        var oldIE = isExplorer.exec(navigator.userAgent.toLowerCase()) && (!docMode || docMode <= 7);
+        const fragment = history.getFragment();
+        const docMode = document.documentMode;
+        const oldIE = isExplorer.exec(navigator.userAgent.toLowerCase()) && (!docMode || docMode <= 7);
 
         // Normalize root to always include a leading and trailing slash.
-        history.root = ("/" + history.root + "/").replace(rootStripper, "/");
+        history.root = `/${history.root}/`.replace(rootStripper, "/");
 
         if (oldIE && history._wantsHashChange) {
             history.iframe = $('<iframe src="javascript:0" tabindex="-1" />').hide().appendTo("body")[0].contentWindow;
@@ -143,8 +147,8 @@ function historyModule() {
         // Determine if we need to change the base url, for a pushState link
         // opened by a non-pushState browser.
         history.fragment = fragment;
-        var loc = history.location;
-        var atRoot = loc.pathname.replace(/[^\/]$/, "$&/") === history.root;
+        const loc = history.location;
+        const atRoot = loc.pathname.replace(/[^\/]$/, "$&/") === history.root;
 
         // Transition from hashChange to pushState or vice versa if both are requested.
         if (history._wantsHashChange && history._wantsPushState) {
@@ -152,13 +156,14 @@ function historyModule() {
             // browser, but we're currently in a browser that doesn't support it...
             if (!history._hasPushState && !atRoot) {
                 history.fragment = history.getFragment(null, true);
-                history.location.replace(history.root + history.location.search + "#" + history.fragment);
+                history.location.replace(`${history.root + history.location.search}#${history.fragment}`);
                 // Return immediately as browser will do redirect to new url
                 return true;
+            }
 
-                // Or if we've started out with a hash-based route, but we're currently
-                // in a browser where it could be `pushState`-based instead...
-            } else if (history._hasPushState && atRoot && loc.hash) {
+            // Or if we've started out with a hash-based route, but we're currently
+            // in a browser where it could be `pushState`-based instead...
+            if (history._hasPushState && atRoot && loc.hash) {
                 this.fragment = history.getHash().replace(routeStripper, "");
                 this.history.replaceState({}, document.title, history.root + history.fragment + loc.search);
             }
@@ -185,8 +190,8 @@ function historyModule() {
      * @return {boolean} Returns true/false from loading the url.
      */
     history.checkUrl = function () {
-        var current = history.getFragment();
-        var currentIsFragment = decodeURIComponent(current) === decodeURIComponent(history.fragment);
+        let current = history.getFragment();
+        const currentIsFragment = decodeURIComponent(current) === decodeURIComponent(history.fragment);
 
         if (currentIsFragment && history.iframe) {
             current = history.getFragment(history.getHash(history.iframe));
@@ -209,7 +214,8 @@ function historyModule() {
      * @return {boolean} Returns true/false from the route handler.
      */
     history.loadUrl = function (fragmentOverride) {
-        var fragment = (history.fragment = history.getFragment(fragmentOverride));
+        // eslint-disable-next-line no-multi-assign
+        const fragment = (history.fragment = history.getFragment(fragmentOverride));
 
         return history.options.routeHandler ? history.options.routeHandler(fragment) : false;
     };
@@ -249,7 +255,7 @@ function historyModule() {
 
         history.fragment = fragment;
 
-        var url = history.root + fragment;
+        let url = history.root + fragment;
 
         // Don't include a trailing slash on the root.
         if (fragment === "" && url !== "/") {
@@ -330,3 +336,5 @@ function historyModule() {
 
     return history;
 }
+
+export default new HistoryModule();

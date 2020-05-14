@@ -1,7 +1,8 @@
-const { CleanWebpackPlugin } = require("clean-webpack-plugin");
-const HtmlWebpackPlugin = require("html-webpack-plugin");
 const path = require("path");
 const webpack = require("webpack");
+const { CleanWebpackPlugin } = require("clean-webpack-plugin");
+const HtmlWebpackPlugin = require("html-webpack-plugin");
+const ExtractCssChunks = require("extract-css-chunks-webpack-plugin");
 
 const DEBUG = !process.argv.production;
 const GLOBALS = {
@@ -36,7 +37,7 @@ module.exports = {
                                 {
                                     useBuiltIns: "usage",
                                     corejs: 3,
-                                    /* targets: [
+                                    targets: [
                                         "Chrome >= 66",
                                         "Firefox >= 52",
                                         "Explorer >= 10",
@@ -44,7 +45,7 @@ module.exports = {
                                         "Edge >= 16",
                                         "iOS >= 10",
                                         "ChromeAndroid  >= 66",
-                                    ], */
+                                    ],
                                 },
                             ],
                         ],
@@ -58,9 +59,13 @@ module.exports = {
                     esModule: true,
                 },
             },
-            {
+            /* {
                 test: /\.css$/,
                 use: ["style-loader", "css-loader"],
+            }, */
+            {
+                test: /\.css$/i,
+                use: [ExtractCssChunks.loader, "css-loader"],
             },
             {
                 test: /\.(png|woff|woff2|eot|ttf|svg)$/,
@@ -98,10 +103,14 @@ module.exports = {
             jQuery: "jquery",
             $: "jquery",
         }),
-        new HtmlWebpackPlugin({ template: "./src/index.html" }),
+        new HtmlWebpackPlugin({
+            template: "./src/index.html",
+            favicon: "./src/img/favicon.ico",
+        }),
         new webpack.DefinePlugin(GLOBALS),
         new webpack.optimize.OccurrenceOrderPlugin(),
         new CleanWebpackPlugin(),
+        new ExtractCssChunks(),
     ].concat(
         DEBUG
             ? []

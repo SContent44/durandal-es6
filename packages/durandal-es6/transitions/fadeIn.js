@@ -1,3 +1,4 @@
+/* eslint-disable func-names */
 import system from "../core/system";
 import helper from "./transitionHelper";
 
@@ -6,7 +7,7 @@ const settings = {
     outAnimation: "fadeOut",
 };
 
-const fadeIn = (context) => {
+const fadeIn = function (context) {
     system.extend(context, settings);
     return helper.create(context);
 };

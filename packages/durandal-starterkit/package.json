@@ -4,6 +4,7 @@
     "description": "Default starter website that demonstrates behaviour of using Durandal for building a Single Page Application (with Webpack).",
     "main": "index.html",
     "scripts": {
+        "lint": "eslint ./** --config ../../.eslintrc.js --ext .js",
         "serve": "webpack-dev-server -d",
         "build": "webpack --prod",
         "webpack-stats": "webpack --profile --json > stats.json",
@@ -17,15 +18,7 @@
     ],
     "author": "Simon Buckley",
     "license": "ISC",
-    "dependencies": {},
-    "browserslist": [
-        "Chrome >= 66",
-        "Firefox 41",
-        "Firefox >= 52",
-        "Explorer >= 10",
-        "Safari >= 10",
-        "Edge >= 16",
-        "iOS >= 10",
-        "ChromeAndroid  >= 66"
-    ]
+    "dependencies": {
+        "bootstrap": "^3.4.1"
+    }
 }

@@ -1,6 +1,16 @@
+/* eslint-disable eqeqeq */
+/* eslint-disable no-cond-assign */
+/* eslint-disable prefer-rest-params */
+/* eslint-disable no-param-reassign */
+/* eslint-disable no-use-before-define */
+/* eslint-disable no-continue */
+/* eslint-disable no-restricted-syntax */
+/* eslint-disable no-underscore-dangle */
+/* eslint-disable func-names */
+/* eslint-disable no-shadow */
+import ko from "knockout";
 import system from "../core/system";
 import binder from "../core/binder";
-import ko from "knockout";
 
 /**
  * Enables automatic observability of plain javascript object for ES5 compatible browsers. Also, converts promise properties into observables that are updated when the promise resolves.
@@ -9,29 +19,27 @@ import ko from "knockout";
  * @requires binder
  * @requires knockout
  */
-export default new observableModule();
-
-function observableModule() {
-    var observableModule,
-        toString = Object.prototype.toString,
-        nonObservableTypes = [
-            "[object Function]",
-            "[object String]",
-            "[object Boolean]",
-            "[object Number]",
-            "[object Date]",
-            "[object RegExp]",
-        ],
-        observableArrayMethods = ["remove", "removeAll", "destroy", "destroyAll", "replace"],
-        arrayMethods = ["pop", "reverse", "sort", "shift", "slice"],
-        additiveArrayFunctions = ["push", "unshift"],
-        es5Functions = ["filter", "map", "reduce", "reduceRight", "forEach", "every", "some"],
-        arrayProto = Array.prototype,
-        observableArrayFunctions = ko.observableArray.fn,
-        logConversion = false,
-        changeDetectionMethod = undefined,
-        skipPromises = false,
-        shouldIgnorePropertyName;
+function ObservableModule() {
+    let observableModule;
+    const { toString } = Object.prototype;
+    const nonObservableTypes = [
+        "[object Function]",
+        "[object String]",
+        "[object Boolean]",
+        "[object Number]",
+        "[object Date]",
+        "[object RegExp]",
+    ];
+    const observableArrayMethods = ["remove", "removeAll", "destroy", "destroyAll", "replace"];
+    const arrayMethods = ["pop", "reverse", "sort", "shift", "slice"];
+    const additiveArrayFunctions = ["push", "unshift"];
+    const es5Functions = ["filter", "map", "reduce", "reduceRight", "forEach", "every", "some"];
+    const arrayProto = Array.prototype;
+    const observableArrayFunctions = ko.observableArray.fn;
+    let logConversion = false;
+    let changeDetectionMethod;
+    let skipPromises = false;
+    let shouldIgnorePropertyName;
 
     /**
      * You can call observable(obj, propertyName) to get the observable function for the specified property on the object.
@@ -39,12 +47,12 @@ function observableModule() {
      */
 
     if (!("getPropertyDescriptor" in Object)) {
-        var getOwnPropertyDescriptor = Object.getOwnPropertyDescriptor;
-        var getPrototypeOf = Object.getPrototypeOf;
+        const { getOwnPropertyDescriptor } = Object;
+        const { getPrototypeOf } = Object;
 
-        Object["getPropertyDescriptor"] = function (o, name) {
-            var proto = o,
-                descriptor;
+        Object.getPropertyDescriptor = function (o, name) {
+            let proto = o;
+            let descriptor;
 
             while (proto && !(descriptor = getOwnPropertyDescriptor(proto, name))) {
                 proto = getPrototypeOf(proto);
@@ -55,7 +63,7 @@ function observableModule() {
     }
 
     function defaultShouldIgnorePropertyName(propertyName) {
-        var first = propertyName[0];
+        const first = propertyName[0];
         return first === "_" || first === "$" || (changeDetectionMethod && propertyName === changeDetectionMethod);
     }
 
@@ -68,18 +76,19 @@ function observableModule() {
             return false;
         }
 
-        var type = toString.call(value);
+        const type = toString.call(value);
 
         return nonObservableTypes.indexOf(type) == -1 && !(value === true || value === false);
     }
 
     function createLookup(obj) {
-        var value = {};
+        const value = {};
 
         Object.defineProperty(obj, "__observable__", {
             enumerable: false,
             configurable: false,
             writable: false,
+            // eslint-disable-next-line object-shorthand
             value: value,
         });
 
@@ -87,8 +96,8 @@ function observableModule() {
     }
 
     function makeObservableArray(original, observable, hasChanged) {
-        var lookup = original.__observable__,
-            notify = true;
+        let lookup = original.__observable__;
+        let notify = true;
 
         if (lookup && lookup.__full__) {
             return;
@@ -106,7 +115,7 @@ function observableModule() {
         observableArrayMethods.forEach(function (methodName) {
             original[methodName] = function () {
                 notify = false;
-                var methodCallResult = observableArrayFunctions[methodName].apply(observable, arguments);
+                const methodCallResult = observableArrayFunctions[methodName].apply(observable, arguments);
                 notify = true;
                 return methodCallResult;
             };
@@ -118,7 +127,7 @@ function observableModule() {
                     observable.valueWillMutate();
                 }
 
-                var methodCallResult = arrayProto[methodName].apply(original, arguments);
+                const methodCallResult = arrayProto[methodName].apply(original, arguments);
 
                 if (notify) {
                     observable.valueHasMutated();
@@ -130,7 +139,7 @@ function observableModule() {
 
         additiveArrayFunctions.forEach(function (methodName) {
             original[methodName] = function () {
-                for (var i = 0, len = arguments.length; i < len; i++) {
+                for (let i = 0, len = arguments.length; i < len; i += 1) {
                     convertObject(arguments[i], hasChanged);
                 }
 
@@ -138,7 +147,7 @@ function observableModule() {
                     observable.valueWillMutate();
                 }
 
-                var methodCallResult = arrayProto[methodName].apply(original, arguments);
+                const methodCallResult = arrayProto[methodName].apply(original, arguments);
 
                 if (notify) {
                     observable.valueHasMutated();
@@ -148,8 +157,8 @@ function observableModule() {
             };
         });
 
-        original["splice"] = function () {
-            for (var i = 2, len = arguments.length; i < len; i++) {
+        original.splice = function () {
+            for (let i = 2, len = arguments.length; i < len; i += 1) {
                 convertObject(arguments[i], hasChanged);
             }
 
@@ -157,7 +166,7 @@ function observableModule() {
                 observable.valueWillMutate();
             }
 
-            var methodCallResult = arrayProto["splice"].apply(original, arguments);
+            const methodCallResult = arrayProto.splice.apply(original, arguments);
 
             if (notify) {
                 observable.valueHasMutated();
@@ -166,7 +175,7 @@ function observableModule() {
             return methodCallResult;
         };
 
-        for (var i = 0, len = original.length; i < len; i++) {
+        for (let i = 0, len = original.length; i < len; i += 1) {
             convertObject(original[i], hasChanged);
         }
     }
@@ -177,7 +186,8 @@ function observableModule() {
      * @param {object} obj The target object to convert.
      */
     function convertObject(obj, hasChanged) {
-        var lookup, value;
+        let lookup;
+        let value;
 
         if (changeDetectionMethod) {
             if (obj && obj[changeDetectionMethod]) {
@@ -204,16 +214,16 @@ function observableModule() {
         lookup.__full__ = true;
 
         if (system.isArray(obj)) {
-            var observable = ko.observableArray(obj);
+            const observable = ko.observableArray(obj);
             makeObservableArray(obj, observable, hasChanged);
         } else {
-            for (var propertyName in obj) {
+            for (const propertyName in obj) {
                 if (shouldIgnorePropertyName(propertyName)) {
                     continue;
                 }
 
                 if (!lookup[propertyName]) {
-                    var descriptor = Object.getPropertyDescriptor(obj, propertyName);
+                    const descriptor = Object.getPropertyDescriptor(obj, propertyName);
                     if (descriptor && (descriptor.get || descriptor.set)) {
                         defineProperty(obj, propertyName, {
                             get: descriptor.get,
@@ -236,10 +246,10 @@ function observableModule() {
     }
 
     function innerSetter(observable, newValue, isArray) {
-        //if this was originally an observableArray, then always check to see if we need to add/replace the array methods (if newValue was an entirely new array)
+        // if this was originally an observableArray, then always check to see if we need to add/replace the array methods (if newValue was an entirely new array)
         if (isArray) {
             if (!newValue) {
-                //don't allow null, force to an empty array
+                // don't allow null, force to an empty array
                 newValue = [];
                 makeObservableArray(newValue, observable);
             } else if (!newValue.destroyAll) {
@@ -249,7 +259,7 @@ function observableModule() {
             convertObject(newValue);
         }
 
-        //call the update to the observable after the array as been updated.
+        // call the update to the observable after the array as been updated.
         observable(newValue);
     }
 
@@ -262,9 +272,9 @@ function observableModule() {
      * @return {KnockoutObservable} The underlying observable.
      */
     function convertProperty(obj, propertyName, original, hasChanged) {
-        var observable,
-            isArray,
-            lookup = obj.__observable__ || createLookup(obj);
+        let observable;
+        let isArray;
+        const lookup = obj.__observable__ || createLookup(obj);
 
         if (original === undefined) {
             original = obj[propertyName];
@@ -285,7 +295,7 @@ function observableModule() {
 
             original.then(function (result) {
                 if (system.isArray(result)) {
-                    var oa = ko.observableArray(result);
+                    const oa = ko.observableArray(result);
                     makeObservableArray(result, oa, hasChanged);
                     result = oa;
                 }
@@ -345,8 +355,7 @@ function observableModule() {
      * @return {KnockoutObservable} The underlying computed observable.
      */
     function defineProperty(obj, propertyName, evaluatorOrOptions) {
-        var computedOptions = { owner: obj, deferEvaluation: true },
-            computed;
+        const computedOptions = { owner: obj, deferEvaluation: true };
 
         if (typeof evaluatorOrOptions === "function") {
             computedOptions.read = evaluatorOrOptions;
@@ -367,7 +376,7 @@ function observableModule() {
             computedOptions.write = evaluatorOrOptions.set || evaluatorOrOptions.write;
         }
 
-        computed = ko.computed(computedOptions);
+        const computed = ko.computed(computedOptions);
 
         Object.defineProperty(obj, propertyName, {
             configurable: true,
@@ -378,13 +387,17 @@ function observableModule() {
         return convertProperty(obj, propertyName, computed);
     }
 
+    // eslint-disable-next-line prefer-const
     observableModule = function (obj, propertyName) {
-        var lookup, observable, value;
+        let lookup;
+        let observable;
+        let value;
 
         if (!obj) {
             return null;
         }
 
+        // eslint-disable-next-line prefer-const
         lookup = obj.__observable__;
         if (lookup) {
             observable = lookup[propertyName];
@@ -393,6 +406,7 @@ function observableModule() {
             }
         }
 
+        // eslint-disable-next-line prefer-const
         value = obj[propertyName];
 
         if (ko.isObservable(value)) {
@@ -411,7 +425,7 @@ function observableModule() {
      * @method install
      */
     observableModule.install = function (options) {
-        var original = binder.binding;
+        const original = binder.binding;
 
         binder.binding = function (obj, view, instruction) {
             if (instruction.applyBindings && !instruction.skipConversion) {
@@ -432,3 +446,5 @@ function observableModule() {
 
     return observableModule;
 }
+
+export default new ObservableModule();

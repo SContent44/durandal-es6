@@ -1,4 +1,5 @@
-﻿import $ from "jquery";
+﻿/* eslint-disable func-names */
+import $ from "jquery";
 import system from "./system";
 import composition from "./composition";
 import Events from "./events";
@@ -18,7 +19,7 @@ function AppModule() {
 
     function loadPlugins() {
         return system
-            .defer((dfd) => {
+            .defer(function (dfd) {
                 if (allPluginIds.length === 0) {
                     dfd.resolve();
                     return;
@@ -27,7 +28,7 @@ function AppModule() {
                 const pluginsToInstall = [];
 
                 for (let i = 0; i < allPluginIds.length; i += 1) {
-                    const pluginPromise = system.acquire(allPluginIds[i]).then((loaded) => {
+                    const pluginPromise = system.acquire(allPluginIds[i]).then(function (loaded) {
                         const module = system.resolveObject(loaded);
 
                         if (module.install) {
@@ -46,10 +47,10 @@ function AppModule() {
                 }
 
                 Promise.all(pluginsToInstall).then(
-                    () => {
+                    function () {
                         dfd.resolve();
                     },
-                    (err) => {
+                    function (err) {
                         system.error(`Failed to load plugin(s). Details: ${err.message}`);
                     }
                 );
@@ -141,9 +142,9 @@ function AppModule() {
             }
 
             return system
-                .defer((dfd) => {
-                    $(() => {
-                        loadPlugins().then(() => {
+                .defer(function (dfd) {
+                    $(function () {
+                        loadPlugins().then(function () {
                             dfd.resolve();
                             system.log("Application:Started");
                         });
@@ -187,12 +188,12 @@ function AppModule() {
                             const result = settings.model.canActivate();
                             if (result && result.then) {
                                 result
-                                    .then((actualResult) => {
+                                    .then(function (actualResult) {
                                         if (actualResult) {
                                             composition.compose(hostElement, settings);
                                         }
                                     })
-                                    .fail((err) => {
+                                    .fail(function (err) {
                                         system.error(err);
                                     });
                             } else if (result) {
@@ -213,11 +214,11 @@ function AppModule() {
             if (system.isString(settings.model)) {
                 system
                     .acquire(settings.model)
-                    .then((module) => {
+                    .then(function (module) {
                         settings.model = system.resolveObject(module);
                         finishComposition();
                     })
-                    .fail((err) => {
+                    .fail(function (err) {
                         system.error(`Failed to load root module (${settings.model}). Details: ${err.message}`);
                     });
             } else {

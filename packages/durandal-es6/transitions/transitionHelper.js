@@ -1,3 +1,4 @@
+/* eslint-disable func-names */
 /* eslint-disable no-use-before-define */
 import $ from "jquery";
 import "animate.css/animate.compat.css";
@@ -93,7 +94,7 @@ function doTrans(settings) {
     let $newView = $(newChild).removeClass(outAn); // just need to remove outAn here, keeping the animated class so we don't get a "flash"
 
     return system
-        .defer((dfd) => {
+        .defer(function (dfd) {
             if (newChild) {
                 $newView = $(newChild);
                 if (settings.activeView) {

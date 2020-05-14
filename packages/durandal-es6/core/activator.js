@@ -1,4 +1,5 @@
-﻿import ko from "knockout";
+﻿/* eslint-disable func-names */
+import ko from "knockout";
 import system from "./system";
 
 /**
@@ -78,11 +79,11 @@ function ActivatorModule() {
 
             if (result && result.then) {
                 result.then(
-                    () => {
+                    function () {
                         settings.afterDeactivate(item, close, setter);
                         dfd.resolve(true);
                     },
-                    (reason) => {
+                    function (reason) {
                         if (reason) {
                             system.log(reason);
                         }
@@ -120,11 +121,11 @@ function ActivatorModule() {
 
         if (result && result.then) {
             result.then(
-                () => {
+                function () {
                     activeItem(newItem);
                     callback(true);
                 },
-                (reason) => {
+                function (reason) {
                     if (reason) {
                         system.log(`ERROR: ${reason.message}`, reason);
                     }
@@ -144,7 +145,7 @@ function ActivatorModule() {
         settings.lifecycleData = null;
 
         return system
-            .defer((dfd) => {
+            .defer(function (dfd) {
                 function continueCanDeactivate() {
                     if (item && item.canDeactivate && options.canDeactivate) {
                         let resultOrPromise;
@@ -158,11 +159,11 @@ function ActivatorModule() {
 
                         if (resultOrPromise.then) {
                             resultOrPromise.then(
-                                (result) => {
+                                function (result) {
                                     settings.lifecycleData = result;
                                     dfd.resolve(settings.interpretResponse(result));
                                 },
-                                (reason) => {
+                                function (reason) {
                                     if (reason) {
                                         system.log(`ERROR: ${reason.message}`, reason);
                                     }
@@ -181,7 +182,7 @@ function ActivatorModule() {
 
                 const childActivator = settings.findChildActivator(item);
                 if (childActivator) {
-                    childActivator.canDeactivate().then((result) => {
+                    childActivator.canDeactivate().then(function (result) {
                         if (result) {
                             continueCanDeactivate();
                         } else {
@@ -200,7 +201,7 @@ function ActivatorModule() {
         settings.lifecycleData = null;
 
         return system
-            .defer((dfd) => {
+            .defer(function (dfd) {
                 if (settings.areSameItem(activeItem(), newItem, activeData, newActivationData)) {
                     dfd.resolve(true);
                     return;
@@ -218,11 +219,11 @@ function ActivatorModule() {
 
                     if (resultOrPromise.then) {
                         resultOrPromise.then(
-                            (result) => {
+                            function (result) {
                                 settings.lifecycleData = result;
                                 dfd.resolve(settings.interpretResponse(result));
                             },
-                            (reason) => {
+                            function (reason) {
                                 if (reason) {
                                     system.log(`ERROR: ${reason.message}`, reason);
                                 }
@@ -278,7 +279,7 @@ function ActivatorModule() {
          */
         computed.isActivating = ko.observable(false);
 
-        computed.forceActiveItem = (item) => {
+        computed.forceActiveItem = function (item) {
             activeItem(item);
         };
 
@@ -290,7 +291,7 @@ function ActivatorModule() {
          * @param {object} options Options for controlling the activation process.
          * @return {promise}
          */
-        computed.canDeactivateItem = (item, close, options) => {
+        computed.canDeactivateItem = function (item, close, options) {
             return canDeactivateItem(item, close, settings, options);
         };
 
@@ -301,10 +302,10 @@ function ActivatorModule() {
          * @param {boolean} close Whether or not to close the item.
          * @return {promise}
          */
-        computed.deactivateItem = (item, close) => {
+        computed.deactivateItem = function (item, close) {
             return system
-                .defer((dfd) => {
-                    computed.canDeactivateItem(item, close).then((canDeactivate) => {
+                .defer(function (dfd) {
+                    computed.canDeactivateItem(item, close).then(function (canDeactivate) {
                         if (canDeactivate) {
                             deactivate(item, close, settings, dfd, activeItem);
                         } else {
@@ -323,7 +324,7 @@ function ActivatorModule() {
          * @param {object} activationData Data associated with the activation.
          * @return {promise}
          */
-        computed.canActivateItem = (newItem, activationData) => {
+        computed.canActivateItem = function (newItem, activationData) {
             return canActivateItem(newItem, activeItem, settings, activeData, activationData);
         };
 
@@ -335,12 +336,12 @@ function ActivatorModule() {
          * @param {object} options Options for controlling the activation process.
          * @return {promise}
          */
-        computed.activateItem = (newItem, newActivationData, options) => {
+        computed.activateItem = function (newItem, newActivationData, options) {
             const { viaSetter } = computed;
             computed.viaSetter = false;
 
             return system
-                .defer((dfd) => {
+                .defer(function (dfd) {
                     if (computed.isActivating()) {
                         dfd.resolve(false);
                         return;
@@ -357,22 +358,22 @@ function ActivatorModule() {
 
                     computed
                         .canDeactivateItem(currentItem, settings.closeOnDeactivate, options)
-                        .then((canDeactivate) => {
+                        .then(function (canDeactivate) {
                             if (canDeactivate) {
-                                computed.canActivateItem(newItem, newActivationData).then((canActivate) => {
+                                computed.canActivateItem(newItem, newActivationData).then(function (canActivate) {
                                     if (canActivate) {
                                         system
-                                            .defer((dfd2) => {
+                                            .defer(function (dfd2) {
                                                 deactivate(currentItem, settings.closeOnDeactivate, settings, dfd2);
                                             })
                                             .promise()
-                                            .then(() => {
+                                            .then(function () {
                                                 // eslint-disable-next-line no-param-reassign
                                                 newItem = settings.beforeActivate(newItem, newActivationData);
                                                 activate(
                                                     newItem,
                                                     activeItem,
-                                                    (result) => {
+                                                    function (result) {
                                                         activeData = newActivationData;
                                                         computed.isActivating(false);
                                                         dfd.resolve(result);
@@ -407,7 +408,7 @@ function ActivatorModule() {
          * @method canActivate
          * @return {promise}
          */
-        computed.canActivate = () => {
+        computed.canActivate = function () {
             let toCheck;
 
             if (initialActiveItem) {
@@ -426,7 +427,7 @@ function ActivatorModule() {
          * @method activate
          * @return {promise}
          */
-        computed.activate = () => {
+        computed.activate = function () {
             let toActivate;
 
             if (initialActiveItem) {
@@ -445,7 +446,7 @@ function ActivatorModule() {
          * @method canDeactivate
          * @return {promise}
          */
-        computed.canDeactivate = (close) => {
+        computed.canDeactivate = function (close) {
             return computed.canDeactivateItem(computed(), close);
         };
 
@@ -454,28 +455,28 @@ function ActivatorModule() {
          * @method deactivate
          * @return {promise}
          */
-        computed.deactivate = (close) => {
+        computed.deactivate = function (close) {
             return computed.deactivateItem(computed(), close);
         };
 
-        computed.includeIn = (includeIn) => {
+        computed.includeIn = function (includeIn) {
             // eslint-disable-next-line no-param-reassign
-            includeIn.canActivate = () => {
+            includeIn.canActivate = function () {
                 return computed.canActivate();
             };
 
             // eslint-disable-next-line no-param-reassign
-            includeIn.activate = () => {
+            includeIn.activate = function () {
                 return computed.activate();
             };
 
             // eslint-disable-next-line no-param-reassign
-            includeIn.canDeactivate = (close) => {
+            includeIn.canDeactivate = function (close) {
                 return computed.canDeactivate(close);
             };
 
             // eslint-disable-next-line no-param-reassign
-            includeIn.deactivate = (close) => {
+            includeIn.deactivate = function (close) {
                 return computed.deactivate(close);
             };
         };
@@ -486,10 +487,10 @@ function ActivatorModule() {
             computed.activate();
         }
 
-        computed.forItems = (items) => {
+        computed.forItems = function (items) {
             settings.closeOnDeactivate = false;
 
-            settings.determineNextItemToActivate = (list, lastIndex) => {
+            settings.determineNextItemToActivate = function (list, lastIndex) {
                 const toRemoveAt = lastIndex - 1;
 
                 // eslint-disable-next-line eqeqeq
@@ -504,7 +505,7 @@ function ActivatorModule() {
                 return null;
             };
 
-            settings.beforeActivate = (receivedNewItem) => {
+            settings.beforeActivate = function (receivedNewItem) {
                 const currentItem = computed();
                 let newItem = receivedNewItem;
 
@@ -524,17 +525,17 @@ function ActivatorModule() {
                 return newItem;
             };
 
-            settings.afterDeactivate = (oldItem, close) => {
+            settings.afterDeactivate = function (oldItem, close) {
                 if (close) {
                     items.remove(oldItem);
                 }
             };
 
             const originalCanDeactivate = computed.canDeactivate;
-            computed.canDeactivate = (close) => {
+            computed.canDeactivate = function (close) {
                 if (close) {
                     return system
-                        .defer((dfd) => {
+                        .defer(function (dfd) {
                             const list = items();
                             const results = [];
 
@@ -550,7 +551,7 @@ function ActivatorModule() {
                             }
 
                             for (let i = 0; i < list.length; i += 1) {
-                                computed.canDeactivateItem(list[i], close).then((result) => {
+                                computed.canDeactivateItem(list[i], close).then(function (result) {
                                     results.push(result);
                                     // eslint-disable-next-line eqeqeq
                                     if (results.length == list.length) {
@@ -565,17 +566,17 @@ function ActivatorModule() {
             };
 
             const originalDeactivate = computed.deactivate;
-            computed.deactivate = (close) => {
+            computed.deactivate = function (close) {
                 if (close) {
                     return system
-                        .defer((dfd) => {
+                        .defer(function (dfd) {
                             const list = items();
                             let results = 0;
                             const listLength = list.length;
 
                             function doDeactivate(item) {
-                                setTimeout(() => {
-                                    computed.deactivateItem(item, close).then(() => {
+                                setTimeout(function () {
+                                    computed.deactivateItem(item, close).then(function () {
                                         results += 1;
                                         items.remove(item);
                                         // eslint-disable-next-line eqeqeq

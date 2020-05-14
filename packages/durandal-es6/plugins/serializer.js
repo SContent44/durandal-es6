@@ -1,13 +1,15 @@
-﻿import system from "../core/system";
+﻿/* eslint-disable prefer-destructuring */
+/* eslint-disable prefer-rest-params */
+/* eslint-disable func-names */
+/* eslint-disable no-param-reassign */
+import system from "../core/system";
 
 /**
  * Serializes and deserializes data to/from JSON.
  * @module serializer
  * @requires system
  */
-export default new serializerModule();
-
-function serializerModule() {
+function SerializerModule() {
     /**
      * @class SerializerModule
      * @static
@@ -32,9 +34,9 @@ function serializerModule() {
          * @param {object} value The object value to check.
          * @return {object} The value to serialize.
          */
-        replacer: function (key, value) {
+        replacer(key, value) {
             if (key) {
-                var first = key[0];
+                const first = key[0];
                 if (first === "_" || first === "$") {
                     return undefined;
                 }
@@ -49,7 +51,7 @@ function serializerModule() {
          * @param {object} [settings] Settings can specify a replacer or space to override the serializer defaults.
          * @return {string} The JSON string.
          */
-        serialize: function (object, settings) {
+        serialize(object, settings) {
             settings = settings === undefined ? {} : settings;
 
             if (system.isString(settings) || system.isNumber(settings)) {
@@ -64,7 +66,7 @@ function serializerModule() {
          * @param {object} object The object to serialize.
          * @return {string} The type.
          */
-        getTypeId: function (object) {
+        getTypeId(object) {
             if (object) {
                 return object[this.typeAttribute];
             }
@@ -82,11 +84,12 @@ function serializerModule() {
          * @param {string} typeId The type id.
          * @param {function} constructor The constructor.
          */
-        registerType: function () {
-            var first = arguments[0];
+        registerType() {
+            const first = arguments[0];
 
+            // eslint-disable-next-line eqeqeq
             if (arguments.length == 1) {
-                var id = first[this.typeAttribute] || system.getModuleId(first);
+                const id = first[this.typeAttribute] || system.getModuleId(first);
                 this.typeMap[id] = first;
             } else {
                 this.typeMap[first] = arguments[1];
@@ -101,15 +104,16 @@ function serializerModule() {
          * @param {object} getConstructor A custom function used to get the constructor function associated with a type id.
          * @return {object} The value.
          */
-        reviver: function (key, value, getTypeId, getConstructor) {
-            var typeId = getTypeId(value);
+        reviver(key, value, getTypeId, getConstructor) {
+            const typeId = getTypeId(value);
             if (typeId) {
-                var ctor = getConstructor(typeId);
+                const ctor = getConstructor(typeId);
                 if (ctor) {
                     if (ctor.fromJSON) {
                         return ctor.fromJSON(value);
                     }
 
+                    // eslint-disable-next-line new-cap
                     return new ctor(value);
                 }
             }
@@ -123,21 +127,21 @@ function serializerModule() {
          * @param {object} [settings] Settings can specify a reviver, getTypeId function or getConstructor function.
          * @return {object} The deserialized object.
          */
-        deserialize: function (text, settings) {
-            var that = this;
+        deserialize(text, settings) {
+            const that = this;
             settings = settings || {};
 
-            var getTypeId =
+            const getTypeId =
                 settings.getTypeId ||
                 function (object) {
                     return that.getTypeId(object);
                 };
-            var getConstructor =
+            const getConstructor =
                 settings.getConstructor ||
                 function (id) {
                     return that.typeMap[id];
                 };
-            var reviver =
+            const reviver =
                 settings.reviver ||
                 function (key, value) {
                     return that.reviver(key, value, getTypeId, getConstructor);
@@ -152,8 +156,10 @@ function serializerModule() {
          * @param {object} [settings] Settings can specify any of the options allowed by the serialize or deserialize methods.
          * @return {object} The new clone.
          */
-        clone: function (obj, settings) {
+        clone(obj, settings) {
             return this.deserialize(this.serialize(obj, settings), settings);
         },
     };
 }
+
+export default new SerializerModule();

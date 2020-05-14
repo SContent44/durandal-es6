@@ -1,4 +1,6 @@
-﻿/* eslint-disable no-param-reassign */
+﻿/* eslint-disable func-names */
+/* eslint-disable no-underscore-dangle */
+/* eslint-disable no-param-reassign */
 import ko from "knockout";
 import system from "../core/system";
 import composition from "../core/composition";
@@ -36,16 +38,18 @@ function WidgetModule() {
      */
     const widget = {
         getSettings(valueAccessor) {
-            var settings = ko.utils.unwrapObservable(valueAccessor()) || {};
+            const settings = ko.utils.unwrapObservable(valueAccessor()) || {};
 
             if (system.isString(settings)) {
                 return { kind: settings };
             }
 
-            for (let attrName in settings) {
-                if (ko.utils.arrayIndexOf(bindableSettings, attrName) != -1) {
+            // eslint-disable-next-line no-restricted-syntax
+            for (const attrName in settings) {
+                if (ko.utils.arrayIndexOf(bindableSettings, attrName) !== -1) {
                     settings[attrName] = ko.utils.unwrapObservable(settings[attrName]);
                 } else {
+                    // eslint-disable-next-line no-self-assign
                     settings[attrName] = settings[attrName];
                 }
             }
@@ -60,7 +64,7 @@ function WidgetModule() {
         registerKind(kind) {
             const kindName = kind.name;
 
-            system.acquire(kind).then((resolvedModule) => {
+            system.acquire(kind).then(function (resolvedModule) {
                 kindModuleMaps[kindName] =
                     resolvedModule &&
                     typeof transition === "object" &&
@@ -135,7 +139,7 @@ function WidgetModule() {
          */
         create(element, settings, bindingContext, fromBinding) {
             if (!fromBinding) {
-                settings = widget.getSettings(() => {
+                settings = widget.getSettings(function () {
                     return settings;
                 }, element);
             }
@@ -155,7 +159,7 @@ function WidgetModule() {
             if (config.kinds) {
                 const toRegister = config.kinds;
 
-                for (let i = 0; i < toRegister.length; i++) {
+                for (let i = 0; i < toRegister.length; i += 1) {
                     widget.registerKind(toRegister[i]);
                 }
             }

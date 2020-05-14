@@ -1,3 +1,4 @@
+/* eslint-disable func-names */
 /* eslint-disable eqeqeq */
 /* eslint-disable no-underscore-dangle */
 /* eslint-disable no-param-reassign */
@@ -86,7 +87,7 @@ function CompositionModule() {
             compositionCompleteCallbacks = [];
 
             if (!error) {
-                setTimeout(() => {
+                setTimeout(function () {
                     let i = callBacks.length;
 
                     // eslint-disable-next-line no-plusplus
@@ -126,7 +127,7 @@ function CompositionModule() {
                 }
 
                 if (result && result.then) {
-                    result.then(successCallback, (reason) => {
+                    result.then(successCallback, function (reason) {
                         onError(context, reason, element);
                         successCallback();
                     });
@@ -166,7 +167,7 @@ function CompositionModule() {
                 context.child.setAttribute(activeViewAttributeName, true);
 
                 if (context.composingNewView && context.model && context.model.detached) {
-                    ko.utils.domNodeDisposal.addDisposeCallback(context.child, () => {
+                    ko.utils.domNodeDisposal.addDisposeCallback(context.child, function () {
                         try {
                             context.model.detached(context.child, context.parent, context);
                         } catch (e2) {
@@ -221,7 +222,7 @@ function CompositionModule() {
         const standardParts = composition.getParts(context.child);
 
         // TODO test this behaviour
-        Object.keys(replacementParts).forEach((partId) => {
+        Object.keys(replacementParts).forEach(function (partId) {
             const toReplace = standardParts[partId] || $(`[data-part="${partId}"]`, context.child).get(0);
 
             if (!toReplace) {
@@ -329,12 +330,12 @@ function CompositionModule() {
 
             switch (name) {
                 case "fadeIn":
-                    transition = () => {
+                    transition = function fadeIn() {
                         return import("../transitions/fadeIn");
                     };
                     break;
                 case "entrance":
-                    transition = () => {
+                    transition = function entrance() {
                         return import("../transitions/entrance");
                     };
                     break;
@@ -370,6 +371,7 @@ function CompositionModule() {
 
             initOptionsFactory =
                 initOptionsFactory ||
+                // eslint-disable-next-line func-names
                 function () {
                     return undefined;
                 };
@@ -382,7 +384,7 @@ function CompositionModule() {
                             trigger: ko.observable(null),
                         };
 
-                        composition.current.complete(() => {
+                        composition.current.complete(function () {
                             if (config.init) {
                                 config.init(element, valueAccessor, allBindingsAccessor, viewModel, bindingContext);
                             }
@@ -419,7 +421,7 @@ function CompositionModule() {
             };
 
             // TODO test this behaviour
-            Object.keys(config).forEach((key) => {
+            Object.keys(config).forEach(function (key) {
                 if (key !== "init" && key !== "update") {
                     handler[key] = config[key];
                 }
@@ -488,14 +490,14 @@ function CompositionModule() {
 
                 system
                     .acquire(transitionModule)
-                    .then((transition) => {
+                    .then(function (transition) {
                         transition =
                             transition && typeof transition === "object" && transition.__esModule && transition.default
                                 ? transition.default
                                 : transition;
                         context.transition = transition;
 
-                        transition(context).then(() => {
+                        transition(context).then(function () {
                             if (!context.cacheViews) {
                                 if (!context.child) {
                                     ko.virtualElements.emptyNode(context.parent);
@@ -519,7 +521,7 @@ function CompositionModule() {
                             endComposition(context, element);
                         });
                     })
-                    .fail((err) => {
+                    .fail(function (err) {
                         onError(
                             context,
                             `Failed to load transition (${transitionModuleName}). Details: ${err.message}`,
@@ -571,7 +573,7 @@ function CompositionModule() {
 
             ko.ignoreDependencies(tryActivate, null, [
                 context,
-                () => {
+                function () {
                     if (context.parent.__composition_context == context) {
                         try {
                             delete context.parent.__composition_context;
@@ -602,9 +604,11 @@ function CompositionModule() {
                             if (currentModel != modelToBind) {
                                 if (!context.composingNewView) {
                                     ko.removeNode(child);
-                                    viewEngine.createView(child.getAttribute("data-view")).then((recreatedView) => {
-                                        composition.bindAndShow(recreatedView, element, context, true);
-                                    });
+                                    viewEngine
+                                        .createView(child.getAttribute("data-view"))
+                                        .then(function (recreatedView) {
+                                            composition.bindAndShow(recreatedView, element, context, true);
+                                        });
                                     return;
                                 }
 
@@ -637,6 +641,7 @@ function CompositionModule() {
         defaultStrategy(context) {
             return viewLocator.locateViewForObject(context.model, context.viewElements);
         },
+        // eslint-disable-next-line no-unused-vars
         getSettings(valueAccessor, element) {
             const value = valueAccessor();
             let settings = ko.utils.unwrapObservable(value) || {};
@@ -664,8 +669,8 @@ function CompositionModule() {
             }
 
             // TODO confirm behaviour is as expected
-            Object.keys(settings).forEach((attrName) => {
-                if (ko.utils.arrayIndexOf(bindableSettings, attrName) != -1) {
+            Object.keys(settings).forEach(function (attrName) {
+                if (ko.utils.arrayIndexOf(bindableSettings, attrName) !== -1) {
                     settings[attrName] = ko.utils.unwrapObservable(settings[attrName]);
                 }
             });
@@ -688,7 +693,7 @@ function CompositionModule() {
             return settings;
         },
         executeStrategy(context, element) {
-            context.strategy(context).then((child) => {
+            context.strategy(context).then(function (child) {
                 composition.bindAndShow(child, element, context);
             });
         },
@@ -699,7 +704,7 @@ function CompositionModule() {
             }
 
             if (context.view) {
-                viewLocator.locateView(context.view, context.viewElements).then((child) => {
+                viewLocator.locateView(context.view, context.viewElements).then(function (child) {
                     composition.bindAndShow(child, element, context);
                 });
                 return;
@@ -713,11 +718,11 @@ function CompositionModule() {
             if (system.isString(context.strategy)) {
                 system
                     .acquire(context.strategy)
-                    .then((strategy) => {
+                    .then(function (strategy) {
                         context.strategy = strategy;
                         composition.executeStrategy(context, element);
                     })
-                    .fail((err) => {
+                    .fail(function (err) {
                         onError(
                             context,
                             `Failed to load view strategy (${context.strategy}). Details: ${err.message}`,
@@ -744,18 +749,18 @@ function CompositionModule() {
             compositionCount += 1;
 
             if (!fromBinding) {
-                settings = composition.getSettings(() => {
+                settings = composition.getSettings(function () {
                     return settings;
                 }, element);
             }
 
             if (settings.compositionComplete) {
-                compositionCompleteCallbacks.push(() => {
+                compositionCompleteCallbacks.push(function () {
                     settings.compositionComplete(settings.child, settings.parent, settings);
                 });
             }
 
-            compositionCompleteCallbacks.push(() => {
+            compositionCompleteCallbacks.push(function () {
                 if (settings.composingNewView && settings.model && settings.model.compositionComplete) {
                     settings.model.compositionComplete(settings.child, settings.parent, settings);
                 }
@@ -779,18 +784,18 @@ function CompositionModule() {
                     settings.area = settings.area || "partial";
                     settings.preserveContext = true;
 
-                    viewLocator.locateView(settings.view, settings.area, settings.viewElements).then((child) => {
+                    viewLocator.locateView(settings.view, settings.area, settings.viewElements).then(function (child) {
                         composition.bindAndShow(child, element, settings);
                     });
                 }
             } else if (system.isString(settings.model)) {
                 system
                     .acquire(settings.model)
-                    .then((module) => {
+                    .then(function (module) {
                         settings.model = system.resolveObject(module);
                         composition.inject(settings, element);
                     })
-                    .fail((err) => {
+                    .fail(function (err) {
                         onError(
                             settings,
                             `Failed to load composed module (${settings.model}). Details: ${err.message}`,

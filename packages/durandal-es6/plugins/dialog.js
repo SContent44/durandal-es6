@@ -1,34 +1,38 @@
-﻿import system from "../core/system";
+﻿/* eslint-disable no-multi-assign */
+/* eslint-disable prefer-rest-params */
+/* eslint-disable prefer-spread */
+/* eslint-disable no-underscore-dangle */
+/* eslint-disable no-param-reassign */
+/* eslint-disable func-names */
+import $ from "jquery";
+import ko from "knockout";
+import system from "../core/system";
 import app from "../core/app";
 import composition from "../core/composition";
 import activator from "../core/activator";
 import viewEngine from "../core/viewEngine";
-import $ from "jquery";
-import ko from "knockout";
 
 /**
  * The dialog module enables the display of message boxes, custom modal dialogs and other overlays or slide-out UI abstractions. Dialogs are constructed by the composition system which interacts with a user defined dialog context. The dialog module enforced the activator lifecycle.
+ * @requires jquery
+ * @requires knockout
  * @module dialog
  * @requires system
  * @requires app
  * @requires composition
  * @requires activator
  * @requires viewEngine
- * @requires jquery
- * @requires knockout
  */
-export default new dialogPluginModule();
-
-function dialogPluginModule() {
-    var contexts = {},
-        dialogCount = ko.observable(0),
-        dialog;
+function DialogPluginModule() {
+    const contexts = {};
+    const dialogCount = ko.observable(0);
+    let dialog;
 
     /**
      * Models a message box's message, title and options.
      * @class MessageBox
      */
-    var MessageBox = function (message, title, options, autoclose, settings) {
+    const MessageBox = function (message, title, options, autoclose, settings) {
         this.message = message;
         this.title = title || MessageBox.defaultTitle;
         this.options = options || MessageBox.defaultOptions;
@@ -99,7 +103,7 @@ function dialogPluginModule() {
     };
 
     MessageBox.prototype.getButtonClass = function ($index) {
-        var c = "";
+        let c = "";
         if (this.settings) {
             if (this.settings.buttonClass) {
                 c = this.settings.buttonClass;
@@ -122,7 +126,7 @@ function dialogPluginModule() {
 
     MessageBox.prototype.getClass = function () {
         if (this.settings) {
-            return this.settings["class"];
+            return this.settings.class;
         }
         return "messageBox";
     };
@@ -135,34 +139,39 @@ function dialogPluginModule() {
     };
 
     MessageBox.prototype.getButtonText = function (stringOrObject) {
-        var t = $.type(stringOrObject);
+        const t = $.type(stringOrObject);
         if (t === "string") {
             return stringOrObject;
-        } else if (t === "object") {
+        }
+
+        if (t === "object") {
             if ($.type(stringOrObject.text) === "string") {
                 return stringOrObject.text;
-            } else {
-                system.error("The object for a MessageBox button does not have a text property that is a string.");
-                return null;
             }
+
+            system.error("The object for a MessageBox button does not have a text property that is a string.");
+            return null;
         }
-        system.error("Object for a MessageBox button is not a string or object but " + t + ".");
+
+        system.error(`Object for a MessageBox button is not a string or object but ${t}.`);
         return null;
     };
 
     MessageBox.prototype.getButtonValue = function (stringOrObject) {
-        var t = $.type(stringOrObject);
+        const t = $.type(stringOrObject);
         if (t === "string") {
             return stringOrObject;
-        } else if (t === "object") {
+        }
+        if (t === "object") {
             if ($.type(stringOrObject.value) === "undefined") {
                 system.error("The object for a MessageBox button does not have a value property defined.");
                 return null;
-            } else {
-                return stringOrObject.value;
             }
+
+            return stringOrObject.value;
         }
-        system.error("Object for a MessageBox button is not a string or object but " + t + ".");
+
+        system.error(`Object for a MessageBox button is not a string or object but ${t}.`);
         return null;
     };
 
@@ -198,9 +207,7 @@ function dialogPluginModule() {
                             dfd.resolve(system.resolveObject(module));
                         })
                         .fail(function (err) {
-                            system.error(
-                                "Failed to load dialog module (" + objOrModuleId + "). Details: " + err.message
-                            );
+                            system.error(`Failed to load dialog module (${objOrModuleId}). Details: ${err.message}`);
                         });
                 } else {
                     dfd.resolve(objOrModuleId);
@@ -218,7 +225,7 @@ function dialogPluginModule() {
          * The constructor function used to create message boxes.
          * @property {MessageBox} MessageBox
          */
-        MessageBox: MessageBox,
+        MessageBox,
         /**
          * The css zIndex that the last dialog was displayed at.
          * @property {number} currentZIndex
@@ -229,7 +236,8 @@ function dialogPluginModule() {
          * @method getNextZIndex
          * @return {number} The next usable zIndex.
          */
-        getNextZIndex: function () {
+        getNextZIndex() {
+            // eslint-disable-next-line no-plusplus
             return ++this.currentZIndex;
         },
         /**
@@ -246,7 +254,7 @@ function dialogPluginModule() {
          * @param {string} [name] The name of the context to retrieve.
          * @return {DialogContext} True context.
          */
-        getContext: function (name) {
+        getContext(name) {
             return contexts[name || "default"];
         },
         /**
@@ -255,17 +263,17 @@ function dialogPluginModule() {
          * @param {string} name The name of the context to add.
          * @param {DialogContext} dialogContext The context to add.
          */
-        addContext: function (name, dialogContext) {
+        addContext(name, dialogContext) {
             dialogContext.name = name;
             contexts[name] = dialogContext;
 
-            var helperName = "show" + name.substr(0, 1).toUpperCase() + name.substr(1);
+            const helperName = `show${name.substr(0, 1).toUpperCase()}${name.substr(1)}`;
             this[helperName] = function (obj, activationData) {
                 return this.show(obj, activationData, name);
             };
         },
-        createCompositionSettings: function (obj, dialogContext) {
-            var settings = {
+        createCompositionSettings(obj, dialogContext) {
+            const settings = {
                 model: obj,
                 activate: false,
                 transition: false,
@@ -291,7 +299,7 @@ function dialogPluginModule() {
          * @param {object} obj The object for whom to retrieve the dialog.
          * @return {Dialog} The dialog model.
          */
-        getDialog: function (obj) {
+        getDialog(obj) {
             if (obj) {
                 return obj.__dialog__;
             }
@@ -304,10 +312,10 @@ function dialogPluginModule() {
          * @param {object} obj The object whose dialog should be closed.
          * @param {object} results* The results to return back to the dialog caller after closing.
          */
-        close: function (obj) {
-            var theDialog = this.getDialog(obj);
+        close(obj) {
+            const theDialog = this.getDialog(obj);
             if (theDialog) {
-                var rest = Array.prototype.slice.call(arguments, 1);
+                const rest = Array.prototype.slice.call(arguments, 1);
                 theDialog.close.apply(theDialog, rest);
             }
         },
@@ -319,23 +327,23 @@ function dialogPluginModule() {
          * @param {string} [context] The name of the dialog context to use. Uses the default context if none is specified.
          * @return {Promise} A promise that resolves when the dialog is closed and returns any data passed at the time of closing.
          */
-        show: function (obj, activationData, context) {
-            var that = this;
-            var dialogContext = contexts[context || "default"];
+        show(obj, activationData, context) {
+            const that = this;
+            const dialogContext = contexts[context || "default"];
 
             return system
                 .defer(function (dfd) {
                     ensureDialogInstance(obj).then(function (instance) {
-                        var dialogActivator = activator.create();
+                        const dialogActivator = activator.create();
 
                         dialogActivator.activateItem(instance, activationData).then(function (success) {
                             if (success) {
-                                var theDialog = (instance.__dialog__ = {
+                                const theDialog = (instance.__dialog__ = {
                                     owner: instance,
                                     context: dialogContext,
                                     activator: dialogActivator,
-                                    close: function () {
-                                        var args = arguments;
+                                    close() {
+                                        const args = arguments;
                                         dialogActivator.deactivateItem(instance, true).then(function (closeSuccess) {
                                             if (closeSuccess) {
                                                 dialogCount(dialogCount() - 1);
@@ -377,7 +385,7 @@ function dialogPluginModule() {
          * @param {Object} [settings] Custom settings for this instance of the messsage box, used to change classes and styles.
          * @return {Promise} A promise that resolves when the message box is closed and returns the selected option.
          */
-        showMessage: function (message, title, options, autoclose, settings) {
+        showMessage(message, title, options, autoclose, settings) {
             if (system.isString(this.MessageBox)) {
                 return dialog.show(this.MessageBox, [
                     message,
@@ -395,7 +403,7 @@ function dialogPluginModule() {
          * @method install
          * @param {object} [config] Add a `messageBox` property to supply a custom message box constructor. Add a `messageBoxView` property to supply custom view markup for the built-in message box. You can also use messageBoxViewUrl to specify the view url.
          */
-        install: function (config) {
+        install(config) {
             app.showDialog = function (obj, activationData, context) {
                 return dialog.show(obj, activationData, context);
             };
@@ -437,13 +445,13 @@ function dialogPluginModule() {
          * @method addHost
          * @param {Dialog} theDialog The dialog model.
          */
-        addHost: function (theDialog) {
-            var body = $("body");
-            var blockout = $('<div class="modalBlockout"></div>')
+        addHost(theDialog) {
+            const body = $("body");
+            const blockout = $('<div class="modalBlockout"></div>')
                 .css({ "z-index": dialog.getNextZIndex(), opacity: this.blockoutOpacity })
                 .appendTo(body);
 
-            var host = $('<div class="modalHost"></div>').css({ "z-index": dialog.getNextZIndex() }).appendTo(body);
+            const host = $('<div class="modalHost"></div>').css({ "z-index": dialog.getNextZIndex() }).appendTo(body);
 
             theDialog.host = host.get(0);
             theDialog.blockout = blockout.get(0);
@@ -452,14 +460,14 @@ function dialogPluginModule() {
                 theDialog.oldBodyMarginRight = body.css("margin-right");
                 theDialog.oldInlineMarginRight = body.get(0).style.marginRight;
 
-                var html = $("html");
-                var oldBodyOuterWidth = body.outerWidth(true);
-                var oldScrollTop = html.scrollTop();
+                const html = $("html");
+                const oldBodyOuterWidth = body.outerWidth(true);
+                const oldScrollTop = html.scrollTop();
                 $("html").css("overflow-y", "hidden");
-                var newBodyOuterWidth = $("body").outerWidth(true);
+                const newBodyOuterWidth = $("body").outerWidth(true);
                 body.css(
                     "margin-right",
-                    newBodyOuterWidth - oldBodyOuterWidth + parseInt(theDialog.oldBodyMarginRight, 10) + "px"
+                    `${newBodyOuterWidth - oldBodyOuterWidth + parseInt(theDialog.oldBodyMarginRight, 10)}px`
                 );
                 html.scrollTop(oldScrollTop); // necessary for Firefox
             }
@@ -469,7 +477,7 @@ function dialogPluginModule() {
          * @method removeHost
          * @param {Dialog} theDialog The dialog model.
          */
-        removeHost: function (theDialog) {
+        removeHost(theDialog) {
             $(theDialog.host).css("opacity", 0);
             $(theDialog.blockout).css("opacity", 0);
 
@@ -479,8 +487,8 @@ function dialogPluginModule() {
             }, this.removeDelay);
 
             if (!dialog.isOpen()) {
-                var html = $("html");
-                var oldScrollTop = html.scrollTop(); // necessary for Firefox.
+                const html = $("html");
+                const oldScrollTop = html.scrollTop(); // necessary for Firefox.
                 html.css("overflow-y", "").scrollTop(oldScrollTop);
 
                 if (theDialog.oldInlineMarginRight) {
@@ -490,8 +498,8 @@ function dialogPluginModule() {
                 }
             }
         },
-        attached: function (view) {
-            //To prevent flickering in IE8, we set visibility to hidden first, and later restore it
+        attached(view) {
+            // To prevent flickering in IE8, we set visibility to hidden first, and later restore it
             $(view).css("visibility", "hidden");
         },
         /**
@@ -501,21 +509,21 @@ function dialogPluginModule() {
          * @param {DOMElement} parent The parent view.
          * @param {object} context The composition context.
          */
-        compositionComplete: function (child, parent, context) {
-            var theDialog = dialog.getDialog(context.model);
-            var $child = $(child);
-            var loadables = $child.find("img").filter(function () {
-                //Remove images with known width and height
-                var $this = $(this);
+        compositionComplete(child, parent, context) {
+            const theDialog = dialog.getDialog(context.model);
+            const $child = $(child);
+            const loadables = $child.find("img").filter(function () {
+                // Remove images with known width and height
+                const $this = $(this);
                 return !(this.style.width && this.style.height) && !($this.attr("width") && $this.attr("height"));
             });
 
             $child.data("predefinedWidth", $child.get(0).style.width);
 
-            var setDialogPosition = function (childView, objDialog) {
-                //Setting a short timeout is need in IE8, otherwise we could do this straight away
+            const setDialogPosition = function (childView, objDialog) {
+                // Setting a short timeout is need in IE8, otherwise we could do this straight away
                 setTimeout(function () {
-                    var $childView = $(childView);
+                    const $childView = $(childView);
 
                     objDialog.context.reposition(childView);
 
@@ -542,28 +550,28 @@ function dialogPluginModule() {
          * @method reposition
          * @param {DOMElement} view The dialog view.
          */
-        reposition: function (view) {
-            var $view = $(view),
-                $window = $(window);
+        reposition(view) {
+            const $view = $(view);
+            const $window = $(window);
 
-            //We will clear and then set width for dialogs without width set
+            // We will clear and then set width for dialogs without width set
             if (!$view.data("predefinedWidth")) {
-                $view.css({ width: "" }); //Reset width
+                $view.css({ width: "" }); // Reset width
             }
 
             // clear the height
             $view.css({ height: "" });
 
-            var width = $view.outerWidth(false),
-                height = $view.outerHeight(false),
-                windowHeight = $window.height() - 2 * this.minYMargin, //leave at least some pixels free
-                windowWidth = $window.width() - 2 * this.minXMargin, //leave at least some pixels free
-                constrainedHeight = Math.min(height, windowHeight),
-                constrainedWidth = Math.min(width, windowWidth);
+            const width = $view.outerWidth(false);
+            const height = $view.outerHeight(false);
+            const windowHeight = $window.height() - 2 * this.minYMargin; // leave at least some pixels free
+            const windowWidth = $window.width() - 2 * this.minXMargin; // leave at least some pixels free
+            const constrainedHeight = Math.min(height, windowHeight);
+            const constrainedWidth = Math.min(width, windowWidth);
 
             $view.css({
-                "margin-top": (-constrainedHeight / 2).toString() + "px",
-                "margin-left": (-constrainedWidth / 2).toString() + "px",
+                "margin-top": `${(-constrainedHeight / 2).toString()}px`,
+                "margin-left": `${(-constrainedWidth / 2).toString()}px`,
             });
 
             if (height > windowHeight) {
@@ -581,7 +589,7 @@ function dialogPluginModule() {
                 $view.css("overflow-x", "");
 
                 if (!$view.data("predefinedWidth")) {
-                    //Ensure the correct width after margin-left has been set
+                    // Ensure the correct width after margin-left has been set
                     $view.outerWidth(constrainedWidth);
                 } else {
                     $view.css("width", $view.data("predefinedWidth"));
@@ -592,3 +600,5 @@ function dialogPluginModule() {
 
     return dialog;
 }
+
+export default new DialogPluginModule();

@@ -9,5 +9,8 @@ Todo:
   ☐ Add unit tests for new behaviour
   ✔ Do better error handling then console.error? @done(20-05-09 18:55)
   ✔ Remove the area and elementToSearch from locate view? Remove area not used, fix the cacheViews functionality @done(20-05-11 06:20)
-  ☐ check router hash
   ✔ check out area behaviour we dont use the areapath behaviour so not needed @done(20-05-11 07:02)
+  ☐ Really only using the __moduleId__ name for the routers pub/sub, could just pick name from instruction?
+  ☐ Move webpack config to root level and extend
+  ☐ Configure ESLint to play nicely at command line
+  ✔ Update animate.css and transition helper to @done(20-05-12 22:10)

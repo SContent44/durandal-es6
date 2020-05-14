@@ -1,4 +1,6 @@
-﻿import $ from "jquery";
+﻿/* eslint-disable eqeqeq */
+/* eslint-disable no-param-reassign */
+import $ from "jquery";
 import ko from "knockout";
 
 /**
@@ -7,9 +9,7 @@ import ko from "knockout";
  * @requires jquery
  * @requires knockout
  */
-export default new httpModule();
-
-function httpModule() {
+function HttpModule() {
     /**
      * @class HTTPModule
      * @static
@@ -27,7 +27,7 @@ function httpModule() {
          * @param {object} data The data to convert to JSON.
          * @return {string} JSON.
          */
-        toJSON: function (data) {
+        toJSON(data) {
             return ko.toJSON(data);
         },
         /**
@@ -38,7 +38,7 @@ function httpModule() {
          * @param {object} [headers] The data to add to the request header.  It will be converted to JSON. If the data contains Knockout observables, they will be converted into normal properties before serialization.
          * @return {Promise} A promise of the get response data.
          */
-        get: function (url, query, headers) {
+        get(url, query, headers) {
             return $.ajax(url, { data: query, headers: ko.toJS(headers) });
         },
         /**
@@ -50,7 +50,7 @@ function httpModule() {
          * @param {object} [headers] The data to add to the request header.  It will be converted to JSON. If the data contains Knockout observables, they will be converted into normal properties before serialization.
          * @return {Promise} A promise of the response data.
          */
-        jsonp: function (url, query, callbackParam, headers) {
+        jsonp(url, query, callbackParam, headers) {
             if (url.indexOf("=?") == -1) {
                 callbackParam = callbackParam || this.callbackParam;
 
@@ -60,11 +60,11 @@ function httpModule() {
                     url += "&";
                 }
 
-                url += callbackParam + "=?";
+                url += `${callbackParam}=?`;
             }
 
             return $.ajax({
-                url: url,
+                url,
                 dataType: "jsonp",
                 data: query,
                 headers: ko.toJS(headers),
@@ -78,9 +78,9 @@ function httpModule() {
          * @param {object} [headers] The data to add to the request header.  It will be converted to JSON. If the data contains Knockout observables, they will be converted into normal properties before serialization.
          * @return {Promise} A promise of the response data.
          */
-        put: function (url, data, headers) {
+        put(url, data, headers) {
             return $.ajax({
-                url: url,
+                url,
                 data: this.toJSON(data),
                 type: "PUT",
                 contentType: "application/json",
@@ -96,9 +96,9 @@ function httpModule() {
          * @param {object} [headers] The data to add to the request header.  It will be converted to JSON. If the data contains Knockout observables, they will be converted into normal properties before serialization.
          * @return {Promise} A promise of the response data.
          */
-        post: function (url, data, headers) {
+        post(url, data, headers) {
             return $.ajax({
-                url: url,
+                url,
                 data: this.toJSON(data),
                 type: "POST",
                 contentType: "application/json",
@@ -114,9 +114,9 @@ function httpModule() {
          * @param {object} [headers] The data to add to the request header.  It will be converted to JSON. If the data contains Knockout observables, they will be converted into normal properties before serialization.
          * @return {Promise} A promise of the get response data.
          */
-        remove: function (url, query, headers) {
+        remove(url, query, headers) {
             return $.ajax({
-                url: url,
+                url,
                 data: query,
                 type: "DELETE",
                 headers: ko.toJS(headers),
@@ -124,3 +124,5 @@ function httpModule() {
         },
     };
 }
+
+export default new HttpModule();
