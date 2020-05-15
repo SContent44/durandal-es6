@@ -210,20 +210,7 @@ function AppModule() {
                 }
             }
 
-            // TODO: look at this
-            if (system.isString(settings.model)) {
-                system
-                    .acquire(settings.model)
-                    .then(function (module) {
-                        settings.model = system.resolveObject(module);
-                        finishComposition();
-                    })
-                    .fail(function (err) {
-                        system.error(`Failed to load root module (${settings.model}). Details: ${err.message}`);
-                    });
-            } else {
-                finishComposition();
-            }
+            finishComposition();
         },
     };
 
