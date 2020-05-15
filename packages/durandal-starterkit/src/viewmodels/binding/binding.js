@@ -42,6 +42,7 @@ function BindingViewModel() {
             someData: ko.pureComputed(() => {
                 return this.ownInput();
             }, this),
+            viewName: "Another own VM screen",
         },
     };
 }

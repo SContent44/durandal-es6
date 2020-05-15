@@ -1,4 +1,5 @@
-﻿/* eslint-disable no-param-reassign */
+﻿/* eslint-disable no-underscore-dangle */
+/* eslint-disable no-param-reassign */
 import ko from "knockout";
 import system from "./system";
 
@@ -51,7 +52,13 @@ function BinderModule() {
             return;
         }
 
-        const viewName = view.getAttribute("data-view");
+        // TODO document this hierarchy
+        const viewName =
+            data.viewName ||
+            data.__moduleId__ ||
+            data.constructor.prototype.__moduleId__ ||
+            data.constructor.name ||
+            view.getAttribute("data-view");
 
         try {
             let instruction;

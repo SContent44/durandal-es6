@@ -462,16 +462,19 @@ function RouterModule() {
                     .then(function (m) {
                         const instance = system.resolveObject(m);
 
+                        const hasModuleNameSet =
+                            (instance.prototype && instance.__moduleId__) ||
+                            (instance.constructor.prototype && instance.constructor.prototype.__moduleId__);
                         // Check if the module instance's __moduleId__ has been set on the object/function
-                        if (
-                            (!instance.prototype && !instance.__moduleId__) ||
-                            (instance.prototype && !instance.prototype.__moduleId__)
-                        ) {
-                            system.setModuleId(instance, instruction.config.moduleName);
-                        }
-                        // TODO revisit when considering removing viewUrl since no longer a supported flow
-                        if (instruction.config.viewUrl) {
-                            instance.viewUrl = instruction.config.viewUrl;
+                        // TODO Document hierarchy of moduleName -> moduleId.name
+                        if (!hasModuleNameSet) {
+                            if (instruction.config.moduleName) {
+                                system.setModuleId(instance, instruction.config.moduleName);
+                            } else {
+                                system.setModuleId(instance, instruction.config.moduleId.name);
+                            }
+                        } else {
+                            system.log("Route module is not named");
                         }
 
                         ensureActivation(activeItem, instance, instruction);

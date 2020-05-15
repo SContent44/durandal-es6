@@ -8,7 +8,6 @@ import routes from "../routes";
 class ShellViewModel {
     constructor() {
         this.view = viewTemplate;
-        this.viewName = "Shell";
 
         this.isExpanded = ko.observable(false);
         this.toggle = () => {

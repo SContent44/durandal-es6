@@ -34,6 +34,7 @@ class FlickrViewModel {
     select(itemDetails) {
         const Item = itemDetails;
         Item.view = itemTemplate;
+        Item.viewName = "Flickr item";
         app.showDialog(Item);
     }
 
