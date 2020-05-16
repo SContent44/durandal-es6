@@ -4,7 +4,7 @@ export default [
     {
         route: "",
         title: "How",
-        moduleId: () => {
+        moduleId: function hows() {
             return How;
         },
         moduleName: "How",
@@ -14,7 +14,7 @@ export default [
     {
         route: "nested",
         title: "Nested async route",
-        moduleId: function Nested() {
+        moduleId: function nested() {
             return import(/* webpackChunkName: "nested-async-route" */ "./viewmodels/nested/nested");
         },
         nav: true,

@@ -462,19 +462,10 @@ function RouterModule() {
                     .then(function (m) {
                         const instance = system.resolveObject(m);
 
-                        const hasModuleNameSet =
-                            (instance.prototype && instance.__moduleId__) ||
-                            (instance.constructor.prototype && instance.constructor.prototype.__moduleId__);
                         // Check if the module instance's __moduleId__ has been set on the object/function
-                        // TODO Document hierarchy of moduleName -> moduleId.name
-                        if (!hasModuleNameSet) {
-                            if (instruction.config.moduleName) {
-                                system.setModuleId(instance, instruction.config.moduleName);
-                            } else {
-                                system.setModuleId(instance, instruction.config.moduleId.name);
-                            }
-                        } else {
-                            system.log("Route module is not named");
+
+                        if (!instance.__moduleId__) {
+                            system.setModuleId(instance, instruction.config.moduleId.name);
                         }
 
                         ensureActivation(activeItem, instance, instruction);

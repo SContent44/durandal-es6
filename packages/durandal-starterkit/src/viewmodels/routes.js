@@ -4,8 +4,7 @@ export default [
     {
         route: "",
         title: "Welcome",
-        moduleName: "Welcome",
-        moduleId: () => {
+        moduleId: function Welcomes() {
             return Welcome;
         },
         nav: true,
@@ -14,7 +13,7 @@ export default [
         route: "flickr",
         title: "Flickr",
         moduleName: "Flickr",
-        moduleId: () => {
+        moduleId: function Flickr() {
             return import(/* webpackChunkName: "flickr-viewmodel" */ "./flickr/flickr");
         },
         nav: true,
@@ -24,7 +23,7 @@ export default [
         hash: "#router",
         title: "Router",
         moduleName: "Router",
-        moduleId: () => {
+        moduleId: function Router() {
             return import(/* webpackChunkName: "router-viewmodel" */ "./router/index");
         },
         nav: true,
@@ -33,7 +32,7 @@ export default [
         route: "binding",
         title: "Binding",
         moduleName: "Binding",
-        moduleId: () => {
+        moduleId: function Binding() {
             return import(/* webpackChunkName: "binding-viewmodel" */ "./binding/binding");
         },
         nav: true,
@@ -42,7 +41,7 @@ export default [
         route: "widgets",
         title: "Widgets",
         moduleName: "Widgets",
-        moduleId: () => {
+        moduleId: function Widgets() {
             return import(/* webpackChunkName: "widgets-viewmodel" */ "./widgets/widgets");
         },
         nav: true,
@@ -51,7 +50,7 @@ export default [
         route: "components",
         title: "Components",
         moduleName: "Components",
-        moduleId: () => {
+        moduleId: function Components() {
             return import(/* webpackChunkName: "components-viewmodel" */ "./ko-components/ko-components");
         },
         nav: true,

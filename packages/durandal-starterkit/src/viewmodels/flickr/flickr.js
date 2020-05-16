@@ -1,6 +1,5 @@
-﻿import { app } from "durandal/core";
-
-import ko from "knockout";
+﻿import ko from "knockout";
+import { app } from "durandal/core";
 
 import viewTemplate from "./flickr.html";
 import itemTemplate from "./detail.html";
