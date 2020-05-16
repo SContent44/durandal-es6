@@ -192,11 +192,11 @@ function SystemModule() {
 
             // Check if the module instance's __moduleId__ has been set on the object/function
             if (!moduleToResolve.__moduleId__) {
-                const viewName =
-                    moduleToResolve.viewName ||
-                    moduleToResolve.__moduleId__ ||
-                    name ||
-                    moduleToResolve.constructor.name;
+                // Name priority
+                // 1. viewName property on the module
+                // 2. passed in name param to provide a name that might not be translated directly from the module
+                // 3. The name of the constructor for the module
+                const viewName = moduleToResolve.viewName || name || moduleToResolve.constructor.name;
 
                 system.setModuleId(moduleToResolve, viewName);
             }
