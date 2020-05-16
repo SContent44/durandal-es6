@@ -163,8 +163,8 @@ function SystemModule() {
                 return;
             }
 
-            if (typeof obj === "function" && obj.prototype) {
-                obj.prototype.__moduleId__ = id;
+            if (typeof obj === "function" && obj.constructor.prototype) {
+                obj.constructor.prototype.__moduleId__ = id;
                 return;
             }
 
