@@ -52,14 +52,6 @@ function BinderModule() {
             return;
         }
 
-        // TODO document this hierarchy
-        const viewName =
-            data.viewName ||
-            data.__moduleId__ ||
-            data.constructor.prototype.__moduleId__ ||
-            data.constructor.name ||
-            view.getAttribute("data-view");
-
         try {
             let instruction;
 
@@ -71,7 +63,7 @@ function BinderModule() {
             binder.binding(data, view, instruction);
 
             if (instruction.applyBindings) {
-                system.log("Binding", viewName, data);
+                system.log("Binding", data.__moduleId__, data);
                 ko.applyBindings(bindingTarget, view);
             } else if (obj) {
                 ko.utils.domData.set(view, koBindingContextKey, { $data: obj });

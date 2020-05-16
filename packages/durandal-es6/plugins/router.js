@@ -460,13 +460,7 @@ function RouterModule() {
                 system
                     .acquire(instruction.config.moduleId)
                     .then(function (m) {
-                        const instance = system.resolveObject(m);
-
-                        // Check if the module instance's __moduleId__ has been set on the object/function
-
-                        if (!instance.__moduleId__) {
-                            system.setModuleId(instance, instruction.config.moduleId.name);
-                        }
+                        const instance = system.resolveObject(m, instruction.config.moduleId.name);
 
                         ensureActivation(activeItem, instance, instruction);
                     })

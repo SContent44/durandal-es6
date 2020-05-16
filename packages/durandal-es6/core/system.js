@@ -180,15 +180,27 @@ function SystemModule() {
          * @param {object} module The module to use to get/create the default object for.
          * @return {object} The default object for the module.
          */
-        resolveObject(module) {
+        resolveObject(module, name) {
             // Check if this is a es6 module default export
-            const moduleToResolve =
+            let moduleToResolve =
                 module && typeof module === "object" && module.__esModule && module.default ? module.default : module;
 
             if (system.isFunction(moduleToResolve)) {
                 // eslint-disable-next-line new-cap
-                return new moduleToResolve();
+                moduleToResolve = new moduleToResolve();
             }
+
+            // Check if the module instance's __moduleId__ has been set on the object/function
+            if (!moduleToResolve.__moduleId__) {
+                const viewName =
+                    moduleToResolve.viewName ||
+                    moduleToResolve.__moduleId__ ||
+                    name ||
+                    moduleToResolve.constructor.name;
+
+                system.setModuleId(moduleToResolve, viewName);
+            }
+
             return moduleToResolve;
         },
         /**

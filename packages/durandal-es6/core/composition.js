@@ -743,7 +743,7 @@ function CompositionModule() {
         compose(element, settings, bindingContext, fromBinding) {
             // If the `model` isn't a string, assume it's the module itself and resolve it.
             if (!!settings.model && typeof settings.model !== "string") {
-                settings.model = system.resolveObject(settings.model);
+                settings.model = system.resolveObject(settings.model, settings.model.__moduleId__);
             }
 
             compositionCount += 1;
@@ -788,20 +788,6 @@ function CompositionModule() {
                         composition.bindAndShow(child, element, settings);
                     });
                 }
-            } else if (system.isString(settings.model)) {
-                system
-                    .acquire(settings.model)
-                    .then(function (module) {
-                        settings.model = system.resolveObject(module);
-                        composition.inject(settings, element);
-                    })
-                    .fail(function (err) {
-                        onError(
-                            settings,
-                            `Failed to load composed module (${settings.model}). Details: ${err.message}`,
-                            element
-                        );
-                    });
             } else {
                 composition.inject(settings, element);
             }
