@@ -65,7 +65,15 @@ module.exports = {
             }, */
             {
                 test: /\.css$/i,
-                use: [ExtractCssChunks.loader, "css-loader"],
+                use: [
+                    ExtractCssChunks.loader,
+                    {
+                        loader: "css-loader",
+                        options: {
+                            modules: "global",
+                        },
+                    },
+                ],
             },
             {
                 test: /\.(png|woff|woff2|eot|ttf|svg)$/,

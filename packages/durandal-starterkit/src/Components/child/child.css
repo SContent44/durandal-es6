@@ -1,19 +1,5 @@
-.child {
+:local .child {
     background-color: red;
-    color: white;
-    margin: 20px;
-    padding: 20px;
-}
-
-grandparent parent child .child {
-    background-color: green;
-    color: yellow;
-    margin: 20px;
-    padding: 20px;
-}
-
-parent child .child {
-    background-color: blue;
     color: white;
     margin: 20px;
     padding: 20px;

@@ -1,9 +1,10 @@
 import viewTemplate from "./child.html";
-import "./child.css";
+import styles from "./child.css";
 
 const child = {
     viewModel(params) {
         this.childValue = params.childValue;
+        this.styles = styles;
     },
     template: viewTemplate,
 };
