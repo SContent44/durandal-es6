@@ -112,15 +112,8 @@ function WidgetModule() {
             return `widgets/${kind}/view`;
         },
         createCompositionSettings(element, settings) {
-            /* Always use the model defined for the kind
             if (!settings.model) {
                 settings.model = this.mapKindToModule(settings.kind);
-            } */
-
-            settings.model = this.mapKindToModule(settings.kind);
-            // Prevent doing inline view strings
-            if (settings.view) {
-                settings.view = undefined;
             }
 
             settings.preserveContext = true;
