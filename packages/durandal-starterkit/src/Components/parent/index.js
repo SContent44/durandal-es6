@@ -1,5 +1,5 @@
 import viewTemplate from "./parent.html";
-import "./parent.css";
+import styles from "./parent.css";
 
 const parent = {
     /** Viewmodel
@@ -8,6 +8,7 @@ const parent = {
     viewModel(params) {
         this.parentValue = params.parentValue;
         this.childValue = params.childValue;
+        this.styles = styles;
     },
 
     /** Template for the view

@@ -1,4 +1,4 @@
-:local .child {
+:local .component {
     background-color: red;
     color: white;
     margin: 20px;

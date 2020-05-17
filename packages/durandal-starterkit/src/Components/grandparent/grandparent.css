@@ -1,4 +1,4 @@
-.grandparent {
+:local .component {
     background-color: yellow;
     color: purple;
     margin: 20px;
