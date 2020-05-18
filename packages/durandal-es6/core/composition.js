@@ -741,8 +741,19 @@ function CompositionModule() {
          * @param {object} [bindingContext] The current binding context.
          */
         compose(element, settings, bindingContext, fromBinding) {
-            // If the `model` isn't a string, assume it's the module itself and resolve it.
-            if (!!settings.model && typeof settings.model !== "string") {
+            // TODO hide this behind debug flag?
+            if (settings.model && typeof settings.model === "string") {
+                system.error(
+                    "You've passed a string for a model, check that you are not use deprecated RequireJS behaviour"
+                );
+            }
+
+            if (system.isFunction(settings)) {
+                settings.model = settings;
+            }
+
+            // If we have a model passed in we will use it's context
+            if (settings.model) {
                 settings.model = system.resolveObject(settings.model, settings.model.__moduleId__);
             }
 

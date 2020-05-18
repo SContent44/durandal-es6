@@ -19,8 +19,15 @@
 
     <h2>Own context that is an object</h2>
     <p>
-        <code>data-bind="compose:anotherOwnVMScreen</code> where <code>anotherOwnVMScreen</code> is an object with which
-        has a view property on it.
+        <code>data-bind="compose:anotherOwnVMScreenObject</code> where <code>anotherOwnVMScreenObject</code> is an
+        object with which has a view property on it.
     </p>
-    <div data-bind="compose:anotherOwnVMScreen"></div>
+    <div data-bind="compose:anotherOwnVMScreenObject"></div>
+
+    <h2>Own context that is a function</h2>
+    <p>
+        <code>data-bind="compose:anotherOwnVMScreenFunction</code> where <code>anotherOwnVMScreenFunction</code> is a
+        function that returns has a view.
+    </p>
+    <div data-bind="compose:anotherOwnVMScreenFunction"></div>
 </section>

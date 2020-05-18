@@ -36,7 +36,7 @@ function BindingViewModel() {
         required: true,
     });
 
-    this.anotherOwnVMScreen = {
+    this.anotherOwnVMScreenObject = {
         view: dynamicTemplate,
         model: {
             someData: ko.pureComputed(() => {
@@ -44,6 +44,14 @@ function BindingViewModel() {
             }, this),
             viewName: "Another own VM screen",
         },
+    };
+
+    this.anotherOwnVMScreenFunction = function () {
+        this.someData = ko.pureComputed(() => {
+            return "Can use a function with its own this context";
+        }, this);
+        this.viewName = "Another own VM screen";
+        this.view = dynamicTemplate;
     };
 }
 
