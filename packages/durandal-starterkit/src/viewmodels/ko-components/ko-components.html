@@ -1,29 +1,32 @@
-<section>
-    <h1>Knockout components</h1>
-    <p>
-        Here are 3 nested components. Grandparent -> Parent -> Child. If you open up your network tab (and turn on
-        throttling to make it a bit clearer) when you load this page you will see:
-    </p>
-    <ol>
-        <li>The pages ViewModel load</li>
-        <li>
-            The child component load (with a descriptive name) and the grandparent component load at about the same time
-        </li>
-        <li>The parent component load</li>
-    </ol>
-    <p>
-        This is a showcase of how the application has control of when to lazy-load modules (including components which
-        are "loaded asynchronously")
-    </p>
-    <h2>Inputs</h2>
-    <p>Grandparent name: <input data-bind="value: $root.grandparentInput" /></p>
-    <p>Parent name: <input data-bind="value: $root.parentInput" /></p>
-    <p>Child name: <input data-bind="value: childInput" /></p>
+<transition>
+    <section>
+        <h1>Knockout components</h1>
+        <p>
+            Here are 3 nested components. Grandparent -> Parent -> Child. If you open up your network tab (and turn on
+            throttling to make it a bit clearer) when you load this page you will see:
+        </p>
+        <ol>
+            <li>The pages ViewModel load</li>
+            <li>
+                The child component load (with a descriptive name) and the grandparent component load at about the same
+                time
+            </li>
+            <li>The parent component load</li>
+        </ol>
+        <p>
+            This is a showcase of how the application has control of when to lazy-load modules (including components
+            which are "loaded asynchronously")
+        </p>
+        <h2>Inputs</h2>
+        <p>Grandparent name: <input data-bind="value: $root.grandparentInput" /></p>
+        <p>Parent name: <input data-bind="value: $root.parentInput" /></p>
+        <p>Child name: <input data-bind="value: childInput" /></p>
 
-    <h2>Grand parent (two nested components)</h2>
-    <grandparent
-        params="grandparentValue: grandparentDisplay, 
+        <h2>Grand parent (two nested components)</h2>
+        <grandparent
+            params="grandparentValue: grandparentDisplay, 
                 parentValue: parentDisplay,
                 childValue: childDisplay"
-    ></grandparent>
-</section>
+        ></grandparent>
+    </section>
+</transition>
