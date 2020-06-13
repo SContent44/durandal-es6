@@ -1,4 +1,4 @@
-import * as ko from "knockout";
+import ko from "knockout";
 import viewTemplate from "./ko-components.html";
 
 // Uncomment the follow line to see how you can control the lazy loading of components

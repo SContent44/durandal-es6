@@ -1,4 +1,4 @@
-import * as ko from "knockout";
+import ko from "knockout";
 
 import viewTemplate from "./binding.html";
 import dynamicTemplate from "./dynamic.html";
