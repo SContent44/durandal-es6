@@ -604,11 +604,11 @@ function CompositionModule() {
                             if (currentModel != modelToBind) {
                                 if (!context.composingNewView) {
                                     ko.removeNode(child);
-                                    viewEngine
-                                        .createView(child.getAttribute("data-view"))
-                                        .then(function (recreatedView) {
+                                    Promise.resolve(viewEngine.createView("", child.getAttribute("data-view"))).then(
+                                        function (recreatedView) {
                                             composition.bindAndShow(recreatedView, element, context, true);
-                                        });
+                                        }
+                                    );
                                     return;
                                 }
 
@@ -647,6 +647,7 @@ function CompositionModule() {
             let settings = ko.utils.unwrapObservable(value) || {};
             let activatorPresent = activator.isActivator(value);
 
+            // TODO review the old if conidtion of the model from the settings, and the activate: !activator present
             if (system.isString(settings)) {
                 if ($.trim(settings).charAt(0) === "<") {
                     settings = $.trim(settings);
