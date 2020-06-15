@@ -104,7 +104,7 @@ function doTrans(settings) {
 
             function outTransition(callback) {
                 $previousView = $(activeView);
-                $previousView.addClass("animated slower");
+                $previousView.addClass("animated slow");
                 $previousView.addClass(outAn);
                 setTimeout(function setTimeout() {
                     if (callback) {
@@ -119,12 +119,12 @@ function doTrans(settings) {
                 }
                 settings.triggerAttach();
 
-                $newView.addClass("animated slower"); // moved the adding of the animated class here so it keeps it together
+                $newView.addClass("animated slow"); // moved the adding of the animated class here so it keeps it together
                 $newView.addClass(inAn);
                 $newView.css("display", "");
 
                 setTimeout(function setTimeout() {
-                    $newView.removeClass(`${inAn} animated slower`); // just need to remove inAn here, that's all we'll have
+                    $newView.removeClass(`${inAn} animated slow`); // just need to remove inAn here, that's all we'll have
                     dfd.resolve(true);
                 }, App.duration);
             }
