@@ -20,7 +20,7 @@ const transition = {
             );
 
             const transitionIn = () => {
-                vm.transitionStyle("animated slow fadeIn");
+                vm.transitionStyle("animated fadeIn");
             };
 
             vm.transitionSet = ko
