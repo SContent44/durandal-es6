@@ -1,12 +1,13 @@
 import ko from "knockout";
 import template from "./transition.html";
+import css from "./transition.css";
+import { app } from "durandal/core";
 
 const transition = {
     viewModel: {
         createViewModel(params, componentInfo) {
             const vm = {
-                transitionStyle: ko.observable(""),
-                displayInitial: ko.observable(false),
+                transitionStyle: ko.observable("animated waitForAnimate"),
                 viewPrimed: ko.observable(false),
             };
 
@@ -19,8 +20,7 @@ const transition = {
             );
 
             const transitionIn = () => {
-                vm.displayInitial(true);
-                vm.transitionStyle("animated fadeIn");
+                vm.transitionStyle("animated slow fadeIn");
             };
 
             vm.transitionSet = ko
