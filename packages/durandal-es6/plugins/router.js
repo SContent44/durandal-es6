@@ -1101,7 +1101,7 @@ function RouterModule() {
 
                 const rootStripper = rootRouter.options.root && new RegExp(`^${rootRouter.options.root}/`);
 
-                $(document).delegate("a", "click", function (evt) {
+                $(document).on("click", "a", function (evt) {
                     // ignore default prevented since these are not supposed to behave like links anyway
                     if (evt.isDefaultPrevented()) {
                         return;

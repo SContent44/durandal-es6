@@ -48,7 +48,7 @@ function ViewLocatorModule() {
 
             // The new default behaviour
             // Check if view is current "cached" if cacheViews is on
-            const hash = viewEngine.hashCode($.trim(obj.view));
+            const hash = viewEngine.hashCode(obj.view.trim());
             if (hash && elementsToSearch && elementsToSearch.length > 0) {
                 const existing = findInElements(elementsToSearch, hash);
                 if (existing) {
@@ -80,8 +80,8 @@ function ViewLocatorModule() {
         locateView(view) {
             if (typeof view === "string") {
                 // If we are passed a string see if it is a html string
-                if ($.trim(view).charAt(0) === "<") {
-                    view = $.trim(view);
+                if (view.trim().charAt(0) === "<") {
+                    view = view.trim();
                     view = viewEngine.processMarkup(view);
                 } else if (viewEngine.isViewUrl(view)) {
                     system.error(

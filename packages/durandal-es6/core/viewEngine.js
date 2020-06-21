@@ -141,7 +141,7 @@ function ViewEngineModule() {
          * @return {object} The processed HTML
          */
         createView(htmlString, hash) {
-            const view = $.trim(htmlString);
+            const view = htmlString.trim();
             const cacheId = hash || this.hashCode(view);
 
             const existing = this.tryGetViewFromCache(cacheId);

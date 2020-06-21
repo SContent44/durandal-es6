@@ -170,7 +170,8 @@ function AppModule() {
             }
 
             if (system.isString(root)) {
-                if ($.trim(root).charAt(0) === "<") {
+                // TODO test using native trim instead jquery upgrade
+                if (root.trim().charAt(0) === "<") {
                     settings.view = root;
                 } else {
                     system.error(

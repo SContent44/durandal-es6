@@ -649,8 +649,8 @@ function CompositionModule() {
 
             // TODO review the old if conidtion of the model from the settings, and the activate: !activator present
             if (system.isString(settings)) {
-                if ($.trim(settings).charAt(0) === "<") {
-                    settings = $.trim(settings);
+                if (settings.trim().charAt(0) === "<") {
+                    settings = settings.trim();
                     settings = {
                         view: viewEngine.processMarkup(settings),
                     };
