@@ -197,17 +197,21 @@ function DialogPluginModule() {
         "</div>",
     ].join("\n");
 
-    function ensureDialogInstance(objOrModuleId) {
+    function ensureDialogInstance(moduleToResolve) {
         return system
             .defer(function (dfd) {
-                system
-                    .acquire(objOrModuleId)
-                    .then(function (module) {
-                        dfd.resolve(system.resolveObject(module));
-                    })
-                    .fail(function (err) {
-                        system.error(`Failed to load dialog module (${objOrModuleId}). Details: ${err.message}`);
-                    });
+                if (system.isFunction(moduleToResolve)) {
+                    system
+                        .acquire(moduleToResolve)
+                        .then(function (module) {
+                            dfd.resolve(system.resolveObject(module));
+                        })
+                        .fail(function (err) {
+                            system.error(`Failed to load dialog module (${moduleToResolve}). Details: ${err.message}`);
+                        });
+                } else {
+                    dfd.resolve(moduleToResolve);
+                }
             })
             .promise();
     }
@@ -526,7 +530,7 @@ function DialogPluginModule() {
                     $(objDialog.host).css("opacity", 1);
                     $childView.css("visibility", "visible");
 
-                    $childView.find(".autofocus").first().focus();
+                    $childView.find(".autofocus").first().trigger("focus");
                 }, 1);
             };
 
@@ -536,7 +540,7 @@ function DialogPluginModule() {
             });
 
             if ($child.hasClass("autoclose") || context.model.autoclose) {
-                $(theDialog.blockout).click(function () {
+                $(theDialog.blockout).on("click", function () {
                     theDialog.close();
                 });
             }
