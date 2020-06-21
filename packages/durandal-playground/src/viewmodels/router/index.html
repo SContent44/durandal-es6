@@ -1,0 +1,36 @@
+<transition>
+    <section id="async">
+        <header><h3>Router</h3></header>
+
+        <article>
+            <header><h4>How?</h4></header>
+            <p>
+                Typically Durandals <code>router</code> module requires you to specify a
+                <code>moduleId</code>
+                for each route.
+            </p>
+
+            <p>
+                To allow Webpack to know these are actual module dependencies, we instead set each
+                <code>moduleId</code> to a function that returns the actual ViewModel instance instead.
+            </p>
+        </article>
+        <br />
+
+        <article>
+            <header><h4>Asynchronous Routes</h4></header>
+
+            <ul class="nav nav-tabs" data-bind="foreach: router.navigationModel">
+                <li data-bind="css: { active: isActive }">
+                    <a data-bind="attr: { href: hash }, html: title"></a>
+                </li>
+            </ul>
+
+            <div
+                class="container"
+                style="padding-top: 20px;"
+                data-bind="router: { transition: 'fadeIn', cacheViews: true }"
+            ></div>
+        </article>
+    </section>
+</transition>

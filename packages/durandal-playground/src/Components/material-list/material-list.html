@@ -1,0 +1,6 @@
+<ul class="mdc-list" data-bind="foreach: items">
+    <li class="mdc-list-item" data-bind="attr: {'tabindex': $index() === 0 ? 0 : null}">
+        <!-- ko template: { nodes: $componentTemplateNodes, data: $data } -->
+        <!-- /ko -->
+    </li>
+</ul>

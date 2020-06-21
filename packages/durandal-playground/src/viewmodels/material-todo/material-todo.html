@@ -1,0 +1,101 @@
+<section>
+    <div class="mdc-layout-grid">
+        <div class="mdc-layout-grid__inner">
+            <div class="mdc-layout-grid__cell--span-6">
+                <material-card>
+                    <div class="mdc-layout-grid">
+                        <div class="mdc-layout-grid__inner">
+                            <div class="mdc-layout-grid__cell--span-12">
+                                <h1>Todos</h1>
+
+                                <input
+                                    class="new-todo"
+                                    data-bind="value: current, valueUpdate: 'afterkeydown', enterKey: add"
+                                    placeholder="What needs to be done?"
+                                    autofocus
+                                />
+
+                                <material-textfield
+                                    params="fieldType: 'filled',
+                    label: 'What needs to be done?',
+                    inputValue: current,
+                    valueUpdate: 'afterkeydown',
+                    enterKey: add"
+                                >
+                                </material-textfield>
+                                <section class="main" data-bind="visible: todos().length">
+                                    <material-checkbox
+                                        params="label: 'Mark all as complete',
+                        checked: allCompleted"
+                                    ></material-checkbox>
+
+                                    <material-card>
+                                        <div data-bind="foreach: todos">
+                                            <material-card>
+                                                <div class="mdc-layout-grid">
+                                                    <div class="mdc-layout-grid__inner">
+                                                        <div
+                                                            class="mdc-layout-grid__cell--span-3 mdc-layout-grid__cell--align-middle"
+                                                        >
+                                                            <material-checkbox
+                                                                params="label: 'Mark item as complete',
+                                    labelVisible: false,
+                                    checked: $data.completed"
+                                                            ></material-checkbox>
+                                                        </div>
+                                                        <div
+                                                            class="mdc-layout-grid__cell--span-9 mdc-layout-grid__cell--align-middle"
+                                                        >
+                                                            <material-textfield
+                                                                params="fieldType: 'outlined',
+                                    label: 'Todo item',
+                                    inputValue: title"
+                                                            ></material-textfield>
+                                                        </div>
+                                                        <div
+                                                            class="mdc-layout-grid__cell--span-12 mdc-layout-grid__cell--align-middle"
+                                                        >
+                                                            <material-button
+                                                                params="text: 'Delete',
+                                    type: 'delete',
+                                    action: $root.remove"
+                                                            ></material-button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </material-card>
+                                        </div>
+                                    </material-card>
+
+                                    <!--<ul class="todo-list" data-bind="foreach: todos">
+                                        <li data-bind="css: { completed: completed, editing: editing }">
+                                            <input
+                                                class="edit"
+                                                data-bind="value: title, valueUpdate: 'afterkeydown', enterKey: $root.stopEditing, escapeKey: $root.cancelEditing, selectAndFocus: editing, event: { blur: $root.stopEditing }"
+                                            />
+                                        </li>
+                                    </ul> -->
+                                </section>
+                                <footer class="footer" data-bind="visible: completedCount() || remainingCount()">
+                                    <span class="todo-count">
+                                        <strong data-bind="text: remainingCount">0</strong>
+                                        <span data-bind="text: getLabel(remainingCount)"></span> left
+                                    </span>
+                                    <material-button
+                                        params="text: 'Clear completed',
+                        type: 'delete',
+                        action: removeCompleted,
+                        isVisible: completedCount"
+                                    ></material-button>
+                                </footer>
+                            </div>
+                        </div>
+                    </div>
+                </material-card>
+                <footer class="info">
+                    <p>Double-click to edit a todo</p>
+                </footer>
+            </div>
+        </div>
+    </div>
+</section>

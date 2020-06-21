@@ -1,0 +1,43 @@
+{
+    "name": "durandal-starterkit",
+    "version": "3.0.0",
+    "description": "Default starter website that demonstrates behaviour of using Durandal for building a Single Page Application (with Webpack).",
+    "main": "index.html",
+    "scripts": {
+        "lint": "eslint ./** --config ../../.eslintrc.js --ext .js",
+        "serve": "webpack-dev-server -d",
+        "build": "webpack --prod",
+        "webpack-stats": "webpack --profile --json > stats.json",
+        "webpack-analyze": "webpack-bundle-analyzer stats.json"
+    },
+    "keywords": [
+        "Durandal",
+        "SPA",
+        "Webpack",
+        "Starter-Kit"
+    ],
+    "author": "Simon Buckley",
+    "license": "ISC",
+    "dependencies": {
+        "@material/button": "^6.0.0",
+        "@material/card": "^6.0.0",
+        "@material/checkbox": "^6.0.0",
+        "@material/circular-progress": "^6.0.0",
+        "@material/dialog": "^6.0.0",
+        "@material/drawer": "^6.0.0",
+        "@material/fab": "^6.0.0",
+        "@material/floating-label": "^6.0.0",
+        "@material/form-field": "^6.0.0",
+        "@material/icon-button": "^6.0.0",
+        "@material/layout-grid": "^6.0.0",
+        "@material/line-ripple": "^6.0.0",
+        "@material/list": "^6.0.0",
+        "@material/menu": "^6.0.0",
+        "@material/notched-outline": "^6.0.0",
+        "@material/ripple": "^6.0.0",
+        "@material/snackbar": "^6.0.0",
+        "@material/textfield": "^6.0.0",
+        "@material/top-app-bar": "^6.0.0",
+        "bootstrap": "^3.4.1"
+    }
+}

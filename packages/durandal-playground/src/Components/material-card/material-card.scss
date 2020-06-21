@@ -1,0 +1,5 @@
+@use "@material/card";
+
+@include card.core-styles;
+
+@import "@material/layout-grid/mdc-layout-grid";
