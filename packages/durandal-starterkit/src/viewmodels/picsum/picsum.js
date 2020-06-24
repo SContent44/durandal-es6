@@ -16,7 +16,7 @@ class PicsumViewModel {
             return true;
         }
 
-        return fetch("https://picsum.photos/v2/list").then(
+        return fetch("https://picsum.photos/v2/list?limit=28").then(
             async (response) => {
                 const imageList = await response.json();
                 this.images(imageList);

@@ -4,7 +4,8 @@
     </div>
     <div class="modal-body">
         <p data-bind="text: 'Author: ' + author"></p>
-        <a data-bind="text: url"></a>
-        <img style="width: 260px; height: 180px;" data-bind="attr: { src: download_url }" />
+        <a target="_blank" data-bind="attr: { href: url }">
+            <img style="width: 390px;" data-bind="attr: { src: download_url }" />
+        </a>
     </div>
 </div>
