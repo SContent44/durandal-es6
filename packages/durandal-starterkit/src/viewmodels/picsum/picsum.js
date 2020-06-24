@@ -1,10 +1,10 @@
 ﻿import ko from "knockout";
 import { app } from "durandal/core";
 
-import viewTemplate from "./flickr.html";
+import viewTemplate from "./picsum.html";
 import itemTemplate from "./detail.html";
 
-class FlickrViewModel {
+class PicsumViewModel {
     constructor() {
         this.view = viewTemplate;
 
@@ -16,24 +16,22 @@ class FlickrViewModel {
             return true;
         }
 
-        return import("durandal/plugins/http").then((http) => {
-            return http.default
-                .jsonp(
-                    "http://api.flickr.com/services/feeds/photos_public.gne",
-                    { tags: "mount ranier", tagmode: "any", format: "json" },
-                    "jsoncallback"
-                )
-                .then((response) => {
-                    this.images(response.items);
-                });
-        });
+        return fetch("https://picsum.photos/v2/list").then(
+            async (response) => {
+                const imageList = await response.json();
+                this.images(imageList);
+            },
+            (error) => {
+                // Could gracefully handle error
+            }
+        );
     }
 
     // eslint-disable-next-line class-methods-use-this
     select(itemDetails) {
         const Item = itemDetails;
         Item.view = itemTemplate;
-        Item.viewName = "Flickr item";
+        Item.viewName = "Picsum item";
         app.showDialog(Item);
     }
 
@@ -44,6 +42,6 @@ class FlickrViewModel {
     }
 }
 
-const Flickr = new FlickrViewModel();
+const Picsum = new PicsumViewModel();
 
-export default Flickr;
+export default Picsum;

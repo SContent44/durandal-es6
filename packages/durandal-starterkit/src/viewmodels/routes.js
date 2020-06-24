@@ -10,11 +10,11 @@ export default [
         nav: true,
     },
     {
-        route: "flickr",
-        title: "Flickr",
-        moduleName: "Flickr",
-        moduleId: function Flickr() {
-            return import(/* webpackChunkName: "flickr-viewmodel" */ "./flickr/flickr");
+        route: "picsum",
+        title: "Picsum",
+        moduleName: "Picsum",
+        moduleId: function Picsum() {
+            return import(/* webpackChunkName: "picsum-viewmodel" */ "./picsum/picsum");
         },
         nav: true,
     },
