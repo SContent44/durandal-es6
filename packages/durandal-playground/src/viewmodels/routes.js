@@ -10,9 +10,9 @@ export default [
         nav: true,
     },
     {
-        route: "flickr",
-        title: "Flickr",
-        moduleName: "Flickr",
+        route: "picsum",
+        title: "Picsum",
+        moduleName: "Picsum",
         moduleId: function Flickr() {
             return import(/* webpackChunkName: "flickr-viewmodel" */ "./flickr/flickr");
         },
@@ -52,15 +52,6 @@ export default [
         moduleName: "Components",
         moduleId: function Components() {
             return import(/* webpackChunkName: "components-viewmodel" */ "./ko-components/ko-components");
-        },
-        nav: true,
-    },
-    {
-        route: "todo",
-        title: "Todo",
-        moduleName: "Todo",
-        moduleId: function Todo() {
-            return import(/* webpackChunkName: "components-viewmodel" */ "./material-todo/material-todo");
         },
         nav: true,
     },
