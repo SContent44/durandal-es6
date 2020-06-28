@@ -1,3 +1,6 @@
+/* eslint-disable no-continue */
+/* eslint-disable no-restricted-syntax */
+/* eslint-disable guard-for-in */
 /* eslint-disable func-names */
 /* eslint-disable eqeqeq */
 /* eslint-disable no-underscore-dangle */
@@ -221,22 +224,10 @@ function CompositionModule() {
         const replacementParts = composition.getParts(parts);
         const standardParts = composition.getParts(context.child);
 
-        // TODO test this behaviour
-        Object.keys(replacementParts).forEach(function (partId) {
-            const toReplace = standardParts[partId] || $(`[data-part="${partId}"]`, context.child).get(0);
-
-            if (!toReplace) {
-                system.log(`Could not find part to override: ${partId}`);
-            } else {
-                toReplace.parentNode.replaceChild(replacementParts[partId], toReplace);
-            }
-        });
-
-        /* Replaced with the above 
-        for (let partId in replacementParts) {
+        for (const partId in replacementParts) {
             let toReplace = standardParts[partId];
             if (!toReplace) {
-                toReplace = $('[data-part="' + partId + '"]', context.child).get(0);
+                toReplace = $(`[data-part="${partId}"]`, context.child).get(0);
                 if (!toReplace) {
                     system.log(`Could not find part to override: ${partId}`);
                     continue;
@@ -245,7 +236,6 @@ function CompositionModule() {
 
             toReplace.parentNode.replaceChild(replacementParts[partId], toReplace);
         }
-        */
     }
 
     function removePreviousView(context) {
@@ -420,20 +410,11 @@ function CompositionModule() {
                 },
             };
 
-            // TODO test this behaviour
-            Object.keys(config).forEach(function (key) {
-                if (key !== "init" && key !== "update") {
-                    handler[key] = config[key];
-                }
-            });
-
-            /* replaced with above
-            for (key in config) {
+            for (const key in config) {
                 if (key !== "init" && key !== "update") {
                     handler[key] = config[key];
                 }
             }
-            */
         },
         /**
          * Gets an object keyed with all the elements that are replacable parts, found within the supplied elements. The key will be the part name and the value will be the element itself.
@@ -669,21 +650,13 @@ function CompositionModule() {
                 activatorPresent = activator.isActivator(settings.model);
             }
 
-            // TODO confirm behaviour is as expected
-            Object.keys(settings).forEach(function (attrName) {
-                if (ko.utils.arrayIndexOf(bindableSettings, attrName) !== -1) {
-                    settings[attrName] = ko.utils.unwrapObservable(settings[attrName]);
-                }
-            });
-
-            /* replace forin loop with the above
-            for (let attrName in settings) {
+            for (const attrName in settings) {
                 if (ko.utils.arrayIndexOf(bindableSettings, attrName) != -1) {
                     settings[attrName] = ko.utils.unwrapObservable(settings[attrName]);
                 } else {
                     // settings[attrName] = settings[attrName];
                 }
-            } */
+            }
 
             if (activatorPresent) {
                 settings.activate = false;
@@ -742,10 +715,9 @@ function CompositionModule() {
          * @param {object} [bindingContext] The current binding context.
          */
         compose(element, settings, bindingContext, fromBinding) {
-            // TODO hide this behind debug flag?
             if (settings.model && typeof settings.model === "string") {
                 system.error(
-                    "You've passed a string for a model, check that you are not use deprecated RequireJS behaviour"
+                    "You've passed a string for a model, check that you are not using deprecated RequireJS behaviour."
                 );
             }
 
