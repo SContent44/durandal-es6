@@ -7,17 +7,18 @@
             aria-labelledby="my-dialog-title"
             aria-describedby="my-dialog-content"
         >
-            <div class="mdc-dialog__content" id="my-dialog-content">
-                Are you sure you want to leave this page?
-            </div>
-            <div class="mdc-dialog__actions">
-                <button type="button" class="mdc-button mdc-dialog__button" data-mdc-dialog-action="cancel">
+            <!-- Title cannot contain leading whitespace due to mdc-typography-baseline-top() -->
+            <h2 class="mdc-dialog__title" id="my-dialog-title" data-bind="text: title"></h2>
+            <div class="mdc-dialog__content" id="my-dialog-content" data-bind="text: message"></div>
+            <div class="mdc-dialog__actions" data-bind="foreach: buttons">
+                <!-- <material-button params="text: label, action: action"></material-button> -->
+                <button
+                    type="button"
+                    class="mdc-button mdc-dialog__button"
+                    data-bind="attr: { 'data-mdc-dialog-action': label }, click: action"
+                >
                     <div class="mdc-button__ripple"></div>
-                    <span class="mdc-button__label">No</span>
-                </button>
-                <button type="button" class="mdc-button mdc-dialog__button" data-mdc-dialog-action="discard">
-                    <div class="mdc-button__ripple"></div>
-                    <span class="mdc-button__label">Yes</span>
+                    <span class="mdc-button__label" data-bind="text: label"></span>
                 </button>
             </div>
         </div>
