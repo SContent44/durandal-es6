@@ -4,6 +4,7 @@
     "scripts": {
         "prettier": "npx prettier --config ./.prettierrc --write ./**",
         "dev-starter": "lerna run --scope durandal-starterkit serve --stream",
+        "dev-playground": "lerna run --scope durandal-playground serve --stream",
         "build-starter": "lerna run --scope durandal-starterkit build --stream",
         "stat-starter": "lerna run --scope durandal-starterkit webpack-stats --stream",
         "analyze-starter": "lerna run --scope durandal-starterkit webpack-analyze --stream"
