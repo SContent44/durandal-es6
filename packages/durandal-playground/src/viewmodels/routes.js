@@ -13,8 +13,8 @@ export default [
         route: "picsum",
         title: "Picsum",
         moduleName: "Picsum",
-        moduleId: function Flickr() {
-            return import(/* webpackChunkName: "flickr-viewmodel" */ "./flickr/flickr");
+        moduleId: function Picsum() {
+            return import(/* webpackChunkName: "flickr-viewmodel" */ "./picsum/picsum");
         },
         nav: true,
     },

@@ -1,9 +1,0 @@
-@use "@material/dialog";
-@use "@material/button";
-
-@include dialog.core-styles;
-@include button.core-styles;
-
-.mdc-button {
-    line-height: 2.25rem;
-}

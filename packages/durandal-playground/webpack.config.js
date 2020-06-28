@@ -14,7 +14,7 @@ const GLOBALS = {
 
 module.exports = {
     mode: "development",
-    entry: path.join(__dirname, "src", "main.js"),
+    entry: ["whatwg-fetch", path.join(__dirname, "src", "main.js")],
     output: {
         path: path.join(__dirname, "/dist"),
         filename: "[name].[chunkhash:8].js",
