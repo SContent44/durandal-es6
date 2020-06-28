@@ -13,14 +13,6 @@ import Shell from "./viewmodels/shell/shell";
 
 import "css/material-basic.scss";
 
-//import "css/ie10mobile.css";
-//import "css/starterkit.css";
-//import "durandal/css/durandal.css";
-//import "lib/font-awesome/css/font-awesome.min.css";
-//
-//import "bootstrap/dist/css/bootstrap.min.css";
-//import "bootstrap/dist/js/bootstrap.min";
-
 // Install widgets
 import widgets from "./widgets";
 
