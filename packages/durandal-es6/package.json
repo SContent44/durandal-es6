@@ -1,4 +1,4 @@
-{    
+{
     "name": "durandal-es6",
     "version": "0.1.0",
     "description": "Durandal is a cross-device, cross-platform client framework written in JavaScript and designed to make Single Page Applications (SPAs) easy to create and maintain. This framework replaces the dependency on RequireJS and instead uses ES modules.",
@@ -22,7 +22,6 @@
     "license": "MIT",
     "repository": {
         "type": "git",
-        "url": "https://github.com/SContent44/durandal-es6/tree/master/packages/durandal-es6"
+        "url": "https://github.com/SContent44/durandal-es6/"
     }
-
 }
