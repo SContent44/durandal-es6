@@ -141,7 +141,7 @@ function SystemModule() {
             if (!obj) {
                 return null;
             }
-            // Check this
+            // TODO current behaviour being used to identify moduleId for router logging
             if (typeof obj === "function" && obj.prototype) {
                 return obj.prototype.__moduleId__;
             }

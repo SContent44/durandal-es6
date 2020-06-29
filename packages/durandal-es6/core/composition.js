@@ -1,3 +1,4 @@
+/* eslint-disable no-self-assign */
 /* eslint-disable no-continue */
 /* eslint-disable no-restricted-syntax */
 /* eslint-disable guard-for-in */
@@ -628,7 +629,6 @@ function CompositionModule() {
             let settings = ko.utils.unwrapObservable(value) || {};
             let activatorPresent = activator.isActivator(value);
 
-            // TODO review the old if conidtion of the model from the settings, and the activate: !activator present
             if (system.isString(settings)) {
                 if (settings.trim().charAt(0) === "<") {
                     settings = settings.trim();
@@ -654,7 +654,7 @@ function CompositionModule() {
                 if (ko.utils.arrayIndexOf(bindableSettings, attrName) != -1) {
                     settings[attrName] = ko.utils.unwrapObservable(settings[attrName]);
                 } else {
-                    // settings[attrName] = settings[attrName];
+                    settings[attrName] = settings[attrName];
                 }
             }
 
@@ -688,7 +688,7 @@ function CompositionModule() {
                 context.strategy = this.defaultStrategy;
             }
 
-            // TODO: Look at this
+            // TODO: Allow it for imports
             if (system.isString(context.strategy)) {
                 system
                     .acquire(context.strategy)
