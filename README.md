@@ -32,14 +32,6 @@ This library achieves this by changing the `acquire` function in the System modu
 
 This is only designed for people who are currently using DurandalJS and are looking for an in place - for example using the same build tooling (such as Webpack or Rollup).
 
-Here's why:
-
--   Your time should be focused on creating something amazing. A project that solves a problem and helps others
-
-*   You shouldn't be doing the same tasks over and over like creating a README from scratch
-
--   You should element DRY principles to the rest of your life :smile:
-
 ### Built With
 
 This work is of course based on top of [DurandalJS](https://github.com/BlueSpire/Durandal).
