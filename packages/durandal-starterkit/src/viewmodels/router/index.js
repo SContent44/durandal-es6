@@ -1,4 +1,4 @@
-import router from "durandal/plugins/router";
+import { router } from "durandal/plugins";
 import viewTemplate from "./index.html";
 
 import routes from "./routes";

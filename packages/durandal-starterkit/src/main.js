@@ -6,7 +6,7 @@ import ko from "knockout";
 import validation from "knockout.validation";
 
 import { app, system } from "durandal/core";
-import router from "durandal/plugins/router";
+import { router } from "durandal/plugins";
 
 import ComponentSetup from "./Components";
 import Shell from "./viewmodels/shell/shell";

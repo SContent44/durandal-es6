@@ -1,6 +1,6 @@
 ﻿import ko from "knockout";
 import { app } from "durandal/core";
-import router from "durandal/plugins/router";
+import { router } from "durandal/plugins";
 
 import viewTemplate from "./shell.html";
 import routes from "../routes";
