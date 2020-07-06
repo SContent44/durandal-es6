@@ -9,6 +9,7 @@ class ShellViewModel {
     constructor() {
         this.view = viewTemplate;
 
+        this.router = router;
         this.isExpanded = ko.observable(false);
         this.toggle = () => {
             this.isExpanded(!this.isExpanded());
