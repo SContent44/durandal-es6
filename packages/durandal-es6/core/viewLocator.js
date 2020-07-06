@@ -37,6 +37,8 @@ function ViewLocatorModule() {
          */
         locateViewForObject(obj, elementsToSearch) {
             let view;
+            const noViewMessage =
+                "WARNING: No view found provided. Make sure that you a provide a view via a view property on the viewmodel (or via your custom getView function)";
 
             // Still able to override the new default behaviour via a getView function
             if (obj.getView) {
@@ -48,25 +50,30 @@ function ViewLocatorModule() {
 
             // The new default behaviour
             // Check if view is current "cached" if cacheViews is on
-            const hash = viewEngine.hashCode(obj.view.trim());
-            if (hash && elementsToSearch && elementsToSearch.length > 0) {
-                const existing = findInElements(elementsToSearch, hash);
-                if (existing) {
-                    return system
-                        .defer((dfd) => {
-                            dfd.resolve(existing);
-                        })
-                        .promise();
+            if (!!obj.view && system.isString(obj.view)) {
+                const hash = viewEngine.hashCode(obj.view.trim());
+                if (hash && elementsToSearch && elementsToSearch.length > 0) {
+                    const existing = findInElements(elementsToSearch, hash);
+                    if (existing) {
+                        return system
+                            .defer((dfd) => {
+                                dfd.resolve(existing);
+                            })
+                            .promise();
+                    }
                 }
+                view = viewEngine.createView(obj.view, hash);
+                return this.locateView(view);
             }
 
-            if (obj.view) {
-                view = viewEngine.createView(obj.view, hash);
+            // No view or getView provided
+            if (system.debug()) {
+                system.log(noViewMessage);
+                view = viewEngine.createFallbackView();
             } else {
-                system.error(
-                    "No view found on the object. Make sure that you a provide view property that has your html template."
-                );
+                system.error(noViewMessage);
             }
+
             return this.locateView(view);
         },
         /**
