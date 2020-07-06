@@ -5,8 +5,8 @@
     "main": "index.html",
     "scripts": {
         "lint": "eslint ./** --config ../../.eslintrc.js --ext .js",
-        "serve": "webpack-dev-server -d",
-        "build": "webpack --prod",
+        "serve": "webpack-dev-server --mode=development",
+        "build": "webpack -p",
         "webpack-stats": "webpack --profile --json > stats.json",
         "webpack-analyze": "webpack-bundle-analyzer stats.json"
     },

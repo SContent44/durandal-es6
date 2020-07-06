@@ -4,14 +4,7 @@ const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const ExtractCssChunks = require("extract-css-chunks-webpack-plugin");
 
-const DEBUG = !process.argv.production;
-const GLOBALS = {
-    "process.env.NODE_ENV": DEBUG ? '"development"' : '"production"',
-    __DEV__: DEBUG,
-};
-
 module.exports = {
-    mode: "development",
     entry: path.join(__dirname, "src", "main.js"),
     output: {
         path: path.join(__dirname, "/dist"),
@@ -115,19 +108,9 @@ module.exports = {
             template: "./src/index.html",
             favicon: "./src/img/favicon.ico",
         }),
-        new webpack.DefinePlugin(GLOBALS),
-        new webpack.optimize.OccurrenceOrderPlugin(),
         new CleanWebpackPlugin(),
         new ExtractCssChunks(),
-    ].concat(
-        DEBUG
-            ? []
-            : [
-                  new webpack.optimize.DedupePlugin(),
-                  new webpack.optimize.UglifyJsPlugin(),
-                  new webpack.optimize.AggressiveMergingPlugin(),
-              ]
-    ),
+    ],
     resolve: {
         extensions: [".js"],
         modules: ["node_modules", "src"],
