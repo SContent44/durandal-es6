@@ -50,6 +50,7 @@ module.exports = {
                 loader: "html-loader",
                 options: {
                     esModule: true,
+                    minimize: { removeComments: false },
                 },
             },
             /* {
