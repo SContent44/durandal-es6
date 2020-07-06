@@ -139,13 +139,13 @@ function DialogPluginModule() {
     };
 
     MessageBox.prototype.getButtonText = function (stringOrObject) {
-        const t = $.type(stringOrObject);
+        const t = typeof stringOrObject;
         if (t === "string") {
             return stringOrObject;
         }
 
         if (t === "object") {
-            if ($.type(stringOrObject.text) === "string") {
+            if (typeof stringOrObject.text === "string") {
                 return stringOrObject.text;
             }
 
@@ -158,12 +158,12 @@ function DialogPluginModule() {
     };
 
     MessageBox.prototype.getButtonValue = function (stringOrObject) {
-        const t = $.type(stringOrObject);
+        const t = typeof stringOrObject;
         if (t === "string") {
             return stringOrObject;
         }
         if (t === "object") {
-            if ($.type(stringOrObject.value) === "undefined") {
+            if (typeof stringOrObject.value === "undefined") {
                 system.error("The object for a MessageBox button does not have a value property defined.");
                 return null;
             }
