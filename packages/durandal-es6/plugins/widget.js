@@ -62,12 +62,14 @@ function WidgetModule() {
          * @param {string} kind The kind to create a custom binding handler for.
          */
         registerKind(kind) {
+            // TODO to avoid strange minifier behave look to see doing the
+            // same fix of an array of objects for the router and perhaps compose in general
             const kindName = kind.name;
 
-            system.acquire(kind).then(function (resolvedModule) {
+            system.acquire(kind.model).then(function (resolvedModule) {
                 kindModuleMaps[kindName] =
                     resolvedModule &&
-                    typeof transition === "object" &&
+                    typeof resolvedModule === "object" &&
                     resolvedModule.__esModule &&
                     resolvedModule.default
                         ? resolvedModule.default
@@ -153,7 +155,9 @@ function WidgetModule() {
                 const toRegister = config.kinds;
 
                 for (let i = 0; i < toRegister.length; i += 1) {
-                    widget.registerKind(toRegister[i]);
+                    const moduleToRegister = toRegister[i];
+
+                    widget.registerKind(moduleToRegister);
                 }
             }
 
