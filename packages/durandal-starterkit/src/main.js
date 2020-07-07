@@ -24,7 +24,7 @@ import widgets from "./widgets";
 
 // Webpack sets this __DEV__ variable. See `webpack.config.js` file
 // eslint-disable-next-line no-undef
-if (!!process.env.NODE_ENV || !process.env.NODE_ENV === "production") {
+if (process.env.NODE_ENV === "development") {
     system.debug(true);
 
     window.ko = ko;
