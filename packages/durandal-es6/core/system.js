@@ -133,46 +133,25 @@ function SystemModule() {
         noop,
         /**
          * Gets the module id for the specified object.
-         * @method getModuleId
+         * @method getModuleName
          * @param {object} obj The object whose module id you wish to determine.
          * @return {string} The module id.
          */
-        getModuleId(obj) {
-            if (!obj) {
-                return null;
-            }
-            // TODO current behaviour being used to identify moduleId for router logging
-            if (typeof obj === "function" && obj.prototype) {
-                return obj.prototype.__moduleId__;
-            }
-
-            if (typeof obj === "string") {
+        getModuleName(ModelInstance) {
+            if (!ModelInstance) {
                 return null;
             }
 
-            return obj.__moduleId__;
-        },
-        /**
-         * Sets the module id for the specified object.
-         * @method setModuleId
-         * @param {object} obj The object whose module id you wish to set.
-         * @param {string} id The id to set for the specified object.
-         */
-        setModuleId(obj, id) {
-            if (!obj) {
-                return;
+            // Make an instance of the model to access it's moduleName property
+            if (typeof ModelInstance === "function") {
+                return new ModelInstance().moduleName;
             }
 
-            if (typeof obj === "function" && obj.constructor.prototype) {
-                obj.constructor.prototype.__moduleId__ = id;
-                return;
+            if (typeof ModelInstance === "object") {
+                return ModelInstance.moduleName;
             }
 
-            if (typeof obj === "string") {
-                return;
-            }
-
-            obj.__moduleId__ = id;
+            return null;
         },
         /**
          * Resolves the default object instance for a module. If the module is an object, the module is returned. If the module is a function, that function is called with `new` and it's result is returned.
@@ -180,7 +159,7 @@ function SystemModule() {
          * @param {object} module The module to use to get/create the default object for.
          * @return {object} The default object for the module.
          */
-        resolveObject(module, name) {
+        resolveObject(module) {
             // Check if this is a es6 module default export
             let moduleToResolve =
                 module && typeof module === "object" && module.__esModule && module.default ? module.default : module;
@@ -188,17 +167,6 @@ function SystemModule() {
             if (system.isFunction(moduleToResolve)) {
                 // eslint-disable-next-line new-cap
                 moduleToResolve = new moduleToResolve();
-            }
-
-            // Check if the module instance's __moduleId__ has been set on the object/function
-            if (!moduleToResolve.__moduleId__) {
-                // Name priority
-                // 1. viewName property on the module
-                // 2. passed in name param to provide a name that might not be translated directly from the module
-                // 3. The name of the constructor for the module
-                const viewName = moduleToResolve.viewName || name || moduleToResolve.constructor.name;
-
-                system.setModuleId(moduleToResolve, viewName);
             }
 
             return moduleToResolve;

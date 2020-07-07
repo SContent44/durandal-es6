@@ -8,6 +8,7 @@ import routes from "../routes";
 class ShellViewModel {
     constructor() {
         this.view = viewTemplate;
+        this.moduleName = "ShellViewModel";
 
         this.router = router;
         this.isExpanded = ko.observable(false);
@@ -33,7 +34,7 @@ class ShellViewModel {
 
     // eslint-disable-next-line class-methods-use-this
     activate() {
-        router.map(routes).buildNavigationModel();
+        router.map(routes).buildNavigationModel().mapUnknownRoutes();
 
         return router.activate();
     }

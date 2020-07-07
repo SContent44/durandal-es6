@@ -63,7 +63,7 @@ function BinderModule() {
             binder.binding(data, view, instruction);
 
             if (instruction.applyBindings) {
-                system.log("Binding", data.__moduleId__, data);
+                system.log("Binding", data.moduleName, data);
                 ko.applyBindings(bindingTarget, view);
             } else if (obj) {
                 ko.utils.domData.set(view, koBindingContextKey, { $data: obj });
@@ -79,7 +79,7 @@ function BinderModule() {
             // eslint-disable-next-line consistent-return
             return instruction;
         } catch (e) {
-            e.message = `${e.message};\nView: ${viewName};\nModuleId: ${system.getModuleId(data)}`;
+            e.message = `${e.message};\nView: ${view.outerHTML};\nModuleId: ${system.getModuleName(data)}`;
             if (binder.throwOnErrors) {
                 system.error(e);
             } else {

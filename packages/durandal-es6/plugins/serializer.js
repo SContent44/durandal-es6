@@ -89,7 +89,7 @@ function SerializerModule() {
 
             // eslint-disable-next-line eqeqeq
             if (arguments.length == 1) {
-                const id = first[this.typeAttribute] || system.getModuleId(first);
+                const id = first[this.typeAttribute] || system.getModuleName(first);
                 this.typeMap[id] = first;
             } else {
                 this.typeMap[first] = arguments[1];

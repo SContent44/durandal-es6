@@ -249,7 +249,7 @@ function RouterModule() {
         function completeNavigation(instance, instruction, mode) {
             system.log("Navigation Complete", instance, instruction);
 
-            const fromModuleId = system.getModuleId(currentActivation);
+            const fromModuleId = system.getModuleName(currentActivation);
             if (fromModuleId) {
                 router.trigger(`router:navigation:from:${fromModuleId}`);
             }
@@ -260,7 +260,7 @@ function RouterModule() {
             currentInstruction = instruction;
             setCurrentInstructionRouteIsActive(true);
 
-            const toModuleId = system.getModuleId(currentActivation);
+            const toModuleId = system.getModuleName(currentActivation);
             if (toModuleId) {
                 router.trigger(`router:navigation:to:${toModuleId}`);
             }
@@ -412,8 +412,7 @@ function RouterModule() {
         function canReuseCurrentActivation(instruction) {
             return (
                 currentInstruction &&
-                // TODO revisit this, but for now using the moduleName as the unique identifier to compare for now
-                currentInstruction.config.moduleName === instruction.config.moduleName &&
+                currentInstruction.config === instruction.config &&
                 currentActivation &&
                 ((currentActivation.canReuseForRoute &&
                     currentActivation.canReuseForRoute.apply(currentActivation, instruction.params)) ||
@@ -460,7 +459,7 @@ function RouterModule() {
                 system
                     .acquire(instruction.config.moduleId)
                     .then(function (m) {
-                        const instance = system.resolveObject(m, instruction.config.moduleId.name);
+                        const instance = system.resolveObject(m);
 
                         ensureActivation(activeItem, instance, instruction);
                     })
@@ -920,9 +919,13 @@ function RouterModule() {
                 };
 
                 if (!config) {
-                    instruction.config.moduleId = fragment;
-                } else if (system.isString(config)) {
-                    instruction.config.moduleId = config;
+                    // We're not dynamically taking unknown modules at runtime so will instead
+                    // just redirect to root route if defined or throw error
+                    return redirect("/");
+                }
+
+                if (system.isObject(config)) {
+                    instruction.config.moduleId = config.model;
                     if (replaceRoute) {
                         history.navigate(replaceRoute, {
                             trigger: false,

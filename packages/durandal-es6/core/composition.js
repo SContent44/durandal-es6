@@ -727,7 +727,7 @@ function CompositionModule() {
 
             // If we have a model passed in we will use it's context
             if (settings.model) {
-                settings.model = system.resolveObject(settings.model, settings.model.__moduleId__);
+                settings.model = system.resolveObject(settings.model);
             }
 
             compositionCount += 1;

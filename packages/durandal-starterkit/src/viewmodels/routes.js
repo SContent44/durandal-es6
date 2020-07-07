@@ -4,7 +4,7 @@ export default [
     {
         route: "",
         title: "Welcome",
-        moduleId: function Welcomes() {
+        moduleId() {
             return Welcome;
         },
         nav: true,
@@ -12,8 +12,7 @@ export default [
     {
         route: "picsum",
         title: "Picsum",
-        moduleName: "Picsum",
-        moduleId: function Picsum() {
+        moduleId() {
             return import(/* webpackChunkName: "picsum-viewmodel" */ "./picsum/picsum");
         },
         nav: true,
@@ -22,8 +21,7 @@ export default [
         route: "router*details",
         hash: "#router",
         title: "Router",
-        moduleName: "Router",
-        moduleId: function Router() {
+        moduleId() {
             return import(/* webpackChunkName: "router-viewmodel" */ "./router/index");
         },
         nav: true,
@@ -31,8 +29,7 @@ export default [
     {
         route: "binding",
         title: "Binding",
-        moduleName: "Binding",
-        moduleId: function Binding() {
+        moduleId() {
             return import(/* webpackChunkName: "binding-viewmodel" */ "./binding/binding");
         },
         nav: true,
@@ -40,8 +37,7 @@ export default [
     {
         route: "widgets",
         title: "Widgets",
-        moduleName: "Widgets",
-        moduleId: function Widgets() {
+        moduleId() {
             return import(/* webpackChunkName: "widgets-viewmodel" */ "./widgets/widgets");
         },
         nav: true,
@@ -49,8 +45,7 @@ export default [
     {
         route: "components",
         title: "Components",
-        moduleName: "Components",
-        moduleId: function Components() {
+        moduleId() {
             return import(/* webpackChunkName: "components-viewmodel" */ "./ko-components/ko-components");
         },
         nav: true,
