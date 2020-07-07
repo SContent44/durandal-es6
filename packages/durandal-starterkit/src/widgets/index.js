@@ -4,5 +4,5 @@ const Alert = function Alert() {
 };
 
 export default {
-    kinds: [{ name: "Alert", model: Alert }],
+    kinds: [Alert],
 };

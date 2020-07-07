@@ -62,18 +62,18 @@ function WidgetModule() {
          * @param {string} kind The kind to create a custom binding handler for.
          */
         registerKind(kind) {
-            // TODO to avoid strange minifier behave look to see doing the
-            // same fix of an array of objects for the router and perhaps compose in general
-            const kindName = kind.name;
-
-            system.acquire(kind.model).then(function (resolvedModule) {
-                kindModuleMaps[kindName] =
+            system.acquire(kind).then(function (resolvedModule) {
+                resolvedModule =
                     resolvedModule &&
                     typeof resolvedModule === "object" &&
                     resolvedModule.__esModule &&
                     resolvedModule.default
                         ? resolvedModule.default
                         : resolvedModule;
+
+                const kindName = system.getModuleName(resolvedModule);
+
+                kindModuleMaps[kindName] = resolvedModule;
 
                 ko.bindingHandlers[kindName] = {
                     init() {
@@ -103,15 +103,6 @@ function WidgetModule() {
                 system.error(`Missing or invalid widget requested: ${kind}`);
             }
             return module;
-        },
-        /**
-         * Converts a kind name to it's view id. Used to conventionally map kinds who aren't explicitly mapped through `mapKind`.
-         * @method convertKindToViewPath
-         * @param {string} kind The kind name.
-         * @return {string} The view id.
-         */
-        convertKindToViewPath(kind) {
-            return `widgets/${kind}/view`;
         },
         createCompositionSettings(element, settings) {
             if (!settings.model) {
