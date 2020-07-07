@@ -20,7 +20,7 @@ module.exports = {
             }, */
             {
                 test: /\.js$/,
-                exclude: /node_modules/,
+                include: [path.resolve(__dirname, "src"), path.resolve(__dirname, "..", "durandal-es6")],
                 use: {
                     loader: "babel-loader",
                     options: {
