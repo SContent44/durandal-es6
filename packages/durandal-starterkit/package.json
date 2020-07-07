@@ -25,7 +25,8 @@
         "jquery": "^3.5.1",
         "jquery-migrate": "^3.3.1",
         "knockout": "^3.5.1",
-        "knockout.validation": "^2.0.4"
+        "knockout.validation": "^2.0.4",
+        "whatwg-fetch": "^3.1.0"
     },
     "devDependencies": {
         "@babel/core": "^7.10.3",

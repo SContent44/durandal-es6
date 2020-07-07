@@ -1,5 +1,6 @@
 ﻿import ko from "knockout";
 import { app } from "durandal/core";
+import "whatwg-fetch";
 
 import viewTemplate from "./picsum.html";
 import itemTemplate from "./detail.html";
