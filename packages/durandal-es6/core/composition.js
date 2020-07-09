@@ -503,7 +503,7 @@ function CompositionModule() {
                             endComposition(context, element);
                         });
                     })
-                    .fail(function (err) {
+                    .catch(function (err) {
                         onError(
                             context,
                             `Failed to load transition (${transitionModuleName}). Details: ${err.message}`,
@@ -696,7 +696,7 @@ function CompositionModule() {
                         context.strategy = strategy;
                         composition.executeStrategy(context, element);
                     })
-                    .fail(function (err) {
+                    .catch(function (err) {
                         onError(
                             context,
                             `Failed to load view strategy (${context.strategy}). Details: ${err.message}`,

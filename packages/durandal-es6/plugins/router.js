@@ -364,7 +364,7 @@ function RouterModule() {
                         startDeferred = null;
                     }
                 })
-                .fail(function (err) {
+                .catch(function (err) {
                     system.error(err);
                 });
         }
@@ -463,7 +463,7 @@ function RouterModule() {
 
                         ensureActivation(activeItem, instance, instruction);
                     })
-                    .fail(function (err) {
+                    .catch(function (err) {
                         cancelNavigation(null, instruction);
                         system.error(
                             `Failed to load routed module (${instruction.config.moduleId}). Details: ${err.message}`,

@@ -206,7 +206,7 @@ function DialogPluginModule() {
                         .then(function (module) {
                             dfd.resolve(system.resolveObject(module));
                         })
-                        .fail(function (err) {
+                        .catch(function (err) {
                             system.error(`Failed to load dialog module (${moduleToResolve}). Details: ${err.message}`);
                         });
                 } else {
