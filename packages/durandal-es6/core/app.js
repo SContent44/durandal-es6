@@ -1,5 +1,4 @@
 ﻿/* eslint-disable func-names */
-import $ from "jquery";
 import system from "./system";
 import composition from "./composition";
 import Events from "./events";
@@ -14,48 +13,54 @@ import Events from "./events";
  * @requires events
  */
 function AppModule() {
-    const allPluginIds = [];
-    const allPluginConfigs = [];
+    const pluginManifest = [];
+
+    function documentReady(fn) {
+        // see if DOM is already available
+        if (document.readyState === "complete" || document.readyState === "interactive") {
+            // call on next available tick
+            setTimeout(fn, 1);
+        } else {
+            document.addEventListener("DOMContentLoaded", fn);
+        }
+    }
 
     function loadPlugins() {
-        return system
-            .defer(function (dfd) {
-                if (allPluginIds.length === 0) {
-                    dfd.resolve();
-                    return;
-                }
+        if (pluginManifest.length === 0) {
+            return;
+        }
 
-                const pluginsToInstall = [];
+        const pluginsToInstall = [];
 
-                for (let i = 0; i < allPluginIds.length; i += 1) {
-                    const pluginPromise = system.acquire(allPluginIds[i]).then(function (loaded) {
-                        const module = system.resolveObject(loaded);
+        pluginManifest.forEach(function (pluginToLoad) {
+            pluginsToInstall.push(
+                system.acquire(pluginToLoad.module).then(function (pluginModule) {
+                    const plugin = system.resolveObject(pluginModule);
 
-                        if (module.install) {
-                            let config = allPluginConfigs[i];
-                            if (!system.isObject(config)) {
-                                config = {};
-                            }
-
-                            module.install(config);
-                            system.log(`Plugin:Installed ${allPluginIds[i].name}`);
-                        } else {
-                            system.log(`Plugin:Loaded ${allPluginIds[i].name}`);
+                    if (plugin.install) {
+                        let { config } = pluginToLoad;
+                        if (!system.isObject(config)) {
+                            config = {};
                         }
-                    });
-                    pluginsToInstall.push(pluginPromise);
-                }
 
-                Promise.all(pluginsToInstall).then(
-                    function () {
-                        dfd.resolve();
-                    },
-                    function (err) {
-                        system.error(`Failed to load plugin(s). Details: ${err.message}`);
+                        plugin.install(config);
+                        system.log(`Plugin:Installed ${pluginToLoad.module.name}`);
+                    } else {
+                        system.log(`Plugin:Loaded ${pluginToLoad.module.name}`);
                     }
-                );
-            })
-            .promise();
+                })
+            );
+        });
+
+        // eslint-disable-next-line consistent-return
+        return Promise.all(pluginsToInstall).then(
+            (resolve) => {
+                system.log("All plugins loaded.");
+            },
+            (error) => {
+                system.error(`Failed to load plugin(s). Details: ${error.message}`);
+            }
+        );
     }
 
     /**
@@ -77,47 +82,47 @@ function AppModule() {
         configurePlugins(config) {
             const pluginIds = system.keys(config);
 
-            for (let i = 0; i < pluginIds.length; i += 1) {
-                const key = pluginIds[i];
-                let plugin;
+            pluginIds.forEach(function (key, index) {
+                let pluginModule;
+
                 switch (key) {
                     case "router":
-                        plugin = function router() {
+                        pluginModule = function router() {
                             return import("../plugins/router");
                         };
                         break;
                     case "widget":
-                        plugin = function widget() {
+                        pluginModule = function widget() {
                             return import("../plugins/widget");
                         };
                         break;
                     case "dialog":
-                        plugin = function dialog() {
+                        pluginModule = function dialog() {
                             return import("../plugins/dialog");
                         };
                         break;
                     case "history":
-                        plugin = function history() {
+                        pluginModule = function history() {
                             return import("../plugins/history");
                         };
                         break;
                     case "http":
-                        plugin = function http() {
+                        pluginModule = function http() {
                             return import("../plugins/http");
                         };
                         break;
                     case "observable":
-                        plugin = function observable() {
+                        pluginModule = function observable() {
                             return import("../plugins/observable");
                         };
                         break;
                     case "serializer":
-                        plugin = function serializer() {
+                        pluginModule = function serializer() {
                             return import("../plugins/serializer");
                         };
                         break;
                     default:
-                        plugin = function notDefined() {
+                        pluginModule = function notDefined() {
                             return undefined;
                         };
                         system.error(
@@ -125,9 +130,11 @@ function AppModule() {
                         );
                 }
 
-                allPluginIds.push(plugin);
-                allPluginConfigs.push(config[key]);
-            }
+                pluginManifest.push({
+                    module: pluginModule,
+                    config: config[key],
+                });
+            });
         },
         /**
          * Starts the application.
@@ -141,16 +148,13 @@ function AppModule() {
                 document.title = this.title;
             }
 
-            return system
-                .defer(function (dfd) {
-                    $(function () {
-                        loadPlugins().then(function () {
-                            dfd.resolve();
-                            system.log("Application:Started");
-                        });
+            return Promise.resolve(
+                documentReady(function () {
+                    loadPlugins().then(function () {
+                        system.log("Application:Started");
                     });
                 })
-                .promise();
+            );
         },
         /**
          * Sets the root module/view for the application.
@@ -193,7 +197,7 @@ function AppModule() {
                                             composition.compose(hostElement, settings);
                                         }
                                     })
-                                    .fail(function (err) {
+                                    .catch(function (err) {
                                         system.error(err);
                                     });
                             } else if (result) {
