@@ -7,17 +7,11 @@ import $ from "jquery";
  * @requires jquery
  */
 function ViewEngineModule() {
-    let parseMarkup;
-
-    if ($.parseHTML) {
-        parseMarkup = function (html) {
-            return $.parseHTML(html);
-        };
-    } else {
-        parseMarkup = function (html) {
-            return $(html).get();
-        };
-    }
+    const parseMarkup = function (htmlString) {
+        const tmp = document.implementation.createHTMLDocument();
+        tmp.body.innerHTML = htmlString;
+        return tmp.body.children;
+    };
 
     /**
      * @class ViewEngineModule
