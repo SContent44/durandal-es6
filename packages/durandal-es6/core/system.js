@@ -247,24 +247,7 @@ function SystemModule() {
          */
         acquire(moduleToResolve) {
             if (system.isFunction(moduleToResolve)) {
-                // Still wrapped in the system.defer because the router expects to be returned a promise with a .fail
-                return system.defer(async (dfd) => {
-                    const module = await Promise.resolve(moduleToResolve);
-                    // Execute the promise and then resolve or reject the result
-                    if (system.isPromise(module())) {
-                        module().then(
-                            (resolvedModule) => {
-                                dfd.resolve(resolvedModule);
-                            },
-                            (error) => {
-                                dfd.reject(error);
-                            }
-                        );
-                    } else {
-                        // If it's not a promise it's a function or an object
-                        dfd.resolve(module);
-                    }
-                });
+                return Promise.resolve(moduleToResolve());
             }
             return system.error(
                 "You are not using the durandal-es6 behaviour. Pass in a function that will resolve to return either a function, object, or a promise<functon|object>."

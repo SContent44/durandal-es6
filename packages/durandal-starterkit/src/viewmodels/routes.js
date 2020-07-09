@@ -1,4 +1,5 @@
 import Welcome from "./welcome/welcome";
+import Binding from "./binding/binding";
 
 export default [
     {
@@ -30,7 +31,7 @@ export default [
         route: "binding",
         title: "Binding",
         moduleId() {
-            return import(/* webpackChunkName: "binding-viewmodel" */ "./binding/binding");
+            return Binding;
         },
         nav: true,
     },
