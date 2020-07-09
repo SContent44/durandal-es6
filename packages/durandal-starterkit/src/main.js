@@ -2,7 +2,6 @@ import $ from "jquery";
 import "jquery-migrate";
 
 import ko from "knockout";
-// eslint-disable-next-line no-unused-vars
 import validation from "knockout.validation";
 
 import { app, system } from "durandal/core";
@@ -19,7 +18,7 @@ import "lib/font-awesome/css/font-awesome.min.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.min";
 
-// Install widgets
+// Array of widgets to install
 import widgets from "./widgets";
 
 // Webpack sets this __DEV__ variable. See `webpack.config.js` file
@@ -46,5 +45,5 @@ ComponentSetup();
 // Start the appliction
 app.start().then(() => {
     // Show the app by setting the root view model for our application with a transition.
-    return app.setRoot(Shell);
+    return app.setRoot(Shell, "fadeIn");
 });
