@@ -508,7 +508,6 @@ function RouterModule() {
 
                 // TODO revisit viewUrl functionality since no longer accepted flow
                 if (!config.viewUrl) {
-                    // TODO Could be a candidate location for setting the viewName based on the name of the function for the view id
                     config.moduleId = config.moduleId || router.convertRouteToModuleId(config.route);
                 }
 
