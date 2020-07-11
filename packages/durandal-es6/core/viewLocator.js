@@ -39,11 +39,12 @@ function ViewLocatorModule() {
 
             if (obj.getView) {
                 view = obj.getView();
-                if (view.trim().charAt(0) === "<") {
+                if (system.isString(obj.view) && view.trim().charAt(0) === "<") {
                     return this.locateView(view, elementsToSearch);
                 }
 
-                system.error("View must be a HTML string for it to work with the view caching functionality");
+                system.log("View must be a HTML string for it to work with the view caching functionality");
+                return this.locateView(view, elementsToSearch);
             }
 
             // The new default behaviour
