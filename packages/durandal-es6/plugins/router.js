@@ -968,7 +968,7 @@ function RouterModule() {
         /**
          * Makes all configured routes and/or module ids relative to a certain base url.
          * @method makeRelative
-         * @param {string|object} settings If string, the value is used as the base for routes and module ids. If an object, you can specify `route` and `moduleId` separately. In place of specifying route, you can set `fromParent:true` to make routes automatically relative to the parent router's active route.
+         * @param {object} settingss An object, you can specify `route` to prefix the routes. In place of specifying route, you can set `fromParent:true` to make routes automatically relative to the parent router's active route.
          * @chainable
          */
         router.makeRelative = function (settings) {
@@ -981,9 +981,10 @@ function RouterModule() {
             }
 
             router.on("router:route:before-config").then(function (config) {
-                // TODO this moduleId behaviour is no longer supported
                 if (settings.moduleId) {
-                    config.moduleId = settings.moduleId + config.moduleId;
+                    system.error(
+                        "The settings.moduleId behaviour has been removed. Ensure you have updated your app's route config to use the durandal-es6 behaviour for moduleId."
+                    );
                 }
 
                 if (settings.route) {
