@@ -765,7 +765,7 @@ function CompositionModule() {
                     settings.area = settings.area || "partial";
                     settings.preserveContext = true;
 
-                    viewLocator.locateView(settings.view, settings.area, settings.viewElements).then(function (child) {
+                    viewLocator.locateView(settings.view, settings.viewElements).then(function (child) {
                         composition.bindAndShow(child, element, settings);
                     });
                 }

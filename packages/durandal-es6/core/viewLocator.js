@@ -36,44 +36,32 @@ function ViewLocatorModule() {
          */
         locateViewForObject(obj, elementsToSearch) {
             let view;
-            const noViewMessage =
-                "WARNING: No view found provided. Make sure that you a provide a view via a view property on the viewmodel (or via your custom getView function)";
 
-            // Still able to override the new default behaviour via a getView function
             if (obj.getView) {
                 view = obj.getView();
-                if (view) {
+                if (view.trim().charAt(0) === "<") {
                     return this.locateView(view, elementsToSearch);
                 }
+
+                system.error("View must be a HTML string for it to work with the view caching functionality");
             }
 
             // The new default behaviour
             // Check if view is current "cached" if cacheViews is on
             if (!!obj.view && system.isString(obj.view)) {
-                const hash = viewEngine.hashCode(obj.view.trim());
-                if (hash && elementsToSearch && elementsToSearch.length > 0) {
-                    const existing = findInElements(elementsToSearch, hash);
-                    if (existing) {
-                        return system
-                            .defer((dfd) => {
-                                dfd.resolve(existing);
-                            })
-                            .promise();
-                    }
-                }
-                view = viewEngine.createView(obj.view, hash);
-                return this.locateView(view);
+                return this.locateView(obj.view, elementsToSearch);
             }
 
             // No view or getView provided
+            const noViewMessage =
+                "WARNING: No view found provided. Make sure that you a provide a view via a view property on the viewmodel (or via your custom getView function)";
             if (system.debug()) {
                 system.log(noViewMessage);
                 view = viewEngine.createFallbackView();
-            } else {
-                system.error(noViewMessage);
+                return this.locateView(view);
             }
 
-            return this.locateView(view);
+            system.error(noViewMessage);
         },
         /**
          * Locates the specified view.
@@ -83,16 +71,23 @@ function ViewLocatorModule() {
          * @param {DOMElement[]} [elementsToSearch] An existing set of elements to search first.
          * @return {Promise} A promise of the view.
          */
-        locateView(view) {
+        locateView(view, elementsToSearch) {
             if (typeof view === "string") {
-                // If we are passed a string see if it is a html string
-                if (view.trim().charAt(0) === "<") {
-                    view = view.trim();
-                    view = viewEngine.processMarkup(view);
-                } else if (viewEngine.isViewUrl(view)) {
-                    system.error(
-                        "Using a view URL is no longer supported. If you want to directly use a template import it and provide it for composition."
-                    );
+                view = view.trim();
+
+                if (view.charAt(0) === "<") {
+                    const hash = viewEngine.hashCode(view);
+                    if (hash && elementsToSearch && elementsToSearch.length > 0) {
+                        // If using cacheViews functionality
+                        const existing = findInElements(elementsToSearch, hash);
+                        if (existing) {
+                            view = existing;
+                        } else {
+                            view = viewEngine.createView(view, hash);
+                        }
+                    } else {
+                        view = viewEngine.createView(view, hash);
+                    }
                 } else {
                     system.error(
                         "This is not a HTML string. If you've tried to pass in a view ID it is no longer supported. If you want to directly use a HTML template import it and provide it for composition."
@@ -100,11 +95,7 @@ function ViewLocatorModule() {
                 }
             }
 
-            return system
-                .defer((dfd) => {
-                    dfd.resolve(view);
-                })
-                .promise();
+            return Promise.resolve(view);
         },
     };
 }
