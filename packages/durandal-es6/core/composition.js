@@ -473,10 +473,7 @@ function CompositionModule() {
                 system
                     .acquire(transitionModule)
                     .then(function (transition) {
-                        transition =
-                            transition && typeof transition === "object" && transition.__esModule && transition.default
-                                ? transition.default
-                                : transition;
+                        transition = system.checkForDefaultExport(transition);
                         context.transition = transition;
 
                         transition(context).then(function () {

@@ -62,18 +62,12 @@ function WidgetModule() {
          * @param {string} kind The kind to create a custom binding handler for.
          */
         registerKind(kind) {
-            system.acquire(kind).then(function (resolvedModule) {
-                resolvedModule =
-                    resolvedModule &&
-                    typeof resolvedModule === "object" &&
-                    resolvedModule.__esModule &&
-                    resolvedModule.default
-                        ? resolvedModule.default
-                        : resolvedModule;
+            system.acquire(kind).then(function (module) {
+                module = system.checkForDefaultExport(module);
 
-                const kindName = system.getModuleName(resolvedModule);
+                const kindName = system.getModuleName(module);
 
-                kindModuleMaps[kindName] = resolvedModule;
+                kindModuleMaps[kindName] = module;
 
                 ko.bindingHandlers[kindName] = {
                     init() {
