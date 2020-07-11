@@ -506,9 +506,14 @@ function RouterModule() {
             if (!system.isRegExp(config.route)) {
                 config.title = config.title || router.convertRouteToTitle(config.route);
 
-                // TODO revisit viewUrl functionality since no longer accepted flow
-                if (!config.viewUrl) {
-                    config.moduleId = config.moduleId || router.convertRouteToModuleId(config.route);
+                if (!config.moduleId) {
+                    system.error("A moduleId function that returns a viewmodel is required.");
+                }
+
+                if (config.viewUrl) {
+                    system.error(
+                        "The viewUrl behaviour is not supported in durandal-es6. Ensure you are using the moduleId behaviour and remove usage of the viewUrl."
+                    );
                 }
 
                 config.hash = config.hash || router.convertRouteToHash(config.route);
@@ -801,16 +806,6 @@ function RouterModule() {
             }
 
             return `#${route}`;
-        };
-
-        /**
-         * Converts a route to a module id. This is only called if no module id is supplied as part of the route mapping.
-         * @method convertRouteToModuleId
-         * @param {string} route
-         * @return {string} The module id.
-         */
-        router.convertRouteToModuleId = function convertRouteToModuleId(route) {
-            return stripParametersFromRoute(route);
         };
 
         /**
