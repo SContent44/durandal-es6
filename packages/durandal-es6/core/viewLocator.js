@@ -1,6 +1,5 @@
 ﻿/* eslint-disable no-param-reassign */
 /* eslint-disable eqeqeq */
-import $ from "jquery";
 import system from "./system";
 import viewEngine from "./viewEngine";
 
