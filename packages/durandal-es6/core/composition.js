@@ -685,24 +685,7 @@ function CompositionModule() {
                 context.strategy = this.defaultStrategy;
             }
 
-            // TODO: Allow it for imports
-            if (system.isString(context.strategy)) {
-                system
-                    .acquire(context.strategy)
-                    .then(function (strategy) {
-                        context.strategy = strategy;
-                        composition.executeStrategy(context, element);
-                    })
-                    .catch(function (err) {
-                        onError(
-                            context,
-                            `Failed to load view strategy (${context.strategy}). Details: ${err.message}`,
-                            element
-                        );
-                    });
-            } else {
-                this.executeStrategy(context, element);
-            }
+            this.executeStrategy(context, element);
         },
         /**
          * Initiates a composition.

@@ -78,7 +78,7 @@ function ViewLocatorModule() {
 
                 if (view.charAt(0) === "<") {
                     const hash = viewEngine.hashCode(view);
-                    if (hash && elementsToSearch && elementsToSearch.length > 0) {
+                    if (elementsToSearch && elementsToSearch.length > 0) {
                         // If using cacheViews functionality
                         const existing = findInElements(elementsToSearch, hash);
                         if (existing) {
