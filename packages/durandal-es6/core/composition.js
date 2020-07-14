@@ -695,66 +695,83 @@ function CompositionModule() {
          * @param {object} [bindingContext] The current binding context.
          */
         compose(element, settings, bindingContext, fromBinding) {
-            if (settings.model && typeof settings.model === "string") {
-                system.error(
-                    "You've passed a string for a model, check that you are not using deprecated RequireJS behaviour."
-                );
-            }
-
-            if (system.isFunction(settings)) {
-                settings.model = settings;
-            }
-
-            // If we have a model passed in we will use it's context
-            if (settings.model) {
-                settings.model = system.resolveObject(settings.model);
-            }
-
-            compositionCount += 1;
-
-            if (!fromBinding) {
-                settings = composition.getSettings(function () {
-                    return settings;
-                }, element);
-            }
-
-            if (settings.compositionComplete) {
-                compositionCompleteCallbacks.push(function () {
-                    settings.compositionComplete(settings.child, settings.parent, settings);
-                });
-            }
-
-            compositionCompleteCallbacks.push(function () {
-                if (settings.composingNewView && settings.model && settings.model.compositionComplete) {
-                    settings.model.compositionComplete(settings.child, settings.parent, settings);
+            Promise.resolve(settings).then((resolvedSettings) => {
+                settings = resolvedSettings;
+                if (settings.model && typeof settings.model === "string") {
+                    system.error(
+                        "You've passed a string for a model, check that you are not using deprecated RequireJS behaviour."
+                    );
                 }
-            });
 
-            const hostState = getHostState(element);
+                if (system.isFunction(settings)) {
+                    settings.model = settings;
+                }
 
-            settings.activeView = hostState.activeView;
-            settings.parent = element;
-            settings.triggerAttach = triggerAttach;
-            settings.bindingContext = bindingContext;
+                // If we have a model passed in we will use it's context
+                if (settings.model) {
+                    settings.model = system.resolveObject(settings.model);
+                }
 
-            if (settings.cacheViews && !settings.viewElements) {
-                settings.viewElements = hostState.childElements;
-            }
+                compositionCount += 1;
 
-            if (!settings.model) {
-                if (!settings.view) {
-                    this.bindAndShow(null, element, settings);
-                } else {
-                    settings.area = settings.area || "partial";
-                    settings.preserveContext = true;
+                if (!fromBinding) {
+                    settings = composition.getSettings(function () {
+                        return settings;
+                    }, element);
+                }
 
-                    viewLocator.locateView(settings.view, settings.viewElements).then(function (child) {
-                        composition.bindAndShow(child, element, settings);
+                if (settings.compositionComplete) {
+                    compositionCompleteCallbacks.push(function () {
+                        settings.compositionComplete(settings.child, settings.parent, settings);
                     });
                 }
-            } else {
-                composition.inject(settings, element);
-            }
+
+                compositionCompleteCallbacks.push(function () {
+                    if (settings.composingNewView && settings.model && settings.model.compositionComplete) {
+                        settings.model.compositionComplete(settings.child, settings.parent, settings);
+                    }
+                });
+
+                const hostState = getHostState(element);
+
+                settings.activeView = hostState.activeView;
+                settings.parent = element;
+                settings.triggerAttach = triggerAttach;
+                settings.bindingContext = bindingContext;
+
+                if (settings.cacheViews && !settings.viewElements) {
+                    settings.viewElements = hostState.childElements;
+                }
+
+                if (!settings.model) {
+                    if (!settings.view) {
+                        this.bindAndShow(null, element, settings);
+                    } else {
+                        settings.area = settings.area || "partial";
+                        settings.preserveContext = true;
+
+                        viewLocator.locateView(settings.view, settings.viewElements).then(function (child) {
+                            composition.bindAndShow(child, element, settings);
+                        });
+                    }
+                } else if (system.isPromise(settings.model)) {
+                    system
+                        .acquire(settings.model)
+                        .then(function (module) {
+                            settings.model = system.resolveObject(module);
+                            composition.inject(settings, element);
+                        })
+                        .catch(function (err) {
+                            onError(
+                                settings,
+                                `Failed to load composed module (${settings.model}). Details: ${err.message}`,
+                                element
+                            );
+                        });
+                } else {
+                    composition.inject(settings, element);
+                }
+            });
         },
     };
 
