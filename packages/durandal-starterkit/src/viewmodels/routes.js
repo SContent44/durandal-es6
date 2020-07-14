@@ -18,7 +18,9 @@ export default [
         route: "router*details",
         hash: "#router",
         title: "Router",
-        moduleId: import(/* webpackChunkName: "router-viewmodel" */ "./router/index"),
+        moduleId() {
+            return import(/* webpackChunkName: "router-viewmodel" */ "./router/index");
+        },
         nav: true,
     },
     {
@@ -30,13 +32,17 @@ export default [
     {
         route: "widgets",
         title: "Widgets",
-        moduleId: import(/* webpackChunkName: "widgets-viewmodel" */ "./widgets/widgets"),
+        moduleId() {
+            return import(/* webpackChunkName: "widgets-viewmodel" */ "./widgets/widgets");
+        },
         nav: true,
     },
     {
         route: "components",
         title: "Components",
-        moduleId: import(/* webpackChunkName: "components-viewmodel" */ "./ko-components/ko-components"),
+        moduleId() {
+            return import(/* webpackChunkName: "components-viewmodel" */ "./ko-components/ko-components");
+        },
         nav: true,
     },
 ];
