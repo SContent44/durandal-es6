@@ -256,6 +256,10 @@ function SystemModule() {
          * @return {Promise} A promise for the loaded module(s).
          */
         acquire(moduleToResolve) {
+            if (system.isPromise(moduleToResolve)) {
+                return moduleToResolve;
+            }
+
             if (system.isFunction(moduleToResolve)) {
                 return Promise.resolve(moduleToResolve());
             }
