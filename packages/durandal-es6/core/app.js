@@ -87,28 +87,44 @@ function AppModule() {
 
                 switch (key) {
                     case "router":
-                        pluginModule = import("../plugins/router");
+                        pluginModule = function router() {
+                            return import("../plugins/router");
+                        };
                         break;
                     case "widget":
-                        pluginModule = import("../plugins/widget");
+                        pluginModule = function widget() {
+                            return import("../plugins/widget");
+                        };
                         break;
                     case "dialog":
-                        pluginModule = import("../plugins/dialog");
+                        pluginModule = function dialog() {
+                            return import("../plugins/dialog");
+                        };
                         break;
                     case "history":
-                        pluginModule = import("../plugins/history");
+                        pluginModule = function history() {
+                            return import("../plugins/history");
+                        };
                         break;
                     case "http":
-                        pluginModule = import("../plugins/http");
+                        pluginModule = function http() {
+                            return import("../plugins/http");
+                        };
                         break;
                     case "observable":
-                        pluginModule = import("../plugins/observable");
+                        pluginModule = function observable() {
+                            return import("../plugins/observable");
+                        };
                         break;
                     case "serializer":
-                        pluginModule = import("../plugins/serializer");
+                        pluginModule = function serializer() {
+                            return import("../plugins/serializer");
+                        };
                         break;
                     default:
-                        pluginModule = undefined;
+                        pluginModule = function notDefined() {
+                            return undefined;
+                        };
                         system.error(
                             `The plugin ${key} is not in the list of registered plugins. Update the app.configurePlugins to include this plugin.`
                         );

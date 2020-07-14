@@ -5,13 +5,17 @@ export default [
     {
         route: "",
         title: "Welcome",
-        moduleId: Welcome,
+        moduleId() {
+            return Welcome;
+        },
         nav: true,
     },
     {
         route: "picsum",
         title: "Picsum",
-        moduleId: import(/* webpackChunkName: "picsum-viewmodel" */ "./picsum/picsum"),
+        moduleId() {
+            return import(/* webpackChunkName: "picsum-viewmodel" */ "./picsum/picsum");
+        },
         nav: true,
     },
     {
@@ -26,7 +30,9 @@ export default [
     {
         route: "binding",
         title: "Binding",
-        moduleId: Binding,
+        moduleId() {
+            return Binding;
+        },
         nav: true,
     },
     {

@@ -1,5 +1,7 @@
 // Object containing all of the widgets we wish to install
-const Alert = import("./alert/alert");
+const Alert = function Alert() {
+    return import("./alert/alert");
+};
 
 export default {
     kinds: [Alert],

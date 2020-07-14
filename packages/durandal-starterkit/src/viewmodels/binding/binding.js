@@ -40,22 +40,22 @@ function BindingViewModel() {
 
     this.anotherOwnVMScreenObject = {
         view: dynamicTemplate,
-        model: Promise.resolve({
+        model: {
             someData: ko.pureComputed(() => {
                 return this.ownInput();
             }, this),
             moduleName: "The another own VM screen binding model",
-        }),
+        },
     };
 
-    this.anotherOwnVMScreenFunction = Promise.resolve(function () {
+    this.anotherOwnVMScreenFunction = function () {
         this.someData = ko.pureComputed(() => {
             return ownInputHelper();
         }, this);
         this.viewName = "Another own VM screen";
         this.view = dynamicTemplate;
         this.moduleName = "Another as a function model";
-    });
+    };
 }
 
 const Binding = new BindingViewModel();
