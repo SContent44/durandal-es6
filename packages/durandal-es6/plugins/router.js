@@ -444,17 +444,6 @@ function RouterModule() {
                 tempActivator.settings.areSameItem = activeItem.settings.areSameItem;
                 tempActivator.settings.findChildActivator = activeItem.settings.findChildActivator;
                 ensureActivation(tempActivator, currentActivation, instruction);
-            } else if (!instruction.config.moduleId) {
-                ensureActivation(
-                    activeItem,
-                    {
-                        viewUrl: instruction.config.viewUrl,
-                        canReuseForRoute() {
-                            return true;
-                        },
-                    },
-                    instruction
-                );
             } else {
                 system
                     .acquire(instruction.config.moduleId)
