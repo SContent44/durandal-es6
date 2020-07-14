@@ -188,7 +188,7 @@ function CompositionModule() {
     }
 
     function shouldTransition(context) {
-        if (system.isString(context.transition)) {
+        if (system.isString(context.transition) || system.isFunction(context.transition)) {
             if (context.activeView) {
                 if (context.activeView == context.child) {
                     return false;
@@ -467,8 +467,14 @@ function CompositionModule() {
                 context.triggerAttach(context, element);
                 endComposition(context, element);
             } else if (shouldTransition(context)) {
-                const transitionModuleName = context.transition;
-                const transitionModule = this.convertTransitionToModule(transitionModuleName);
+                let transitionModule;
+                if (typeof context.transition === "string") {
+                    // Reference for the "builtin" transitions
+                    transitionModule = this.convertTransitionToModule(context.transition);
+                } else {
+                    // Assume if it's not a string we've been passed the transition to resolve
+                    transitionModule = context.transition;
+                }
 
                 system
                     .acquire(transitionModule)
@@ -503,7 +509,7 @@ function CompositionModule() {
                     .catch(function (err) {
                         onError(
                             context,
-                            `Failed to load transition (${transitionModuleName}). Details: ${err.message}`,
+                            `Failed to load transition (${transitionModule}). Details: ${err.message}`,
                             element
                         );
                     });
