@@ -256,12 +256,16 @@ function SystemModule() {
          * @return {Promise} A promise for the loaded module(s).
          */
         acquire(moduleToResolve) {
-            if (system.isPromise(moduleToResolve)) {
-                return moduleToResolve;
+            if (
+                system.isPromise(moduleToResolve) ||
+                system.isFunction(moduleToResolve) ||
+                system.isObject(moduleToResolve)
+            ) {
+                return Promise.resolve(moduleToResolve).then((resolvedModule) => {
+                    return resolvedModule;
+                });
             }
-            if (system.isFunction(moduleToResolve) || system.isObject(moduleToResolve)) {
-                return Promise.resolve(moduleToResolve);
-            }
+
             return system.error(
                 "You are not using the durandal-es6 behaviour. Pass in a function or a Promise that will resolve to return either a function, object, or a promise<functon|object>."
             );
