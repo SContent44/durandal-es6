@@ -628,46 +628,49 @@ function CompositionModule() {
         },
         // eslint-disable-next-line no-unused-vars
         getSettings(valueAccessor, element) {
-            const value = valueAccessor();
-            let settings = ko.utils.unwrapObservable(value) || {};
-            let activatorPresent = activator.isActivator(value);
+            const valueToResolve = valueAccessor();
 
-            if (system.isString(settings)) {
-                if (settings.trim().charAt(0) === "<") {
-                    settings = settings.trim();
-                    settings = {
-                        view: viewEngine.processMarkup(settings),
-                    };
-                } else if (viewEngine.isViewUrl(settings)) {
-                    system.error(
-                        "Passing in a viewUrl is no longer supported. If wanting to reference a .html template just import and provide it directly."
-                    );
-                } else {
-                    system.error("Passed a string that was not valid HTML.");
+            return Promise.resolve(valueToResolve).then((value) => {
+                let settings = ko.utils.unwrapObservable(value) || {};
+                let activatorPresent = activator.isActivator(value);
+
+                if (system.isString(settings)) {
+                    if (settings.trim().charAt(0) === "<") {
+                        settings = settings.trim();
+                        settings = {
+                            view: viewEngine.processMarkup(settings),
+                        };
+                    } else if (viewEngine.isViewUrl(settings)) {
+                        system.error(
+                            "Passing in a viewUrl is no longer supported. If wanting to reference a .html template just import and provide it directly."
+                        );
+                    } else {
+                        system.error("Passed a string that was not valid HTML.");
+                    }
+
+                    return settings;
+                }
+
+                if (!activatorPresent && settings.model) {
+                    activatorPresent = activator.isActivator(settings.model);
+                }
+
+                for (const attrName in settings) {
+                    if (ko.utils.arrayIndexOf(bindableSettings, attrName) != -1) {
+                        settings[attrName] = ko.utils.unwrapObservable(settings[attrName]);
+                    } else {
+                        settings[attrName] = settings[attrName];
+                    }
+                }
+
+                if (activatorPresent) {
+                    settings.activate = false;
+                } else if (settings.activate === undefined) {
+                    settings.activate = true;
                 }
 
                 return settings;
-            }
-
-            if (!activatorPresent && settings.model) {
-                activatorPresent = activator.isActivator(settings.model);
-            }
-
-            for (const attrName in settings) {
-                if (ko.utils.arrayIndexOf(bindableSettings, attrName) != -1) {
-                    settings[attrName] = ko.utils.unwrapObservable(settings[attrName]);
-                } else {
-                    settings[attrName] = settings[attrName];
-                }
-            }
-
-            if (activatorPresent) {
-                settings.activate = false;
-            } else if (settings.activate === undefined) {
-                settings.activate = true;
-            }
-
-            return settings;
+            });
         },
         executeStrategy(context, element) {
             context.strategy(context).then(function (child) {
@@ -701,6 +704,12 @@ function CompositionModule() {
          * @param {object} [bindingContext] The current binding context.
          */
         compose(element, settings, bindingContext, fromBinding) {
+            if (!fromBinding) {
+                settings = composition.getSettings(function () {
+                    return settings;
+                }, element);
+            }
+
             Promise.resolve(settings).then((resolvedSettings) => {
                 settings = resolvedSettings;
                 if (settings.model && typeof settings.model === "string") {
@@ -719,12 +728,6 @@ function CompositionModule() {
                 }
 
                 compositionCount += 1;
-
-                if (!fromBinding) {
-                    settings = composition.getSettings(function () {
-                        return settings;
-                    }, element);
-                }
 
                 if (settings.compositionComplete) {
                     compositionCompleteCallbacks.push(function () {
@@ -786,33 +789,34 @@ function CompositionModule() {
             return { controlsDescendantBindings: true };
         },
         update(element, valueAccessor, allBindingsAccessor, viewModel, bindingContext) {
-            const settings = composition.getSettings(valueAccessor, element);
-            if (settings.mode) {
-                let data = ko.utils.domData.get(element, compositionDataKey);
-                if (!data) {
-                    const childNodes = ko.virtualElements.childNodes(element);
-                    data = {};
+            composition.getSettings(valueAccessor, element).then((settings) => {
+                if (settings.mode) {
+                    let data = ko.utils.domData.get(element, compositionDataKey);
+                    if (!data) {
+                        const childNodes = ko.virtualElements.childNodes(element);
+                        data = {};
 
-                    if (settings.mode === "inline") {
-                        data.view = viewEngine.ensureSingleElement(childNodes);
-                    } else if (settings.mode === "templated") {
-                        data.parts = cloneNodes(childNodes);
+                        if (settings.mode === "inline") {
+                            data.view = viewEngine.ensureSingleElement(childNodes);
+                        } else if (settings.mode === "templated") {
+                            data.parts = cloneNodes(childNodes);
+                        }
+
+                        ko.virtualElements.emptyNode(element);
+                        ko.utils.domData.set(element, compositionDataKey, data);
                     }
 
-                    ko.virtualElements.emptyNode(element);
-                    ko.utils.domData.set(element, compositionDataKey, data);
+                    if (settings.mode === "inline") {
+                        settings.view = data.view.cloneNode(true);
+                    } else if (settings.mode === "templated") {
+                        settings.parts = data.parts;
+                    }
+
+                    settings.preserveContext = true;
                 }
 
-                if (settings.mode === "inline") {
-                    settings.view = data.view.cloneNode(true);
-                } else if (settings.mode === "templated") {
-                    settings.parts = data.parts;
-                }
-
-                settings.preserveContext = true;
-            }
-
-            composition.compose(element, settings, bindingContext, true);
+                composition.compose(element, settings, bindingContext, true);
+            });
         },
     };
 

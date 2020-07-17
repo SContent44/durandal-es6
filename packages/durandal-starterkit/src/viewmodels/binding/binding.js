@@ -18,7 +18,11 @@ function BindingViewModel() {
     this.ownInput = ownInputHelper;
 
     // Composing a view that does not have it's own viewmodel by just passing view in directly.
-    this.sharedVMScreen = dynamicTemplate;
+    this.sharedVMScreen = () => {
+        return import("./dynamic.html").then((module) => {
+            return module.default;
+        });
+    };
 
     this.someData = ko.pureComputed(() => {
         return this.sharedInput();
