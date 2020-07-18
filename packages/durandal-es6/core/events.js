@@ -1,7 +1,4 @@
-﻿/* eslint-disable no-param-reassign */
-/* eslint-disable no-cond-assign */
-/* eslint-disable func-names */
-import system from "./system";
+﻿import system from "./system";
 
 /**
  * Durandal events originate from backbone.js but also combine some ideas from signals.js as well as some additional improvements.
@@ -82,12 +79,9 @@ function EventsModule() {
             return new Subscription(this, events);
         }
 
-        // eslint-disable-next-line prefer-const
         calls = this.callbacks || (this.callbacks = {});
-        // eslint-disable-next-line no-param-reassign
         events = events.split(eventSplitter);
 
-        // eslint-disable-next-line no-cond-assign
         while ((event = events.shift())) {
             list = calls[event] || (calls[event] = []);
             list.push(callback, context);
@@ -127,7 +121,6 @@ function EventsModule() {
         while ((event = events.shift())) {
             if (!(list = calls[event]) || !(callback || context)) {
                 delete calls[event];
-                // eslint-disable-next-line no-continue
                 continue;
             }
 
@@ -162,7 +155,6 @@ function EventsModule() {
 
         events = events.split(eventSplitter);
         for (i = 1, length = arguments.length; i < length; i += 1) {
-            // eslint-disable-next-line prefer-rest-params
             rest[i - 1] = arguments[i];
         }
 

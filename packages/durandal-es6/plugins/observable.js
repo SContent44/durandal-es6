@@ -1,13 +1,3 @@
-/* eslint-disable eqeqeq */
-/* eslint-disable no-cond-assign */
-/* eslint-disable prefer-rest-params */
-/* eslint-disable no-param-reassign */
-/* eslint-disable no-use-before-define */
-/* eslint-disable no-continue */
-/* eslint-disable no-restricted-syntax */
-/* eslint-disable no-underscore-dangle */
-/* eslint-disable func-names */
-/* eslint-disable no-shadow */
 import ko from "knockout";
 import system from "../core/system";
 import binder from "../core/binder";
@@ -88,8 +78,7 @@ function ObservableModule() {
             enumerable: false,
             configurable: false,
             writable: false,
-            // eslint-disable-next-line object-shorthand
-            value: value,
+            value,
         });
 
         return value;
@@ -389,16 +378,13 @@ function ObservableModule() {
 
     // eslint-disable-next-line prefer-const
     observableModule = function (obj, propertyName) {
-        let lookup;
         let observable;
-        let value;
 
         if (!obj) {
             return null;
         }
 
-        // eslint-disable-next-line prefer-const
-        lookup = obj.__observable__;
+        const lookup = obj.__observable__;
         if (lookup) {
             observable = lookup[propertyName];
             if (observable) {
@@ -406,8 +392,7 @@ function ObservableModule() {
             }
         }
 
-        // eslint-disable-next-line prefer-const
-        value = obj[propertyName];
+        const value = obj[propertyName];
 
         if (ko.isObservable(value)) {
             return value;

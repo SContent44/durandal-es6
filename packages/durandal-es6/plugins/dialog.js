@@ -1,10 +1,4 @@
-﻿/* eslint-disable no-multi-assign */
-/* eslint-disable prefer-rest-params */
-/* eslint-disable prefer-spread */
-/* eslint-disable no-underscore-dangle */
-/* eslint-disable no-param-reassign */
-/* eslint-disable func-names */
-import $ from "jquery";
+﻿import $ from "jquery";
 import ko from "knockout";
 import system from "../core/system";
 import app from "../core/app";
@@ -237,7 +231,6 @@ function DialogPluginModule() {
          * @return {number} The next usable zIndex.
          */
         getNextZIndex() {
-            // eslint-disable-next-line no-plusplus
             return ++this.currentZIndex;
         },
         /**

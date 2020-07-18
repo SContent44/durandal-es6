@@ -1,12 +1,4 @@
-﻿/* eslint-disable func-names */
-/* eslint-disable no-shadow */
-/* eslint-disable prefer-spread */
-/* eslint-disable eqeqeq */
-/* eslint-disable no-unused-vars */
-/* eslint-disable no-plusplus */
-/* eslint-disable no-param-reassign */
-/* eslint-disable no-underscore-dangle */
-import $ from "jquery";
+﻿import $ from "jquery";
 import ko from "knockout";
 import system from "../core/system";
 import app from "../core/app";
@@ -31,7 +23,6 @@ function RouterModule() {
     const optionalParam = /\((.*?)\)/g;
     const namedParam = /(\(\?)?:\w+/g;
     const splatParam = /\*\w+/g;
-    // eslint-disable-next-line no-useless-escape
     const escapeRegExp = /[\-{}\[\]+?.,\\\^$|#\s]/g;
     let startDeferred;
     let rootRouter;
@@ -956,7 +947,6 @@ function RouterModule() {
          * @chainable
          */
         router.reset = function () {
-            // eslint-disable-next-line no-multi-assign
             currentInstruction = currentActivation = undefined;
             router.handlers = [];
             router.routes = [];
@@ -1004,6 +994,7 @@ function RouterModule() {
                     config.dynamicHash = config.dynamicHash || ko.observable(config.hash);
                 });
 
+                // eslint-disable-next-line no-unused-vars
                 router.on("router:route:before-child-routes").then(function (instance, instruction, parentRouter) {
                     const childRouter = instance.router;
 

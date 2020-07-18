@@ -1,6 +1,4 @@
-﻿/* eslint-disable no-param-reassign */
-/* eslint-disable eqeqeq */
-import system from "./system";
+﻿import system from "./system";
 import viewEngine from "./viewEngine";
 
 /**
@@ -11,7 +9,6 @@ import viewEngine from "./viewEngine";
  * @requires viewEngine
  */
 function ViewLocatorModule() {
-    // eslint-disable-next-line consistent-return
     function findInElements(nodes, hash) {
         for (let i = 0; i < nodes.length; i += 1) {
             const current = nodes[i];

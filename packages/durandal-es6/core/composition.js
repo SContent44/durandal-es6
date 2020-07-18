@@ -1,12 +1,3 @@
-/* eslint-disable no-self-assign */
-/* eslint-disable no-continue */
-/* eslint-disable no-restricted-syntax */
-/* eslint-disable guard-for-in */
-/* eslint-disable func-names */
-/* eslint-disable eqeqeq */
-/* eslint-disable no-underscore-dangle */
-/* eslint-disable no-param-reassign */
-/* eslint-disable no-use-before-define */
 import $ from "jquery";
 import ko from "knockout";
 import system from "./system";
@@ -64,7 +55,6 @@ function CompositionModule() {
         let child = ko.virtualElements.firstChild(parent);
 
         while (child) {
-            // eslint-disable-next-line eqeqeq
             if (child.nodeType == 1) {
                 elements.push(child);
                 if (child.getAttribute(activeViewAttributeName)) {
@@ -94,7 +84,6 @@ function CompositionModule() {
                 setTimeout(function () {
                     let i = callBacks.length;
 
-                    // eslint-disable-next-line no-plusplus
                     while (i--) {
                         try {
                             callBacks[i]();
@@ -110,9 +99,7 @@ function CompositionModule() {
     }
 
     function cleanUp(context) {
-        // eslint-disable-next-line no-param-reassign
         delete context.activeView;
-        // eslint-disable-next-line no-param-reassign
         delete context.viewElements;
     }
 
@@ -124,7 +111,6 @@ function CompositionModule() {
 
             try {
                 if (system.isArray(context.activationData)) {
-                    // eslint-disable-next-line prefer-spread
                     result = context.model.activate.apply(context.model, context.activationData);
                 } else {
                     result = context.model.activate(context.activationData);
@@ -149,7 +135,8 @@ function CompositionModule() {
     }
 
     function triggerAttach(context, element) {
-        // eslint-disable-next-line no-redeclare, no-var
+        // The passed in context would be the same as "this". It's useful for the functions that use triggerAttach to visualise what the context that is being "passed in"
+        // eslint-disable-next-line no-var, no-redeclare
         var context = this;
 
         if (context.activeView) {
@@ -259,13 +246,11 @@ function CompositionModule() {
 
     function hide(view) {
         ko.utils.domData.set(view, visibilityKey, view.style.display);
-        // eslint-disable-next-line no-param-reassign
         view.style.display = "none";
     }
 
     function show(view) {
         const displayStyle = ko.utils.domData.get(view, visibilityKey);
-        // eslint-disable-next-line no-param-reassign
         view.style.display = displayStyle === "none" ? "block" : displayStyle;
     }
 
@@ -362,12 +347,10 @@ function CompositionModule() {
 
             initOptionsFactory =
                 initOptionsFactory ||
-                // eslint-disable-next-line func-names
                 function () {
                     return undefined;
                 };
 
-            // eslint-disable-next-line prefer-const, no-multi-assign
             handler = ko.bindingHandlers[name] = {
                 init(element, valueAccessor, allBindingsAccessor, viewModel, bindingContext) {
                     if (compositionCount > 0) {
@@ -397,7 +380,6 @@ function CompositionModule() {
 
                     return initOptionsFactory(element, valueAccessor, allBindingsAccessor, viewModel, bindingContext);
                 },
-                // eslint-disable-next-line consistent-return
                 update(element, valueAccessor, allBindingsAccessor, viewModel, bindingContext) {
                     const data = ko.utils.domData.get(element, dataKey);
 
@@ -429,7 +411,6 @@ function CompositionModule() {
             }
 
             if (elements.length === undefined) {
-                // eslint-disable-next-line no-param-reassign
                 elements = [elements];
             }
 
@@ -440,7 +421,6 @@ function CompositionModule() {
                 if (element.getAttribute) {
                     id = element.getAttribute(partAttributeName);
                     if (id) {
-                        // eslint-disable-next-line no-param-reassign
                         parts[id] = element;
                     }
 
@@ -455,7 +435,6 @@ function CompositionModule() {
         cloneNodes,
         finalize(context, element) {
             if (context.transition === undefined) {
-                // eslint-disable-next-line no-param-reassign
                 context.transition = this.defaultTransitionName;
             }
 
@@ -517,7 +496,6 @@ function CompositionModule() {
                 if (context.child != context.activeView) {
                     if (context.cacheViews && context.activeView) {
                         const instruction = binder.getBindingInstruction(context.activeView);
-                        // eslint-disable-next-line eqeqeq
                         if (!instruction || (instruction.cacheViews != undefined && !instruction.cacheViews)) {
                             ko.removeNode(context.activeView);
                         } else {
@@ -543,16 +521,12 @@ function CompositionModule() {
             }
         },
         bindAndShow(child, element, context, skipActivation) {
-            // eslint-disable-next-line no-param-reassign
             context.child = child;
-            // eslint-disable-next-line no-underscore-dangle, no-param-reassign
             context.parent.__composition_context = context;
 
             if (context.cacheViews) {
-                // eslint-disable-next-line eqeqeq, no-param-reassign
                 context.composingNewView = ko.utils.arrayIndexOf(context.viewElements, child) == -1;
             } else {
-                // eslint-disable-next-line no-param-reassign
                 context.composingNewView = true;
             }
 
@@ -585,7 +559,6 @@ function CompositionModule() {
                             const modelToBind = context.model || dummyModel;
                             const currentModel = ko.dataFor(child);
 
-                            // eslint-disable-next-line eqeqeq
                             if (currentModel != modelToBind) {
                                 if (!context.composingNewView) {
                                     ko.removeNode(child);
@@ -626,7 +599,6 @@ function CompositionModule() {
         defaultStrategy(context) {
             return viewLocator.locateViewForObject(context.model, context.viewElements);
         },
-        // eslint-disable-next-line no-unused-vars
         getSettings(valueAccessor, element) {
             const valueToResolve = valueAccessor();
 

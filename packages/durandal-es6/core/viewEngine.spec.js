@@ -1,17 +1,18 @@
+/* eslint-disable no-undef */
+const $ = require("jquery");
 const sut = require("./viewEngine").default;
 const system = require("./system").default;
-const $ = require("jquery");
 
 describe("durandal/viewEngine", function () {
     describe("isViewUrl", function () {
         it("returns false when view extension not found", function () {
-            var isViewUrl = sut.isViewUrl("test");
+            const isViewUrl = sut.isViewUrl("test");
 
             expect(isViewUrl).toBe(false);
         });
 
         it("returns true when view extension found", function () {
-            var isViewUrl = sut.isViewUrl("test.html");
+            const isViewUrl = sut.isViewUrl("test.html");
 
             expect(isViewUrl).toBe(true);
         });
@@ -19,7 +20,7 @@ describe("durandal/viewEngine", function () {
 
     describe("convertViewUrlToViewId", function () {
         it("returns view id", function () {
-            var viewId = sut.convertViewUrlToViewId("test.html");
+            const viewId = sut.convertViewUrlToViewId("test.html");
 
             expect(viewId).toBe("test");
         });
@@ -27,7 +28,7 @@ describe("durandal/viewEngine", function () {
 
     describe("convertViewIdToRequirePath", function () {
         it("returns require path", function () {
-            var viewId = sut.convertViewIdToRequirePath("test");
+            const viewId = sut.convertViewIdToRequirePath("test");
 
             expect(viewId).toBe("text!test.html");
         });
@@ -36,7 +37,7 @@ describe("durandal/viewEngine", function () {
     describe("processMarkup", function () {
         describe("with single node", function () {
             it("returns dom element", function () {
-                var markup = sut.processMarkup("<div>test</div>");
+                const markup = sut.processMarkup("<div>test</div>");
 
                 expect(markup.nodeType).toBe(1);
                 /**
@@ -50,7 +51,7 @@ describe("durandal/viewEngine", function () {
 
         describe("with multiple nodes", function () {
             it("returns wrapped dom element", function () {
-                var markup = sut.processMarkup("<div>test</div><div>test</div>");
+                const markup = sut.processMarkup("<div>test</div><div>test</div>");
 
                 expect(markup.className).toBe("durandal-wrapper");
                 expect(markup.childNodes.length).toBe(2);
@@ -59,7 +60,7 @@ describe("durandal/viewEngine", function () {
 
         describe("with comments", function () {
             it("returns dom element with comments removed", function () {
-                var markup = sut.processMarkup("<!-- this is a comment --><div>test</div>");
+                const markup = sut.processMarkup("<!-- this is a comment --><div>test</div>");
 
                 expect(markup.nodeType).toBe(1);
                 expect(markup.textContent).toBe("test");
@@ -69,18 +70,18 @@ describe("durandal/viewEngine", function () {
     });
 
     describe("processMarkup with alternate parseMarkup", function () {
-        var oldParseMarkup = null;
-        var spyable = null;
+        let oldParseMarkup = null;
+        let spyable = null;
 
         beforeEach(function () {
             spyable = {
-                parseIt: function (markup) {
+                parseIt(markup) {
                     return $.parseHTML(markup);
                 },
             };
 
             oldParseMarkup = sut.parseMarkup;
-            var spied = spyOn(spyable, "parseIt").and.callThrough();
+            const spied = spyOn(spyable, "parseIt").and.callThrough();
             sut.parseMarkup = spied;
         });
 
@@ -92,7 +93,7 @@ describe("durandal/viewEngine", function () {
 
         describe("with single node", function () {
             it("returns dom element", function () {
-                var markup = sut.processMarkup("<div>test</div>");
+                const markup = sut.processMarkup("<div>test</div>");
 
                 expect(spyable.parseIt).toHaveBeenCalled();
                 expect(markup.nodeType).toBe(1);
@@ -103,7 +104,7 @@ describe("durandal/viewEngine", function () {
 
         describe("with multiple nodes", function () {
             it("returns wrapped dom element", function () {
-                var markup = sut.processMarkup("<div>test</div><div>test</div>");
+                const markup = sut.processMarkup("<div>test</div><div>test</div>");
 
                 expect(spyable.parseIt).toHaveBeenCalled();
                 expect(markup.className).toBe("durandal-wrapper");
@@ -113,7 +114,7 @@ describe("durandal/viewEngine", function () {
 
         describe("with comments", function () {
             it("returns dom element with comments removed", function () {
-                var markup = sut.processMarkup("<!-- this is a comment --><div>test</div>");
+                const markup = sut.processMarkup("<!-- this is a comment --><div>test</div>");
 
                 expect(spyable.parseIt).toHaveBeenCalled();
                 expect(markup.nodeType).toBe(1);
@@ -129,11 +130,11 @@ describe("durandal/viewEngine", function () {
     describe("createView", function () {
         it("view acquire and data-view attribute added", function () {
             spyOn(system, "acquire").and.callFake(function (req) {
-                var d = system.defer();
+                const d = system.defer();
                 d.resolve("<div>test</div>");
                 return d.promise();
             });
-            var view = sut.createView("test");
+            const view = sut.createView("test");
 
             expect(system.acquire).toHaveBeenCalledWith("text!test.html");
 

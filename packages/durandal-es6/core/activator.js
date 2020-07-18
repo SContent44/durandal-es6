@@ -1,5 +1,4 @@
-﻿/* eslint-disable func-names */
-import ko from "knockout";
+﻿import ko from "knockout";
 import system from "./system";
 
 /**
@@ -19,7 +18,7 @@ function ActivatorModule() {
 
     function ensureSettings(receivedSettings) {
         let settings = receivedSettings;
-        // eslint-disable-next-line eqeqeq
+
         if (settings == undefined) {
             settings = {};
         }
@@ -57,7 +56,6 @@ function ActivatorModule() {
 
     function invoke(target, method, data) {
         if (system.isArray(data)) {
-            // eslint-disable-next-line prefer-spread
             return target[method].apply(target, data);
         }
 
@@ -262,7 +260,6 @@ function ActivatorModule() {
             },
         });
 
-        // eslint-disable-next-line no-underscore-dangle
         computed.__activator__ = true;
 
         /**
@@ -368,7 +365,6 @@ function ActivatorModule() {
                                             })
                                             .promise()
                                             .then(function () {
-                                                // eslint-disable-next-line no-param-reassign
                                                 newItem = settings.beforeActivate(newItem, newActivationData);
                                                 activate(
                                                     newItem,
@@ -413,7 +409,6 @@ function ActivatorModule() {
 
             if (initialActiveItem) {
                 toCheck = initialActiveItem;
-                // eslint-disable-next-line no-param-reassign
                 initialActiveItem = false;
             } else {
                 toCheck = computed();
@@ -432,7 +427,6 @@ function ActivatorModule() {
 
             if (initialActiveItem) {
                 toActivate = initialActiveItem;
-                // eslint-disable-next-line no-param-reassign
                 initialActiveItem = false;
             } else {
                 toActivate = computed();
@@ -460,22 +454,18 @@ function ActivatorModule() {
         };
 
         computed.includeIn = function (includeIn) {
-            // eslint-disable-next-line no-param-reassign
             includeIn.canActivate = function () {
                 return computed.canActivate();
             };
 
-            // eslint-disable-next-line no-param-reassign
             includeIn.activate = function () {
                 return computed.activate();
             };
 
-            // eslint-disable-next-line no-param-reassign
             includeIn.canDeactivate = function (close) {
                 return computed.canDeactivate(close);
             };
 
-            // eslint-disable-next-line no-param-reassign
             includeIn.deactivate = function (close) {
                 return computed.deactivate(close);
             };
@@ -493,7 +483,6 @@ function ActivatorModule() {
             settings.determineNextItemToActivate = function (list, lastIndex) {
                 const toRemoveAt = lastIndex - 1;
 
-                // eslint-disable-next-line eqeqeq
                 if (toRemoveAt == -1 && list.length > 1) {
                     return list[1];
                 }
@@ -514,7 +503,6 @@ function ActivatorModule() {
                 } else {
                     const index = items.indexOf(newItem);
 
-                    // eslint-disable-next-line eqeqeq
                     if (index == -1) {
                         items.push(newItem);
                     } else {
@@ -553,7 +541,6 @@ function ActivatorModule() {
                             for (let i = 0; i < list.length; i += 1) {
                                 computed.canDeactivateItem(list[i], close).then(function (result) {
                                     results.push(result);
-                                    // eslint-disable-next-line eqeqeq
                                     if (results.length == list.length) {
                                         finish();
                                     }
@@ -579,7 +566,6 @@ function ActivatorModule() {
                                     computed.deactivateItem(item, close).then(function () {
                                         results += 1;
                                         items.remove(item);
-                                        // eslint-disable-next-line eqeqeq
                                         if (results == listLength) {
                                             dfd.resolve();
                                         }
@@ -647,9 +633,7 @@ function ActivatorModule() {
          * @param {object} newActivationData
          * @return {boolean}
          */
-        // eslint-disable-next-line no-unused-vars
         areSameItem(currentItem, newItem, currentActivationData, newActivationData) {
-            // eslint-disable-next-line eqeqeq
             return currentItem == newItem;
         },
         /**
@@ -672,7 +656,6 @@ function ActivatorModule() {
                 setter(null);
             }
         },
-        // eslint-disable-next-line no-unused-vars
         findChildActivator(item) {
             return null;
         },
@@ -703,7 +686,6 @@ function ActivatorModule() {
          * @return {boolean} True if the object is an activator; false otherwise.
          */
         isActivator(object) {
-            // eslint-disable-next-line no-underscore-dangle
             return object && object.__activator__;
         },
     };

@@ -1,7 +1,4 @@
-﻿/* eslint-disable func-names */
-/* eslint-disable no-underscore-dangle */
-/* eslint-disable no-param-reassign */
-import ko from "knockout";
+﻿import ko from "knockout";
 import system from "../core/system";
 import composition from "../core/composition";
 
@@ -44,12 +41,10 @@ function WidgetModule() {
                 return { kind: settings };
             }
 
-            // eslint-disable-next-line no-restricted-syntax
             for (const attrName in settings) {
                 if (ko.utils.arrayIndexOf(bindableSettings, attrName) !== -1) {
                     settings[attrName] = ko.utils.unwrapObservable(settings[attrName]);
                 } else {
-                    // eslint-disable-next-line no-self-assign
                     settings[attrName] = settings[attrName];
                 }
             }

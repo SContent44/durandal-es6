@@ -4,7 +4,6 @@
     "description": "Default starter website that demonstrates behaviour of using Durandal for building a Single Page Application (with Webpack).",
     "main": "index.html",
     "scripts": {
-        "lint": "eslint ./** --config ../../.eslintrc.js --ext .js",
         "serve": "webpack-dev-server --mode=development",
         "build": "webpack -p",
         "webpack-stats": "webpack --profile --json > stats.json",

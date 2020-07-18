@@ -1,8 +1,4 @@
-﻿/* eslint-disable prefer-destructuring */
-/* eslint-disable prefer-rest-params */
-/* eslint-disable func-names */
-/* eslint-disable no-param-reassign */
-import system from "../core/system";
+﻿import system from "../core/system";
 
 /**
  * Serializes and deserializes data to/from JSON.
@@ -87,11 +83,11 @@ function SerializerModule() {
         registerType() {
             const first = arguments[0];
 
-            // eslint-disable-next-line eqeqeq
             if (arguments.length == 1) {
                 const id = first[this.typeAttribute] || system.getModuleName(first);
                 this.typeMap[id] = first;
             } else {
+                // eslint-disable-next-line prefer-destructuring
                 this.typeMap[first] = arguments[1];
             }
         },
@@ -113,7 +109,6 @@ function SerializerModule() {
                         return ctor.fromJSON(value);
                     }
 
-                    // eslint-disable-next-line new-cap
                     return new ctor(value);
                 }
             }

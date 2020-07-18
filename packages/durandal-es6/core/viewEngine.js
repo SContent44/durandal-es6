@@ -1,5 +1,4 @@
-﻿/* eslint-disable func-names */
-import $ from "jquery";
+﻿import $ from "jquery";
 
 /**
  * The viewEngine module provides information to the viewLocator module which is used to locate the view's source file. The viewEngine also transforms a view id into a view instance.
@@ -79,7 +78,6 @@ function ViewEngineModule() {
                     if (current.nodeType === 3) {
                         const result = /\S/.test(current.nodeValue);
                         if (!result) {
-                            // eslint-disable-next-line no-continue
                             continue;
                         }
                     }
@@ -127,9 +125,7 @@ function ViewEngineModule() {
 
             for (i = 0, l = s.length; i < l; i += 1) {
                 char = s.charCodeAt(i);
-                // eslint-disable-next-line no-bitwise
                 hash = (hash << 5) - hash + char;
-                // eslint-disable-next-line no-bitwise
                 hash |= 0; // Convert to 32bit integer
             }
             return hash;

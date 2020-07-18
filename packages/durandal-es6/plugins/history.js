@@ -1,10 +1,4 @@
-﻿/* eslint-disable consistent-return */
-/* eslint-disable no-useless-escape */
-/* eslint-disable no-underscore-dangle */
-/* eslint-disable func-names */
-/* eslint-disable no-param-reassign */
-/* eslint-disable no-use-before-define */
-import $ from "jquery";
+﻿import $ from "jquery";
 import system from "../core/system";
 
 /**
@@ -214,7 +208,6 @@ function HistoryModule() {
      * @return {boolean} Returns true/false from the route handler.
      */
     history.loadUrl = function (fragmentOverride) {
-        // eslint-disable-next-line no-multi-assign
         const fragment = (history.fragment = history.getFragment(fragmentOverride));
 
         return history.options.routeHandler ? history.options.routeHandler(fragment) : false;

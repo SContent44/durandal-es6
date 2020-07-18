@@ -1,5 +1,4 @@
-﻿/* eslint-disable func-names */
-import system from "./system";
+﻿import system from "./system";
 import composition from "./composition";
 import Events from "./events";
 
@@ -52,7 +51,6 @@ function AppModule() {
             );
         });
 
-        // eslint-disable-next-line consistent-return
         return Promise.all(pluginsToInstall).then(
             (resolve) => {
                 system.log("All plugins loaded.");

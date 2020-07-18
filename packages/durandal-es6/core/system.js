@@ -1,12 +1,5 @@
-﻿/* eslint-disable prefer-rest-params */
-/* eslint-disable prefer-spread */
-/* eslint-disable func-names */
-/* eslint-disable eqeqeq */
-/* eslint-disable no-bitwise */
-/* eslint-disable no-param-reassign */
-/* eslint-disable no-underscore-dangle */
-/* eslint-disable no-console */
-import $ from "jquery";
+﻿import $ from "jquery";
+
 /**
  * The system module encapsulates the most basic features used by other modules.
  * @module system
@@ -58,7 +51,6 @@ function SystemModule() {
                 if (window.opera) {
                     let i = 0;
                     while (i < arguments.length) {
-                        // eslint-disable-next-line prefer-rest-params
                         console.log(`Item ${i + 1}: ${arguments[i]}`);
                         i += 1;
                     }
@@ -175,7 +167,6 @@ function SystemModule() {
             let moduleToResolve = system.checkForDefaultExport(module);
 
             if (system.isFunction(moduleToResolve)) {
-                // eslint-disable-next-line new-cap
                 moduleToResolve = new moduleToResolve();
             }
 
@@ -253,7 +244,7 @@ function SystemModule() {
          * We now pass the module we wish to load directly to the acquire function. We'
          * @method acquire
          * @param {object|function|Promise<object|function>} module The module to load
-         * @return {Promise} A promise for the loaded module(s).
+         * @return {Promise} A promise for the loaded module.
          */
         acquire(moduleToResolve) {
             if (system.isPromise(moduleToResolve)) {
@@ -274,14 +265,12 @@ function SystemModule() {
          * @param {object} extension* Uses to extend the target object.
          */
         extend(obj) {
-            // eslint-disable-next-line prefer-rest-params
             const rest = slice.call(arguments, 1);
 
             for (let i = 0; i < rest.length; i += 1) {
                 const source = rest[i];
 
                 if (source) {
-                    // eslint-disable-next-line guard-for-in, no-restricted-syntax
                     for (const prop in source) {
                         obj[prop] = source[prop];
                     }
@@ -313,7 +302,6 @@ function SystemModule() {
      */
     system.keys =
         nativeKeys ||
-        // eslint-disable-next-line func-names
         function (obj) {
             if (obj !== Object(obj)) {
                 throw new TypeError("Invalid object");
@@ -321,7 +309,6 @@ function SystemModule() {
 
             const keys = [];
 
-            // eslint-disable-next-line no-restricted-syntax
             for (const key in obj) {
                 if (hasOwnProperty.call(obj, key)) {
                     keys[keys.length] = key;
@@ -349,7 +336,6 @@ function SystemModule() {
      */
     system.isArray =
         nativeIsArray ||
-        // eslint-disable-next-line func-names
         function (obj) {
             return toString.call(obj) == "[object Array]";
         };

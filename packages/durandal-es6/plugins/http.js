@@ -1,6 +1,4 @@
-﻿/* eslint-disable eqeqeq */
-/* eslint-disable no-param-reassign */
-import $ from "jquery";
+﻿import $ from "jquery";
 import ko from "knockout";
 
 /**

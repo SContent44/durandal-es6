@@ -1,22 +1,23 @@
+const ko = require("knockout");
 const sut = require("./binder").default;
 const system = require("./system").default;
-const ko = require("knockout");
 
 const isSpy = (spy) => spy.calls && typeof spy.calls.count === "function";
 
 describe("durandal/binder", function () {
-    var settings, view;
+    let settings;
+    let view;
 
     function sharedBindingBehaviour(createSettings, sutAction) {
-        var insufficientInfoMessage = "Insufficient Information to Bind",
-            unexpectedViewMessage = "Unexpected View Type",
-            viewName = "view name";
+        const insufficientInfoMessage = "Insufficient Information to Bind";
+        const unexpectedViewMessage = "Unexpected View Type";
+        const viewName = "view name";
 
         beforeEach(function () {
             settings = createSettings();
 
             view = {
-                getAttribute: function () {
+                getAttribute() {
                     return viewName;
                 },
             };
@@ -64,19 +65,19 @@ describe("durandal/binder", function () {
         });
 
         it("applies bindings with before and after hooks", function () {
-            var bindStatus = 0;
+            let bindStatus = 0;
             jest.spyOn(sut, "binding").mockImplementation(function (dataArg, viewArg) {
                 expect(dataArg).toBe(settings.data);
                 expect(viewArg).toBe(view);
                 expect(bindStatus).toBe(0);
                 bindStatus = 1;
             });
-            /*spyOn(sut, "binding").and.callFake(function (dataArg, viewArg) {
+            /* spyOn(sut, "binding").and.callFake(function (dataArg, viewArg) {
                 expect(dataArg).toBe(settings.data);
                 expect(viewArg).toBe(view);
                 expect(bindStatus).toBe(0);
                 bindStatus = 1;
-            });*/
+            }); */
             ko.applyBindings.mockImplementation(function () {
                 expect(bindStatus).toBe(1);
                 bindStatus = 2;
@@ -149,7 +150,7 @@ describe("durandal/binder", function () {
 
     describe("bind", function () {
         function createSettings() {
-            var target = {};
+            const target = {};
             return {
                 obj: target,
                 bindingTarget: target,
@@ -165,10 +166,10 @@ describe("durandal/binder", function () {
     describe("bindContext", function () {
         describe("child context used", function () {
             function createSettings() {
-                var bindingObject = {};
-                var bindingContext = {
+                const bindingObject = {};
+                const bindingContext = {
                     $data: bindingObject,
-                    createChildContext: function () {
+                    createChildContext() {
                         return bindingContext;
                     },
                 };
@@ -187,10 +188,10 @@ describe("durandal/binder", function () {
 
         describe("child context not used", function () {
             function createSettings() {
-                var bindingObject = {};
-                var bindingContext = {
+                const bindingObject = {};
+                const bindingContext = {
                     $data: bindingObject,
-                    createChildContext: function () {
+                    createChildContext() {
                         return bindingObject;
                     },
                 };

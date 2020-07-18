@@ -1,6 +1,4 @@
-﻿/* eslint-disable no-underscore-dangle */
-/* eslint-disable no-param-reassign */
-import ko from "knockout";
+﻿import ko from "knockout";
 import system from "./system";
 
 /**
@@ -76,7 +74,6 @@ function BinderModule() {
             }
 
             ko.utils.domData.set(view, bindingInstructionKey, instruction);
-            // eslint-disable-next-line consistent-return
             return instruction;
         } catch (e) {
             e.message = `${e.message};\nView: ${view.outerHTML};\nModuleId: ${system.getModuleName(data)}`;
