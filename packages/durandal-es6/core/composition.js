@@ -603,45 +603,48 @@ function CompositionModule() {
             const valueToResolve = valueAccessor();
 
             return Promise.resolve(valueToResolve).then((value) => {
-                let settings = ko.utils.unwrapObservable(value) || {};
-                let activatorPresent = activator.isActivator(value);
+                let settingsToResolve = ko.utils.unwrapObservable(value) || {};
 
-                if (system.isString(settings)) {
-                    if (settings.trim().charAt(0) === "<") {
-                        settings = settings.trim();
-                        settings = {
-                            view: viewEngine.processMarkup(settings),
-                        };
-                    } else if (viewEngine.isViewUrl(settings)) {
-                        system.error(
-                            "Passing in a viewUrl is no longer supported. If wanting to reference a .html template just import and provide it directly."
-                        );
-                    } else {
-                        system.error("Passed a string that was not valid HTML.");
+                return Promise.resolve(settingsToResolve).then((settings) => {
+                    let activatorPresent = activator.isActivator(value);
+
+                    if (system.isString(settings)) {
+                        if (settings.trim().charAt(0) === "<") {
+                            settings = settings.trim();
+                            settings = {
+                                view: viewEngine.processMarkup(settings),
+                            };
+                        } else if (viewEngine.isViewUrl(settings)) {
+                            system.error(
+                                "Passing in a viewUrl is no longer supported. If wanting to reference a .html template just import and provide it directly."
+                            );
+                        } else {
+                            system.error("Passed a string that was not valid HTML.");
+                        }
+
+                        return settings;
+                    }
+
+                    if (!activatorPresent && settings.model) {
+                        activatorPresent = activator.isActivator(settings.model);
+                    }
+
+                    for (const attrName in settings) {
+                        if (ko.utils.arrayIndexOf(bindableSettings, attrName) != -1) {
+                            settings[attrName] = ko.utils.unwrapObservable(settings[attrName]);
+                        } else {
+                            settings[attrName] = settings[attrName];
+                        }
+                    }
+
+                    if (activatorPresent) {
+                        settings.activate = false;
+                    } else if (settings.activate === undefined) {
+                        settings.activate = true;
                     }
 
                     return settings;
-                }
-
-                if (!activatorPresent && settings.model) {
-                    activatorPresent = activator.isActivator(settings.model);
-                }
-
-                for (const attrName in settings) {
-                    if (ko.utils.arrayIndexOf(bindableSettings, attrName) != -1) {
-                        settings[attrName] = ko.utils.unwrapObservable(settings[attrName]);
-                    } else {
-                        settings[attrName] = settings[attrName];
-                    }
-                }
-
-                if (activatorPresent) {
-                    settings.activate = false;
-                } else if (settings.activate === undefined) {
-                    settings.activate = true;
-                }
-
-                return settings;
+                });
             });
         },
         executeStrategy(context, element) {
