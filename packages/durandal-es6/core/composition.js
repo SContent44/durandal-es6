@@ -604,10 +604,9 @@ function CompositionModule() {
 
             return Promise.resolve(valueToResolve).then((value) => {
                 let settingsToResolve = ko.utils.unwrapObservable(value) || {};
+                let activatorPresent = activator.isActivator(value);
 
                 return Promise.resolve(settingsToResolve).then((settings) => {
-                    let activatorPresent = activator.isActivator(value);
-
                     if (system.isString(settings)) {
                         if (settings.trim().charAt(0) === "<") {
                             settings = settings.trim();
