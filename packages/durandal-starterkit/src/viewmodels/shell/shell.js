@@ -8,7 +8,7 @@ import routes from "../routes";
 class ShellViewModel {
     constructor() {
         this.view = viewTemplate;
-        this.moduleName = "ShellViewModel";
+        this.modelName = "ShellViewModel";
 
         this.router = router;
         this.isExpanded = ko.observable(false);

@@ -7,7 +7,7 @@ export default [
         moduleId: function hows() {
             return How;
         },
-        moduleName: "How",
+        modelName: "How",
         nav: true,
     },
 

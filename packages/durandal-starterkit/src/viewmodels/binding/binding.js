@@ -5,7 +5,7 @@ import dynamicTemplate from "./dynamic.html";
 
 function BindingViewModel() {
     this.view = viewTemplate;
-    this.moduleName = "BindingViewModel";
+    this.modelName = "BindingViewModel";
 
     // Input for each of the someData values
     this.sharedInput = ko.observable("Shares parent context").extend({
@@ -35,7 +35,7 @@ function BindingViewModel() {
                 someData: ko.pureComputed(() => {
                     return this.ownInput();
                 }, this),
-                moduleName: "The own VM screen binding model",
+                modelName: "The own VM screen binding model",
             },
             view: dynamicTemplate,
         };
@@ -48,7 +48,7 @@ function BindingViewModel() {
             someData: ko.pureComputed(() => {
                 return this.ownInput();
             }, this),
-            moduleName: "The another own VM screen binding model",
+            modelName: "The another own VM screen binding model",
         }),
     };
 
@@ -58,7 +58,7 @@ function BindingViewModel() {
         }, this);
         this.viewName = "Another own VM screen";
         this.view = dynamicTemplate;
-        this.moduleName = "Another as a function model";
+        this.modelName = "Another as a function model";
     });
 }
 

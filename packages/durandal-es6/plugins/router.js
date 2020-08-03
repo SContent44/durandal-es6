@@ -240,7 +240,7 @@ function RouterModule() {
         function completeNavigation(instance, instruction, mode) {
             system.log("Navigation Complete", instance, instruction);
 
-            const fromModuleId = system.getModuleName(currentActivation);
+            const fromModuleId = system.getModelName(currentActivation);
             if (fromModuleId) {
                 router.trigger(`router:navigation:from:${fromModuleId}`);
             }
@@ -251,7 +251,7 @@ function RouterModule() {
             currentInstruction = instruction;
             setCurrentInstructionRouteIsActive(true);
 
-            const toModuleId = system.getModuleName(currentActivation);
+            const toModuleId = system.getModelName(currentActivation);
             if (toModuleId) {
                 router.trigger(`router:navigation:to:${toModuleId}`);
             }

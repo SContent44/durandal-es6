@@ -2,7 +2,7 @@
 
 function WelcomeViewModel() {
     this.view = viewTemplate;
-    this.moduleName = "WelcomeViewModel";
+    this.modelName = "WelcomeViewModel";
 
     this.displayName = "Welcome to the Durandal Starter Kit!";
     this.description =

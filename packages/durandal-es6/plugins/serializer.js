@@ -84,7 +84,7 @@ function SerializerModule() {
             const first = arguments[0];
 
             if (arguments.length == 1) {
-                const id = first[this.typeAttribute] || system.getModuleName(first);
+                const id = first[this.typeAttribute] || system.getModelName(first);
                 this.typeMap[id] = first;
             } else {
                 // eslint-disable-next-line prefer-destructuring

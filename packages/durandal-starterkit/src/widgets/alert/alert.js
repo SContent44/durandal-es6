@@ -4,8 +4,8 @@ import viewTemplate from "./alert.html";
 class AlertViewModel {
     constructor() {
         this.view = viewTemplate;
-        // ATTENTION: Keep in in mind that the moduleName for a widget will be used as it's widget name
-        this.moduleName = "Alert";
+        // ATTENTION: Keep in in mind that the modelName for a widget will be used as it's widget name
+        this.modelName = "Alert";
 
         this.variant = ko.observable("");
         this.text = ko.observable("");

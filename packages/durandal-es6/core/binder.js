@@ -61,7 +61,7 @@ function BinderModule() {
             binder.binding(data, view, instruction);
 
             if (instruction.applyBindings) {
-                system.log("Binding", data.moduleName, data);
+                system.log("Binding", data.modelName, data);
                 ko.applyBindings(bindingTarget, view);
             } else if (obj) {
                 ko.utils.domData.set(view, koBindingContextKey, { $data: obj });
@@ -76,7 +76,7 @@ function BinderModule() {
             ko.utils.domData.set(view, bindingInstructionKey, instruction);
             return instruction;
         } catch (e) {
-            e.message = `${e.message};\nView: ${view.outerHTML};\nModuleId: ${system.getModuleName(data)}`;
+            e.message = `${e.message};\nView: ${view.outerHTML};\nModuleId: ${system.getModelName(data)}`;
             if (binder.throwOnErrors) {
                 system.error(e);
             } else {

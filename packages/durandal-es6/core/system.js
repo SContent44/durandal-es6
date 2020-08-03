@@ -124,23 +124,23 @@ function SystemModule() {
          */
         noop,
         /**
-         * Gets the moduleName for the specified object.
-         * @method getModuleName
-         * @param {object} obj The object whose moduleName you wish to determine.
-         * @return {string} The moduleName.
+         * Gets the modelName for the specified object.
+         * @method getModelName
+         * @param {object} obj The object whose modelName you wish to determine.
+         * @return {string} The modelName.
          */
-        getModuleName(ModelInstance) {
+        getModelName(ModelInstance) {
             if (!ModelInstance) {
                 return null;
             }
 
-            // Make an instance of the model to access it's moduleName property
+            // Make an instance of the model to access it's modelName property
             if (typeof ModelInstance === "function") {
-                return new ModelInstance().moduleName;
+                return new ModelInstance().modelName;
             }
 
             if (typeof ModelInstance === "object") {
-                return ModelInstance.moduleName;
+                return ModelInstance.modelName;
             }
 
             return null;

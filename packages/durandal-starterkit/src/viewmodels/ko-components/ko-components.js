@@ -6,7 +6,7 @@ import(/* webpackChunkName: "child" */ "../../Components/child/index");
 
 function ComponentViewModel() {
     this.view = viewTemplate;
-    this.moduleName = "ComponentViewModel";
+    this.modelName = "ComponentViewModel";
 
     this.grandparentInput = ko.observable("Grandparent Name").extend({
         required: true,
