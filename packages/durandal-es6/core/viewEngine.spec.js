@@ -18,22 +18,6 @@ describe("durandal/viewEngine", function () {
         });
     });
 
-    describe("convertViewUrlToViewId", function () {
-        it("returns view id", function () {
-            const viewId = sut.convertViewUrlToViewId("test.html");
-
-            expect(viewId).toBe("test");
-        });
-    });
-
-    describe("convertViewIdToRequirePath", function () {
-        it("returns require path", function () {
-            const viewId = sut.convertViewIdToRequirePath("test");
-
-            expect(viewId).toBe("text!test.html");
-        });
-    });
-
     describe("processMarkup", function () {
         describe("with single node", function () {
             it("returns dom element", function () {
@@ -129,18 +113,11 @@ describe("durandal/viewEngine", function () {
      */
     describe("createView", function () {
         it("view acquire and data-view attribute added", function () {
-            spyOn(system, "acquire").and.callFake(function (req) {
-                const d = system.defer();
-                d.resolve("<div>test</div>");
-                return d.promise();
-            });
-            const view = sut.createView("test");
+            const htmlString = "<div>test</div>";
+            const view = sut.createView(htmlString, undefined);
+            const hash = sut.hashCode(htmlString);
 
-            expect(system.acquire).toHaveBeenCalledWith("text!test.html");
-
-            view.done(function (view) {
-                expect($(view).data("view")).toBe("test");
-            });
+            expect($(view).data("view")).toBe(hash);
         });
     });
 });
