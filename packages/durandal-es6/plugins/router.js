@@ -672,6 +672,7 @@ function RouterModule() {
         };
 
         let titleSubscription;
+
         function setTitle(value) {
             const appTitle = ko.unwrap(app.title);
 
@@ -852,10 +853,10 @@ function RouterModule() {
          * @param {number} defaultOrder The default order to use for navigation visible routes that don't specify an order. The default is 100 and each successive route will be one more than that.
          * @chainable
          */
-        router.buildNavigationModel = function buildNavigationModel(defaultOrder) {
+        router.buildNavigationModel = function buildNavigationModel(defaultOrder = 100) {
             const nav = [];
             const { routes } = router;
-            let fallbackOrder = defaultOrder || 100;
+            let fallbackOrder = defaultOrder;
 
             for (let i = 0; i < routes.length; i++) {
                 const current = routes[i];
@@ -880,8 +881,8 @@ function RouterModule() {
         /**
          * Configures how the router will handle unknown routes.
          * @method mapUnknownRoutes
-         * @param {string|function} [config] If not supplied, then the router will map routes to modules with the same name.
-         * If a string is supplied, it represents the module id to route all unknown routes to.
+         * @param {object|function} [config] If not supplied, then the router will redirect unknown routes to the SPAs root route "/".
+         * If a object is supplied, the object's moduleId prop represents the module id to route all unknown routes to.
          * Finally, if config is a function, it will be called back with the route instruction containing the route info. The function can then modify the instruction by adding a moduleId and the router will take over from there.
          * @param {string} [replaceRoute] If config is a module id, then you can optionally provide a route to replace the url with.
          * @chainable
@@ -891,6 +892,14 @@ function RouterModule() {
             const catchAllPattern = routeStringToRegExp(catchAllRoute);
 
             router.route(catchAllPattern, function routeCallback(fragment, queryString) {
+                if (!config) {
+                    return redirect("/");
+                }
+
+                if (typeof config !== "function" && typeof config !== "object") {
+                    system.error("mapUnknownRoutes: If provided the config param must be a function or an object.");
+                }
+
                 const paramInfo = createParams(catchAllPattern, fragment, queryString);
                 const instruction = {
                     fragment,
@@ -903,14 +912,9 @@ function RouterModule() {
                     queryParams: paramInfo.queryParams,
                 };
 
-                if (!config) {
-                    // We're not dynamically taking unknown modules at runtime so will instead
-                    // just redirect to root route if defined or throw error
-                    return redirect("/");
-                }
-
-                if (system.isObject(config)) {
-                    instruction.config.moduleId = config.model;
+                // Functions are first-class objects in Javascript so Durandal's system.isObject will return true for a function
+                if (typeof config === "object") {
+                    instruction.config.moduleId = config.moduleId;
                     if (replaceRoute) {
                         history.navigate(replaceRoute, {
                             trigger: false,

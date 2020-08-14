@@ -34,6 +34,26 @@ class ShellViewModel {
 
     // eslint-disable-next-line class-methods-use-this
     activate() {
+        const redirectObject = {
+            moduleId: () => {
+                return {
+                    view: "<p>Not found object</p>",
+                };
+            },
+        };
+
+        const redirectFunction = (instruction) => {
+            const returnedInstruction = instruction;
+
+            returnedInstruction.config.moduleId = () => {
+                return {
+                    view: "<p>Not found function</p>",
+                };
+            };
+
+            return returnedInstruction;
+        };
+
         router.map(routes).buildNavigationModel().mapUnknownRoutes();
 
         return router.activate();
