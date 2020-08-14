@@ -108,9 +108,6 @@ describe("durandal/viewEngine", function () {
         });
     });
 
-    /**
-     * This functionality is redone for durandal-es6 - should be addressed
-     */
     describe("createView", function () {
         it("view acquire and data-view attribute added", function () {
             const htmlString = "<div>test</div>";

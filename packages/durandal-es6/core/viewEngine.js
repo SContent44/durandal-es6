@@ -112,7 +112,8 @@ function ViewEngineModule() {
         },
         /**
          * Used to generate a hash based on the passed in string to be used as the id when storing cached views for createView
-         * @param {string} s
+         * @param {string} s the string that will be hashed
+         * @return {string} The hashed representation of the input string
          */
         hashCode(s) {
             let hash = 0;
@@ -133,7 +134,8 @@ function ViewEngineModule() {
         /**
          * Creates the view based on the view string.
          * @method createView
-         * @param {string} view The HTML string for the view to be rendered.
+         * @param {string} htmlString The HTML string for the view to be rendered.
+         * @param {string} hash Hash of the html string to see if it can be reused from the cache
          * @return {object} The processed HTML
          */
         createView(htmlString, hash) {
@@ -156,13 +158,11 @@ function ViewEngineModule() {
         /**
          * Called when a view cannot be found to provide the opportunity to locate or generate a fallback view. Mainly used to ease development.
          * @method createFallbackView
-         * @param {string} viewId The view id whose view should be created.
+         * @param {string} htmlString The HTML string to be rendered if not wishing to use the default durandal-view-404
          * @return {object} The processed HTML
          */
-        createFallbackView() {
-            const message = "View Not Found.";
-
-            return this.processMarkup(`<div class="durandal-view-404">${message}</div>`);
+        createFallbackView(htmlString = `<div class="durandal-view-404">View Not Found.</div>`) {
+            return this.createView(htmlString, undefined);
         },
     };
 }

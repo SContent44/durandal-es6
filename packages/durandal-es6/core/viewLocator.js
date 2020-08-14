@@ -64,10 +64,9 @@ function ViewLocatorModule() {
         /**
          * Locates the specified view.
          * @method locateView
-         * @param {string|DOMElement} viewOrUrlOrId A view, view url or view id to locate.
-         * @param {string} [area] The area to translate the view to.
+         * @param {string|DOMElement} view A view, view url or view id to locate.
          * @param {DOMElement[]} [elementsToSearch] An existing set of elements to search first.
-         * @return {Promise} A promise of the view.
+         * @return {Promise} A promise of the rendered view.
          */
         locateView(view, elementsToSearch) {
             if (typeof view === "string") {
