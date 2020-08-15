@@ -55,7 +55,7 @@ const animationTypes = [
     "rotateOutDownLeft",
     "rotateOutDownRight",
     "rotateOutUpLeft",
-    "roateOutUpRight",
+    "rotateOutUpRight",
     "shake",
     "swing",
     "tada",
