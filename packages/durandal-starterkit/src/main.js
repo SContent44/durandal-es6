@@ -1,8 +1,8 @@
-import $ from "jquery";
+import "jquery";
 import "jquery-migrate";
 
 import ko from "knockout";
-import validation from "knockout.validation";
+import "knockout.validation";
 
 import { app, system } from "durandal/core";
 import { router } from "durandal/plugins";
