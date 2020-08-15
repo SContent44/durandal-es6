@@ -962,7 +962,7 @@ function RouterModule() {
         /**
          * Makes all configured routes and/or module ids relative to a certain base url.
          * @method makeRelative
-         * @param {object} settingss An object, you can specify `route` to prefix the routes. In place of specifying route, you can set `fromParent:true` to make routes automatically relative to the parent router's active route.
+         * @param {object} settings An object, you can specify `route` to prefix the routes. In place of specifying route, you can set `fromParent:true` to make routes automatically relative to the parent router's active route.
          * @chainable
          */
         router.makeRelative = function (settings) {
@@ -1182,4 +1182,4 @@ function RouterModule() {
     return rootRouter;
 }
 
-export default new RouterModule();
+export default RouterModule();

@@ -594,4 +594,4 @@ function DialogPluginModule() {
     return dialog;
 }
 
-export default new DialogPluginModule();
+export default DialogPluginModule();

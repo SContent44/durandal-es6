@@ -799,4 +799,4 @@ function CompositionModule() {
     return composition;
 }
 
-export default new CompositionModule();
+export default CompositionModule();

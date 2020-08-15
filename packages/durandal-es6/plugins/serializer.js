@@ -157,4 +157,4 @@ function SerializerModule() {
     };
 }
 
-export default new SerializerModule();
+export default SerializerModule();

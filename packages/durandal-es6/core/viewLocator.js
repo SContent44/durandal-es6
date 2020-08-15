@@ -97,4 +97,4 @@ function ViewLocatorModule() {
     };
 }
 
-export default new ViewLocatorModule();
+export default ViewLocatorModule();

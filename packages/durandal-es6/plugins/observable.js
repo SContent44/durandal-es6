@@ -432,4 +432,4 @@ function ObservableModule() {
     return observableModule;
 }
 
-export default new ObservableModule();
+export default ObservableModule();

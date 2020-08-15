@@ -153,4 +153,4 @@ function BinderModule() {
     return binder;
 }
 
-export default new BinderModule();
+export default BinderModule();

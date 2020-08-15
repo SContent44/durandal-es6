@@ -223,4 +223,4 @@ function EventsModule() {
     return Events;
 }
 
-export default new EventsModule();
+export default EventsModule();

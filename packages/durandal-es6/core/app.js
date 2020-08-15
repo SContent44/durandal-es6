@@ -221,4 +221,4 @@ function AppModule() {
     return app;
 }
 
-export default new AppModule();
+export default AppModule();

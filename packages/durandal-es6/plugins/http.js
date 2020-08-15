@@ -123,4 +123,4 @@ function HttpModule() {
     };
 }
 
-export default new HttpModule();
+export default HttpModule();

@@ -330,4 +330,4 @@ function HistoryModule() {
     return history;
 }
 
-export default new HistoryModule();
+export default HistoryModule();

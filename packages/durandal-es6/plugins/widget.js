@@ -160,4 +160,4 @@ function WidgetModule() {
     return widget;
 }
 
-export default new WidgetModule();
+export default WidgetModule();

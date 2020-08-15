@@ -693,4 +693,4 @@ function ActivatorModule() {
     return activator;
 }
 
-export default new ActivatorModule();
+export default ActivatorModule();

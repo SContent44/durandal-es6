@@ -429,4 +429,4 @@ function SystemModule() {
     return system;
 }
 
-export default new SystemModule();
+export default SystemModule();

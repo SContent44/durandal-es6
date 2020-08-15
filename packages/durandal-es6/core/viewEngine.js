@@ -23,6 +23,10 @@ function ViewEngineModule() {
      * @static
      */
     return {
+        /**
+         * The cache of the hashed representation of a view string matching it's rendered HTML
+         * @property {object} cache for storing the cached rendered HTML
+         */
         cache: {},
         /**
          * The file extension that view source files are expected to have.
@@ -167,4 +171,4 @@ function ViewEngineModule() {
     };
 }
 
-export default new ViewEngineModule();
+export default ViewEngineModule();
