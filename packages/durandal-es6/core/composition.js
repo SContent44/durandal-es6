@@ -306,13 +306,9 @@ function CompositionModule() {
 
             switch (name) {
                 case "fadeIn":
+                case "entrance":
                     transition = function fadeIn() {
                         return import("../transitions/fadeIn");
-                    };
-                    break;
-                case "entrance":
-                    transition = function entrance() {
-                        return import("../transitions/entrance");
                     };
                     break;
                 default:
