@@ -447,7 +447,7 @@ function CompositionModule() {
                     // Reference for the "builtin" transitions
                     transitionModule = this.convertTransitionToModule(context.transition);
                 } else {
-                    // Assume if it's not a string we've been passed the transition to resolve
+                    // Assume if it's not a string we've been passed the transition function that returns a transition.
                     transitionModule = context.transition;
                 }
 

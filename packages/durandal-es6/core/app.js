@@ -158,7 +158,7 @@ function AppModule() {
          * Sets the root module/view for the application.
          * @method setRoot
          * @param {string} root The root view or module.
-         * @param {string} [transition] The transition to use from the previous root (or splash screen) into the new root.
+         * @param {string|function} [transition] The transition to use from the previous root (or splash screen) into the new root. Can be a string for a pre-registered transition such as 'fadeIn' or it can be a function that returns a transition
          * @param {string} [applicationHost] The application host element or id. By default the id 'applicationHost' will be used.
          */
         setRoot(root, transition, applicationHost) {
