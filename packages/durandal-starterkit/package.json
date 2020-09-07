@@ -1,6 +1,6 @@
 {
     "name": "durandal-starterkit",
-    "version": "3.0.0",
+    "version": "1.0.0",
     "description": "Default starter website that demonstrates behaviour of using Durandal for building a Single Page Application (with Webpack).",
     "main": "index.html",
     "scripts": {
