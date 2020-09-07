@@ -146,31 +146,17 @@ function SystemModule() {
             return null;
         },
         /**
-         * Resolves the default export if a ES module object is passed in, otherwise returns the original value.
-         * @method checkForDefaultExport
-         * @param {object} module The module to check for the default export
-         * @return {object} The default object for the module or the module itself
-         */
-        checkForDefaultExport(module) {
-            return module && typeof module === "object" && module.__esModule && module.default
-                ? module.default
-                : module;
-        },
-        /**
          * Resolves the default object instance for a module. If the module is an object, the module is returned. If the module is a function, that function is called with `new` and it's result is returned.
          * @method resolveObject
          * @param {object} module The module to use to get/create the default object for.
          * @return {object} The default object for the module.
          */
         resolveObject(module) {
-            // Check if this is a es6 module default export
-            let moduleToResolve = system.checkForDefaultExport(module);
-
-            if (system.isFunction(moduleToResolve)) {
-                moduleToResolve = new moduleToResolve();
+            if (system.isFunction(module)) {
+                return new module();
             }
 
-            return moduleToResolve;
+            return module;
         },
         /**
          * Gets/Sets whether or not Durandal is in debug mode.

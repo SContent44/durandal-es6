@@ -58,8 +58,6 @@ function WidgetModule() {
          */
         registerKind(kind) {
             system.acquire(kind).then(function (module) {
-                module = system.checkForDefaultExport(module);
-
                 const kindName = system.getModelName(module);
 
                 kindModuleMaps[kindName] = module;

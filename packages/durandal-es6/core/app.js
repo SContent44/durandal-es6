@@ -86,37 +86,51 @@ function AppModule() {
                 switch (key) {
                     case "router":
                         pluginModule = function router() {
-                            return import("../plugins/router");
+                            return import("../plugins/router").then((module) => {
+                                return module.default;
+                            });
                         };
                         break;
                     case "widget":
                         pluginModule = function widget() {
-                            return import("../plugins/widget");
+                            return import("../plugins/widget").then((module) => {
+                                return module.default;
+                            });
                         };
                         break;
                     case "dialog":
                         pluginModule = function dialog() {
-                            return import("../plugins/dialog");
+                            return import("../plugins/dialog").then((module) => {
+                                return module.default;
+                            });
                         };
                         break;
                     case "history":
                         pluginModule = function history() {
-                            return import("../plugins/history");
+                            return import("../plugins/history").then((module) => {
+                                return module.default;
+                            });
                         };
                         break;
                     case "http":
                         pluginModule = function http() {
-                            return import("../plugins/http");
+                            return import("../plugins/http").then((module) => {
+                                return module.default;
+                            });
                         };
                         break;
                     case "observable":
                         pluginModule = function observable() {
-                            return import("../plugins/observable");
+                            return import("../plugins/observable").then((module) => {
+                                return module.default;
+                            });
                         };
                         break;
                     case "serializer":
                         pluginModule = function serializer() {
-                            return import("../plugins/serializer");
+                            return import("../plugins/serializer").then((module) => {
+                                return module.default;
+                            });
                         };
                         break;
                     default:

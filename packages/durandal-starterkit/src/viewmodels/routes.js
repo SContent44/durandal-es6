@@ -14,7 +14,9 @@ export default [
         route: "picsum",
         title: "Picsum",
         moduleId() {
-            return import(/* webpackChunkName: "picsum-viewmodel" */ "./picsum/picsum");
+            return import(/* webpackChunkName: "picsum-viewmodel" */ "./picsum/picsum").then((module) => {
+                return module.default;
+            });
         },
         nav: true,
     },
@@ -23,7 +25,9 @@ export default [
         hash: "#router",
         title: "Router",
         moduleId() {
-            return import(/* webpackChunkName: "router-viewmodel" */ "./router/index");
+            return import(/* webpackChunkName: "router-viewmodel" */ "./router/index").then((module) => {
+                return module.default;
+            });
         },
         nav: true,
     },
@@ -39,7 +43,9 @@ export default [
         route: "widgets",
         title: "Widgets",
         moduleId() {
-            return import(/* webpackChunkName: "widgets-viewmodel" */ "./widgets/widgets");
+            return import(/* webpackChunkName: "widgets-viewmodel" */ "./widgets/widgets").then((module) => {
+                return module.default;
+            });
         },
         nav: true,
     },
@@ -47,7 +53,11 @@ export default [
         route: "components",
         title: "Components",
         moduleId() {
-            return import(/* webpackChunkName: "components-viewmodel" */ "./ko-components/ko-components");
+            return import(/* webpackChunkName: "components-viewmodel" */ "./ko-components/ko-components").then(
+                (module) => {
+                    return module.default;
+                }
+            );
         },
         nav: true,
     },

@@ -308,7 +308,9 @@ function CompositionModule() {
                 case "fadeIn":
                 case "entrance":
                     transition = function fadeIn() {
-                        return import("../transitions/fadeIn");
+                        return import("../transitions/fadeIn").then((module) => {
+                            return module.default;
+                        });
                     };
                     break;
                 default:
@@ -454,7 +456,6 @@ function CompositionModule() {
                 system
                     .acquire(transitionModule)
                     .then(function (transition) {
-                        transition = system.checkForDefaultExport(transition);
                         context.transition = transition;
 
                         transition(context).then(function () {
