@@ -559,11 +559,8 @@ function CompositionModule() {
                             if (currentModel != modelToBind) {
                                 if (!context.composingNewView) {
                                     ko.removeNode(child);
-                                    Promise.resolve(viewEngine.createView("", child.getAttribute("data-view"))).then(
-                                        function (recreatedView) {
-                                            composition.bindAndShow(recreatedView, element, context, true);
-                                        }
-                                    );
+                                    const recreatedView = viewEngine.createView("", child.getAttribute("data-view"));
+                                    composition.bindAndShow(recreatedView, element, context, true);
                                     return;
                                 }
 
@@ -605,18 +602,9 @@ function CompositionModule() {
 
                 return Promise.resolve(settingsToResolve).then((settings) => {
                     if (system.isString(settings)) {
-                        if (settings.trim().charAt(0) === "<") {
-                            settings = settings.trim();
-                            settings = {
-                                view: viewEngine.processMarkup(settings),
-                            };
-                        } else if (viewEngine.isViewUrl(settings)) {
-                            system.error(
-                                "Passing in a viewUrl is no longer supported. If wanting to reference a .html template just import and provide it directly."
-                            );
-                        } else {
-                            system.error("Passed a string that was not valid HTML.");
-                        }
+                        settings = {
+                            view: settings,
+                        };
 
                         return settings;
                     }

@@ -186,13 +186,7 @@ function AppModule() {
             }
 
             if (system.isString(root)) {
-                if (root.trim().charAt(0) === "<") {
-                    settings.view = root;
-                } else {
-                    system.error(
-                        "Does not supppot passing in a string other than a HTML string to render for the page. If you want to pass in a view model directly pass it in as a model property on the object"
-                    );
-                }
+                settings.view = root;
             } else {
                 settings.model = root;
             }

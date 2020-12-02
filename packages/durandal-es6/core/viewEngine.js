@@ -1,4 +1,5 @@
 ﻿import $ from "jquery";
+import system from "./system";
 
 /**
  * The viewEngine module provides information to the viewLocator module which is used to locate the view's source file. The viewEngine also transforms a view id into a view instance.
@@ -144,20 +145,27 @@ function ViewEngineModule() {
          */
         createView(htmlString, hash) {
             const view = htmlString.trim();
-            const cacheId = hash || this.hashCode(view);
 
-            const existing = this.tryGetViewFromCache(cacheId);
+            if (view.charAt(0) === "<") {
+                const cacheId = hash || this.hashCode(view);
 
-            let element;
-            if (existing) {
-                element = existing.cloneNode(true);
-            } else {
-                element = this.processMarkup(view);
-                element.setAttribute("data-view", cacheId);
-                this.putViewInCache(cacheId, element);
+                const existing = this.tryGetViewFromCache(cacheId);
+
+                let element;
+                if (existing) {
+                    element = existing.cloneNode(true);
+                } else {
+                    element = this.processMarkup(view);
+                    element.setAttribute("data-view", cacheId);
+                    this.putViewInCache(cacheId, element);
+                }
+
+                return element.cloneNode(true);
             }
 
-            return element.cloneNode(true);
+            throw new Error(
+                "A non HTML string was passed to durandal-es6 viewEngine.createView. Ensure not using original Durandal Require.js behaviour"
+            );
         },
         /**
          * Called when a view cannot be found to provide the opportunity to locate or generate a fallback view. Mainly used to ease development.

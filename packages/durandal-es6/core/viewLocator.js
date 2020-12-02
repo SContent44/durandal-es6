@@ -27,7 +27,7 @@ function ViewLocatorModule() {
         /**
          * Maps an object instance to a view instance.
          * @method locateViewForObject
-         * @param {object} obj The object to locate the view for.
+         * @param {object} obj The object to locate the view for. Must have a view property that holds a string or a getView function that will return a string
          * @param {DOMElement[]} [elementsToSearch] An existing set of elements to search first.
          * @return {Promise} A promise of the view.
          */
@@ -36,30 +36,29 @@ function ViewLocatorModule() {
 
             if (obj.getView) {
                 view = obj.getView();
-                if (system.isString(obj.view) && view.trim().charAt(0) === "<") {
-                    return this.locateView(view, elementsToSearch);
-                }
 
-                system.log("View must be a HTML string for it to work with the view caching functionality");
                 return this.locateView(view, elementsToSearch);
             }
 
             // The new default behaviour
-            // Check if view is current "cached" if cacheViews is on
-            if (!!obj.view && system.isString(obj.view)) {
+            if (obj.view) {
                 return this.locateView(obj.view, elementsToSearch);
             }
 
             // No view or getView provided
-            const noViewMessage =
-                "WARNING: No view found provided. Make sure that you a provide a view via a view property on the viewmodel (or via your custom getView function)";
+            const personalisedError = obj.modelName
+                ? `No view provided for view model: ${obj.modelName}`
+                : `No view provided for view mode`;
+            const noViewMessage = `Durandal.locateViewForObject: ${personalisedError}. Make sure that you a provide a view via a view property on the viewmodel (or via your custom getView function)`;
+
             if (system.debug()) {
                 system.log(noViewMessage);
                 view = viewEngine.createFallbackView();
                 return this.locateView(view);
             }
 
-            system.error(noViewMessage);
+            // System.error is a noop in outside of debug mode so throw actual error.
+            throw new Error(noViewMessage);
         },
         /**
          * Locates the specified view.
@@ -69,30 +68,25 @@ function ViewLocatorModule() {
          * @return {Promise} A promise of the rendered view.
          */
         locateView(view, elementsToSearch) {
-            if (typeof view === "string") {
-                view = view.trim();
+            return Promise.resolve(view).then(function (resolvedView) {
+                if (typeof resolvedView === "string") {
+                    const hash = viewEngine.hashCode(resolvedView);
 
-                if (view.charAt(0) === "<") {
-                    const hash = viewEngine.hashCode(view);
                     if (elementsToSearch && elementsToSearch.length > 0) {
                         // If using cacheViews functionality
                         const existing = findInElements(elementsToSearch, hash);
                         if (existing) {
-                            view = existing;
+                            resolvedView = existing;
                         } else {
-                            view = viewEngine.createView(view, hash);
+                            resolvedView = viewEngine.createView(resolvedView, hash);
                         }
                     } else {
-                        view = viewEngine.createView(view, hash);
+                        resolvedView = viewEngine.createView(resolvedView, hash);
                     }
-                } else {
-                    system.error(
-                        "This is not a HTML string. If you've tried to pass in a view ID it is no longer supported. If you want to directly use a HTML template import it and provide it for composition."
-                    );
                 }
-            }
 
-            return Promise.resolve(view);
+                return resolvedView;
+            });
         },
     };
 }
