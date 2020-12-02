@@ -8,7 +8,8 @@
         "build-starter": "lerna run --scope durandal-starterkit build --stream",
         "stat-starter": "lerna run --scope durandal-starterkit webpack-stats --stream",
         "analyze-starter": "lerna run --scope durandal-starterkit webpack-analyze --stream",
-        "test": "jest"
+        "test": "jest",
+        "lint": "lerna run --scope durandal-es6 lint --stream"
     },
     "devDependencies": {
         "@babel/core": "^7.11.1",
