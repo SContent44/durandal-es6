@@ -145,11 +145,11 @@ function ViewEngineModule() {
          */
         createView(htmlString, hash) {
             const view = htmlString.trim();
+            let existing = this.tryGetViewFromCache(hash);
 
-            if (view.charAt(0) === "<") {
-                const cacheId = hash || this.hashCode(view);
-
-                const existing = this.tryGetViewFromCache(cacheId);
+            if (view.charAt(0) === "<" || existing) {
+                const cacheId = this.hashCode(view);
+                existing = existing || this.tryGetViewFromCache(cacheId);
 
                 let element;
                 if (existing) {
