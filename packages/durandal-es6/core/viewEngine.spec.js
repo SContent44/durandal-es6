@@ -3,24 +3,24 @@ const $ = require("jquery");
 const sut = require("./viewEngine").default;
 const system = require("./system").default;
 
-describe("durandal/viewEngine", function () {
-    describe("isViewUrl", function () {
-        it("returns false when view extension not found", function () {
+describe("durandal/viewEngine", () => {
+    describe("isViewUrl", () => {
+        it("returns false when view extension not found", () => {
             const isViewUrl = sut.isViewUrl("test");
 
             expect(isViewUrl).toBe(false);
         });
 
-        it("returns true when view extension found", function () {
+        it("returns true when view extension found", () => {
             const isViewUrl = sut.isViewUrl("test.html");
 
             expect(isViewUrl).toBe(true);
         });
     });
 
-    describe("processMarkup", function () {
-        describe("with single node", function () {
-            it("returns dom element", function () {
+    describe("processMarkup", () => {
+        describe("with single node", () => {
+            it("returns dom element", () => {
                 const markup = sut.processMarkup("<div>test</div>");
 
                 expect(markup.nodeType).toBe(1);
@@ -33,8 +33,8 @@ describe("durandal/viewEngine", function () {
             });
         });
 
-        describe("with multiple nodes", function () {
-            it("returns wrapped dom element", function () {
+        describe("with multiple nodes", () => {
+            it("returns wrapped dom element", () => {
                 const markup = sut.processMarkup("<div>test</div><div>test</div>");
 
                 expect(markup.className).toBe("durandal-wrapper");
@@ -42,8 +42,8 @@ describe("durandal/viewEngine", function () {
             });
         });
 
-        describe("with comments", function () {
-            it("returns dom element with comments removed", function () {
+        describe("with comments", () => {
+            it("returns dom element with comments removed", () => {
                 const markup = sut.processMarkup("<!-- this is a comment --><div>test</div>");
 
                 expect(markup.nodeType).toBe(1);
@@ -53,11 +53,11 @@ describe("durandal/viewEngine", function () {
         });
     });
 
-    describe("processMarkup with alternate parseMarkup", function () {
+    describe("processMarkup with alternate parseMarkup", () => {
         let oldParseMarkup = null;
         let spyable = null;
 
-        beforeEach(function () {
+        beforeEach(() => {
             spyable = {
                 parseIt(markup) {
                     return $.parseHTML(markup);
@@ -65,18 +65,18 @@ describe("durandal/viewEngine", function () {
             };
 
             oldParseMarkup = sut.parseMarkup;
-            const spied = spyOn(spyable, "parseIt").and.callThrough();
+            const spied = jest.spyOn(spyable, "parseIt");
             sut.parseMarkup = spied;
         });
 
-        afterEach(function () {
+        afterEach(() => {
             sut.parseMarkup = oldParseMarkup;
             oldParseMarkup = null;
             spyable = null;
         });
 
-        describe("with single node", function () {
-            it("returns dom element", function () {
+        describe("with single node", () => {
+            it("returns dom element", () => {
                 const markup = sut.processMarkup("<div>test</div>");
 
                 expect(spyable.parseIt).toHaveBeenCalled();
@@ -86,8 +86,8 @@ describe("durandal/viewEngine", function () {
             });
         });
 
-        describe("with multiple nodes", function () {
-            it("returns wrapped dom element", function () {
+        describe("with multiple nodes", () => {
+            it("returns wrapped dom element", () => {
                 const markup = sut.processMarkup("<div>test</div><div>test</div>");
 
                 expect(spyable.parseIt).toHaveBeenCalled();
@@ -96,8 +96,8 @@ describe("durandal/viewEngine", function () {
             });
         });
 
-        describe("with comments", function () {
-            it("returns dom element with comments removed", function () {
+        describe("with comments", () => {
+            it("returns dom element with comments removed", () => {
                 const markup = sut.processMarkup("<!-- this is a comment --><div>test</div>");
 
                 expect(spyable.parseIt).toHaveBeenCalled();
@@ -108,8 +108,8 @@ describe("durandal/viewEngine", function () {
         });
     });
 
-    describe("createView", function () {
-        it("view acquire and data-view attribute added", function () {
+    describe("createView", () => {
+        it("view acquire and data-view attribute added", () => {
             const htmlString = "<div>test</div>";
             const view = sut.createView(htmlString, undefined);
             const hash = sut.hashCode(htmlString);

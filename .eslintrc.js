@@ -37,7 +37,6 @@ module.exports = {
         "prefer-rest-params": "off",
         "prefer-spread": "off",
         "no-restricted-syntax": "off",
-        "guard-for-in": "off",
         "no-continue": "off",
         "no-self-assign": "off",
         "no-bitwise": "off",

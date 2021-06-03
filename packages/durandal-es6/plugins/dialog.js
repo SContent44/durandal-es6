@@ -193,14 +193,14 @@ function DialogPluginModule() {
 
     function ensureDialogInstance(moduleToResolve) {
         return system
-            .defer(function (dfd) {
+            .defer((dfd) => {
                 if (system.isFunction(moduleToResolve)) {
                     system
                         .acquire(moduleToResolve)
-                        .then(function (module) {
+                        .then((module) => {
                             dfd.resolve(system.resolveObject(module));
                         })
-                        .catch(function (err) {
+                        .catch((err) => {
                             system.error(`Failed to load dialog module (${moduleToResolve}). Details: ${err.message}`);
                         });
                 } else {
@@ -238,9 +238,7 @@ function DialogPluginModule() {
          * @method isOpen
          * @return {boolean} True if a dialog is open. false otherwise.
          */
-        isOpen: ko.computed(function () {
-            return dialogCount() > 0;
-        }),
+        isOpen: ko.computed(() => dialogCount() > 0),
         /**
          * Gets the dialog context by name or returns the default context if no name is specified.
          * @method getContext
@@ -325,11 +323,11 @@ function DialogPluginModule() {
             const dialogContext = contexts[context || "default"];
 
             return system
-                .defer(function (dfd) {
-                    ensureDialogInstance(obj).then(function (instance) {
+                .defer((dfd) => {
+                    ensureDialogInstance(obj).then((instance) => {
                         const dialogActivator = activator.create();
 
-                        dialogActivator.activateItem(instance, activationData).then(function (success) {
+                        dialogActivator.activateItem(instance, activationData).then((success) => {
                             if (success) {
                                 const theDialog = (instance.__dialog__ = {
                                     owner: instance,
@@ -337,7 +335,7 @@ function DialogPluginModule() {
                                     activator: dialogActivator,
                                     close() {
                                         const args = arguments;
-                                        dialogActivator.deactivateItem(instance, true).then(function (closeSuccess) {
+                                        dialogActivator.deactivateItem(instance, true).then((closeSuccess) => {
                                             if (closeSuccess) {
                                                 dialogCount(dialogCount() - 1);
                                                 dialogContext.removeHost(theDialog);
@@ -474,7 +472,7 @@ function DialogPluginModule() {
             $(theDialog.host).css("opacity", 0);
             $(theDialog.blockout).css("opacity", 0);
 
-            setTimeout(function () {
+            setTimeout(() => {
                 ko.removeNode(theDialog.host);
                 ko.removeNode(theDialog.blockout);
             }, this.removeDelay);
@@ -515,7 +513,7 @@ function DialogPluginModule() {
 
             const setDialogPosition = function (childView, objDialog) {
                 // Setting a short timeout is need in IE8, otherwise we could do this straight away
-                setTimeout(function () {
+                setTimeout(() => {
                     const $childView = $(childView);
 
                     objDialog.context.reposition(childView);
@@ -528,12 +526,12 @@ function DialogPluginModule() {
             };
 
             setDialogPosition(child, theDialog);
-            loadables.on("load", function () {
+            loadables.on("load", () => {
                 setDialogPosition(child, theDialog);
             });
 
             if ($child.hasClass("autoclose") || context.model.autoclose) {
-                $(theDialog.blockout).on("click", function () {
+                $(theDialog.blockout).on("click", () => {
                     theDialog.close();
                 });
             }

@@ -219,7 +219,7 @@ function SystemModule() {
          */
         guid() {
             let d = new Date().getTime();
-            return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function (c) {
+            return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, (c) => {
                 const r = (d + Math.random() * 16) % 16 | 0;
                 d = Math.floor(d / 16);
                 return (c == "x" ? r : (r & 0x7) | 0x8).toString(16);
@@ -240,6 +240,11 @@ function SystemModule() {
             if (system.isFunction(moduleToResolve)) {
                 return Promise.resolve(moduleToResolve());
             }
+
+            if (system.isObject(moduleToResolve)) {
+                return Promise.resolve(moduleToResolve);
+            }
+
             return system.error(
                 "You are not using the durandal-es6 behaviour. Pass in a function that will resolve to return either a function, object, or a promise<functon|object>."
             );
@@ -273,7 +278,7 @@ function SystemModule() {
          */
         wait(milliseconds) {
             return system
-                .defer(function (dfd) {
+                .defer((dfd) => {
                     setTimeout(dfd.resolve, milliseconds);
                 })
                 .promise();

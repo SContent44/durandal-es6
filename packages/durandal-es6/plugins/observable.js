@@ -95,13 +95,13 @@ function ObservableModule() {
         lookup = lookup || createLookup(original);
         lookup.__full__ = true;
 
-        es5Functions.forEach(function (methodName) {
+        es5Functions.forEach((methodName) => {
             observable[methodName] = function () {
                 return arrayProto[methodName].apply(original, arguments);
             };
         });
 
-        observableArrayMethods.forEach(function (methodName) {
+        observableArrayMethods.forEach((methodName) => {
             original[methodName] = function () {
                 notify = false;
                 const methodCallResult = observableArrayFunctions[methodName].apply(observable, arguments);
@@ -110,7 +110,7 @@ function ObservableModule() {
             };
         });
 
-        arrayMethods.forEach(function (methodName) {
+        arrayMethods.forEach((methodName) => {
             original[methodName] = function () {
                 if (notify) {
                     observable.valueWillMutate();
@@ -126,7 +126,7 @@ function ObservableModule() {
             };
         });
 
-        additiveArrayFunctions.forEach(function (methodName) {
+        additiveArrayFunctions.forEach((methodName) => {
             original[methodName] = function () {
                 for (let i = 0, len = arguments.length; i < len; i += 1) {
                     convertObject(arguments[i], hasChanged);
@@ -282,7 +282,7 @@ function ObservableModule() {
         } else if (!skipPromises && system.isPromise(original)) {
             observable = ko.observable();
 
-            original.then(function (result) {
+            original.then((result) => {
                 if (system.isArray(result)) {
                     const oa = ko.observableArray(result);
                     makeObservableArray(result, oa, hasChanged);
@@ -297,17 +297,17 @@ function ObservableModule() {
         }
 
         if (hasChanged && hasChanged.length > 0) {
-            hasChanged.forEach(function (func) {
+            hasChanged.forEach((func) => {
                 if (system.isArray(original)) {
                     observable.subscribe(
-                        function (arrayChanges) {
+                        (arrayChanges) => {
                             func(obj, propertyName, null, arrayChanges);
                         },
                         null,
                         "arrayChange"
                     );
                 } else {
-                    observable.subscribe(function (newValue) {
+                    observable.subscribe((newValue) => {
                         func(obj, propertyName, newValue, null);
                     });
                 }
@@ -321,7 +321,7 @@ function ObservableModule() {
             set: ko.isWriteableObservable(observable)
                 ? function (newValue) {
                       if (newValue && system.isPromise(newValue) && !skipPromises) {
-                          newValue.then(function (result) {
+                          newValue.then((result) => {
                               innerSetter(observable, result, system.isArray(result));
                           });
                       } else {

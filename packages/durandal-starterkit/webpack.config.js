@@ -138,12 +138,8 @@ module.exports = {
         },
     },
     devServer: {
-        contentBase: __dirname,
         hot: false,
-        inline: true,
         historyApiFallback: true,
-        stats: { colors: true },
-        progress: true,
         port: 19003,
     },
 };

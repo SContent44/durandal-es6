@@ -35,9 +35,7 @@ function RouterModule() {
         routeString = routeString
             .replace(escapeRegExp, "\\$&")
             .replace(optionalParam, "(?:$1)?")
-            .replace(namedParam, function replacedNamedParam(match, optional) {
-                return optional ? match : "([^/]+)";
-            })
+            .replace(namedParam, (match, optional) => (optional ? match : "([^/]+)"))
             .replace(splatParam, "(.*?)");
 
         return new RegExp(`^${routeString}$`, routesAreCaseSensitive ? undefined : "i");
@@ -184,7 +182,7 @@ function RouterModule() {
              * Indicates that the router (or a child router) is currently in the process of navigating.
              * @property {KnockoutComputed} isNavigating
              */
-            isNavigating: ko.computed(function () {
+            isNavigating: ko.computed(() => {
                 const current = activeItem();
                 const processing = isProcessing();
                 const currentRouterIsProcesing = !!(
@@ -311,7 +309,7 @@ function RouterModule() {
 
             activator
                 .activateItem(instance, instruction.params, options)
-                .then(function (succeeded) {
+                .then((succeeded) => {
                     if (succeeded) {
                         const previousActivation = currentActivation;
                         const withChild = hasChildRouter(instance, router);
@@ -355,7 +353,7 @@ function RouterModule() {
                         startDeferred = null;
                     }
                 })
-                .catch(function (err) {
+                .catch((err) => {
                     system.error(err);
                 });
         }
@@ -371,7 +369,7 @@ function RouterModule() {
             const resultOrPromise = router.guardRoute(instance, instruction);
             if (resultOrPromise || resultOrPromise === "") {
                 if (resultOrPromise.then) {
-                    resultOrPromise.then(function (result) {
+                    resultOrPromise.then((result) => {
                         if (result) {
                             if (system.isString(result)) {
                                 redirect(result);
@@ -449,12 +447,12 @@ function RouterModule() {
             } else {
                 system
                     .acquire(instruction.config.moduleId)
-                    .then(function (m) {
+                    .then((m) => {
                         const instance = system.resolveObject(m);
 
                         ensureActivation(activeItem, instance, instruction);
                     })
-                    .catch(function (err) {
+                    .catch((err) => {
                         cancelNavigation(null, instruction);
                         system.error(
                             `Failed to load routed module (${instruction.config.moduleId}). Details: ${err.message}`,
@@ -522,7 +520,7 @@ function RouterModule() {
             router.trigger("router:route:after-config", config, router);
             router.routes.push(config);
 
-            router.route(config.routePattern, function routeCallback(fragment, queryString) {
+            router.route(config.routePattern, (fragment, queryString) => {
                 const paramInfo = createParams(config.routePattern, fragment, queryString);
                 queueInstruction({
                     fragment,
@@ -685,7 +683,7 @@ function RouterModule() {
 
         // Allow observable to be used for app.title
         if (ko.isObservable(app.title)) {
-            app.title.subscribe(function () {
+            app.title.subscribe(() => {
                 const instruction = router.activeInstruction();
                 const title = instruction != null ? ko.unwrap(instruction.config.title) : "";
                 setTitle(title);
@@ -870,9 +868,7 @@ function RouterModule() {
                 }
             }
 
-            nav.sort(function (a, b) {
-                return a.nav - b.nav;
-            });
+            nav.sort((a, b) => a.nav - b.nav);
             router.navigationModel(nav);
 
             return router;
@@ -891,7 +887,7 @@ function RouterModule() {
             const catchAllRoute = "*catchall";
             const catchAllPattern = routeStringToRegExp(catchAllRoute);
 
-            router.route(catchAllPattern, function routeCallback(fragment, queryString) {
+            router.route(catchAllPattern, (fragment, queryString) => {
                 if (!config) {
                     return redirect("/");
                 }
@@ -924,7 +920,7 @@ function RouterModule() {
                 } else if (system.isFunction(config)) {
                     const result = config(instruction);
                     if (result && result.then) {
-                        result.then(function () {
+                        result.then(() => {
                             router.trigger("router:route:before-config", instruction.config, router);
                             router.trigger("router:route:after-config", instruction.config, router);
                             queueInstruction(instruction);
@@ -974,7 +970,7 @@ function RouterModule() {
                 router.relativeToParentRouter = true;
             }
 
-            router.on("router:route:before-config").then(function (config) {
+            router.on("router:route:before-config").then((config) => {
                 if (settings.moduleId) {
                     system.error(
                         "The settings.moduleId behaviour has been removed. Ensure you have updated your app's route config to use the durandal-es6 behaviour for moduleId."
@@ -991,7 +987,7 @@ function RouterModule() {
             });
 
             if (settings.dynamicHash) {
-                router.on("router:route:after-config").then(function (config) {
+                router.on("router:route:after-config").then((config) => {
                     config.routePattern = routeStringToRegExp(
                         config.route ? `${settings.dynamicHash}/${config.route}` : settings.dynamicHash
                     );
@@ -999,16 +995,16 @@ function RouterModule() {
                 });
 
                 // eslint-disable-next-line no-unused-vars
-                router.on("router:route:before-child-routes").then(function (instance, instruction, parentRouter) {
+                router.on("router:route:before-child-routes").then((instance, instruction, parentRouter) => {
                     const childRouter = instance.router;
 
                     for (let i = 0; i < childRouter.routes.length; i += 1) {
                         const route = childRouter.routes[i];
                         const params = instruction.params.slice(0);
 
-                        route.hash = childRouter.convertRouteToHash(route.route).replace(namedParam, function (match) {
-                            return params.length > 0 ? params.shift() : match;
-                        });
+                        route.hash = childRouter
+                            .convertRouteToHash(route.route)
+                            .replace(namedParam, (match) => (params.length > 0 ? params.shift() : match));
 
                         route.dynamicHash(route.hash);
                     }
@@ -1076,7 +1072,7 @@ function RouterModule() {
      */
     rootRouter.activate = function (options) {
         return system
-            .defer(function (dfd) {
+            .defer((dfd) => {
                 startDeferred = dfd;
                 rootRouter.options = system.extend({ routeHandler: rootRouter.loadUrl }, rootRouter.options, options);
 

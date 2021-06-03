@@ -68,7 +68,7 @@ function ViewLocatorModule() {
          * @return {Promise} A promise of the rendered view.
          */
         locateView(view, elementsToSearch) {
-            return Promise.resolve(view).then(function (resolvedView) {
+            return Promise.resolve(view).then((resolvedView) => {
                 if (typeof resolvedView === "string") {
                     const hash = viewEngine.hashCode(resolvedView);
 

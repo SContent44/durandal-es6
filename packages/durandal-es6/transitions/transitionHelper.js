@@ -105,7 +105,7 @@ function doTrans(settings) {
         $previousView.addClass("animated");
         $previousView.addClass(outAn);
 
-        return new Promise(function (resolve) {
+        return new Promise((resolve) => {
             setTimeout(() => {
                 if (callback) {
                     resolve(callback());
@@ -124,7 +124,7 @@ function doTrans(settings) {
         $newView.addClass(inAn);
         $newView.css("display", "");
 
-        return new Promise(function (resolve) {
+        return new Promise((resolve) => {
             setTimeout(() => {
                 $newView.removeClass(`${inAn} animated`); // just need to remove inAn here, that's all we'll have
                 resolve(true);

@@ -1,19 +1,19 @@
 const Events = require("./events").default;
 
-describe("Durandal/Events AMD", function () {
-    describe("on and trigger", function () {
+describe("Durandal/Events AMD", () => {
+    describe("on and trigger", () => {
         let obj = { counter: 0 };
         Events.includeIn(obj);
-        obj.on("event", function () {
+        obj.on("event", () => {
             obj.counter += 1;
         });
 
-        it("counter should be incremented", function () {
+        it("counter should be incremented", () => {
             obj.trigger("event");
             expect(obj.counter).toBe(1);
         });
 
-        it("counter should be incremented five times", function () {
+        it("counter should be incremented five times", () => {
             obj.trigger("event");
             obj.trigger("event");
             obj.trigger("event");
@@ -22,13 +22,13 @@ describe("Durandal/Events AMD", function () {
             expect(obj.counter).toBe(5);
         });
 
-        it("binding and triggering should support multiple events ", function () {
+        it("binding and triggering should support multiple events ", () => {
             obj = { counter: 0 };
             Events.includeIn(obj);
 
             obj.trigger("event");
 
-            obj.on("a b c", function () {
+            obj.on("a b c", () => {
                 obj.counter += 1;
             });
 
@@ -47,13 +47,13 @@ describe("Durandal/Events AMD", function () {
             expect(obj.counter).toBe(5);
         });
 
-        it("should trigger all for each event", function () {
+        it("should trigger all for each event", () => {
             let a;
             let b;
             const obj = { counter: 0 };
             Events.includeIn(obj);
 
-            obj.on("all", function (event) {
+            obj.on("all", (event) => {
                 obj.counter++;
                 if (event === "a") {
                     a = true;
@@ -68,7 +68,7 @@ describe("Durandal/Events AMD", function () {
         });
     });
 
-    describe("on, then unbind all functions", function () {
+    describe("on, then unbind all functions", () => {
         const obj = { counter: 0 };
         Events.includeIn(obj);
         const callback = function () {
@@ -80,12 +80,12 @@ describe("Durandal/Events AMD", function () {
         obj.off("event");
         obj.trigger("event");
 
-        it("counter should have only been incremented once", function () {
+        it("counter should have only been incremented once", () => {
             expect(obj.counter).toBe(1);
         });
     });
 
-    describe("bind two callbacks, unbind only one", function () {
+    describe("bind two callbacks, unbind only one", () => {
         const obj = { counterA: 0, counterB: 0 };
         Events.includeIn(obj);
         const callback = function () {
@@ -93,7 +93,7 @@ describe("Durandal/Events AMD", function () {
         };
 
         obj.on("event", callback);
-        obj.on("event", function () {
+        obj.on("event", () => {
             obj.counterB += 1;
         });
 
@@ -101,15 +101,15 @@ describe("Durandal/Events AMD", function () {
         obj.off("event", callback);
         obj.trigger("event");
 
-        it("counterA should have only been incremented once.", function () {
+        it("counterA should have only been incremented once.", () => {
             expect(obj.counterA).toBe(1);
         });
-        it("counterB should have been incremented twice.", function () {
+        it("counterB should have been incremented twice.", () => {
             expect(obj.counterB).toBe(2);
         });
     });
 
-    describe("unbind a callback in the midst of it firing", function () {
+    describe("unbind a callback in the midst of it firing", () => {
         const obj = { counter: 0 };
         Events.includeIn(obj);
         const callback = function () {
@@ -120,12 +120,12 @@ describe("Durandal/Events AMD", function () {
         obj.trigger("event");
         obj.trigger("event");
         obj.trigger("event");
-        it("the callback should have been unbound.", function () {
+        it("the callback should have been unbound.", () => {
             expect(obj.counter).toBe(1);
         });
     });
 
-    describe("two binds that unbind themselves", function () {
+    describe("two binds that unbind themselves", () => {
         const obj = { counterA: 0, counterB: 0 };
         Events.includeIn(obj);
         const incrA = function () {
@@ -141,20 +141,20 @@ describe("Durandal/Events AMD", function () {
         obj.trigger("event");
         obj.trigger("event");
         obj.trigger("event");
-        it("counterA should have only been incremented once.", function () {
+        it("counterA should have only been incremented once.", () => {
             expect(obj.counterA).toBe(1);
         });
-        it("counterA should have only been incremented once..", function () {
+        it("counterA should have only been incremented once..", () => {
             expect(obj.counterB).toBe(1);
         });
     });
 
-    describe("bind a callback with a supplied context", function () {
+    describe("bind a callback with a supplied context", () => {
         const TestClass = function () {
             return this;
         };
         TestClass.prototype.assertTrue = function () {
-            it("this` should be bound to the callback`", function () {
+            it("this` should be bound to the callback`", () => {
                 expect(true).toBeTruthy();
             });
         };
@@ -171,7 +171,7 @@ describe("Durandal/Events AMD", function () {
         obj.trigger("event");
     });
 
-    describe("nested trigger with unbind", function () {
+    describe("nested trigger with unbind", () => {
         const obj = { counter: 0 };
         Events.includeIn(obj);
 
@@ -186,12 +186,12 @@ describe("Durandal/Events AMD", function () {
         obj.on("event", incr1);
         obj.on("event", incr2);
         obj.trigger("event");
-        it("counter should have incremented three times", function () {
+        it("counter should have incremented three times", () => {
             expect(obj.counter).toBe(3);
         });
     });
 
-    describe("callback list is not altered during trigger", function () {
+    describe("callback list is not altered during trigger", () => {
         let counter = 0;
         const obj = {};
         const incr = function () {
@@ -199,8 +199,8 @@ describe("Durandal/Events AMD", function () {
         };
         Events.includeIn(obj);
 
-        it("bind should not alter callback list", function () {
-            obj.on("event", function () {
+        it("bind should not alter callback list", () => {
+            obj.on("event", () => {
                 obj.on("event", incr);
                 obj.on("all", incr);
             });
@@ -208,9 +208,9 @@ describe("Durandal/Events AMD", function () {
             expect(counter).toBe(0);
         });
 
-        it("unbind should not alter callback list", function () {
+        it("unbind should not alter callback list", () => {
             obj.off();
-            obj.on("event", function () {
+            obj.on("event", () => {
                 obj.off("event", incr);
                 obj.off("all", incr);
             });
@@ -224,7 +224,7 @@ describe("Durandal/Events AMD", function () {
     });
 
     // This test has been x'd out since 2013
-    xit("if no callback is provided, `on` should be a noop", function () {
+    xit("if no callback is provided, `on` should be a noop", () => {
         const obj = {};
         Events.includeIn(obj);
         const result = obj.on("test").trigger("test");
@@ -232,7 +232,7 @@ describe("Durandal/Events AMD", function () {
     });
 
     // This test has been x'd out since 2013
-    xit("if callback is truthy but not a function, `on` should throw an error just like jQuery", function () {
+    xit("if callback is truthy but not a function, `on` should throw an error just like jQuery", () => {
         const view = {};
         Events.includeIn(view);
 
@@ -240,17 +240,17 @@ describe("Durandal/Events AMD", function () {
         view.trigger("test");
     });
 
-    describe("off", function () {
-        it("should remove all events for a specific context", function () {
+    describe("off", () => {
+        it("should remove all events for a specific context", () => {
             const obj = {};
             Events.includeIn(obj);
 
-            obj.on("x y all", function () {
+            obj.on("x y all", () => {
                 expect(true).toBeTruthy();
             });
             obj.on(
                 "x y all",
-                function () {
+                () => {
                     expect(false).toBeTruthy();
                 },
                 obj
@@ -259,7 +259,7 @@ describe("Durandal/Events AMD", function () {
             obj.trigger("x y");
         });
 
-        it("should remove all events for a specific callback", function () {
+        it("should remove all events for a specific callback", () => {
             const obj = {};
             Events.includeIn(obj);
             const success = function () {
@@ -275,19 +275,19 @@ describe("Durandal/Events AMD", function () {
             obj.trigger("x y");
         });
 
-        it("should not skip consecutive events", function () {
+        it("should not skip consecutive events", () => {
             const obj = {};
             Events.includeIn(obj);
             obj.on(
                 "event",
-                function () {
+                () => {
                     expect(false).toBeTruthy();
                 },
                 obj
             );
             obj.on(
                 "event",
-                function () {
+                () => {
                     expect(false).toBeTruthy();
                 },
                 obj
@@ -297,7 +297,7 @@ describe("Durandal/Events AMD", function () {
         });
     });
 
-    describe("event functions", function () {
+    describe("event functions", () => {
         const obj = {};
         const obj2 = {};
         const fn = function () {
@@ -306,7 +306,7 @@ describe("Durandal/Events AMD", function () {
         Events.includeIn(obj);
         Events.includeIn(obj2);
 
-        it("should be chainable", function () {
+        it("should be chainable", () => {
             expect(obj).toEqual(obj.trigger("noeventssetyet"));
             expect(obj).toEqual(obj.off("noeventssetyet"));
             expect(obj).toEqual(obj.on("a", fn));

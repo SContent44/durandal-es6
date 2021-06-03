@@ -4,7 +4,7 @@ const system = require("./system").default;
 
 const isSpy = (spy) => spy.calls && typeof spy.calls.count === "function";
 
-describe("durandal/binder", function () {
+describe("durandal/binder", () => {
     let settings;
     let view;
 
@@ -13,7 +13,7 @@ describe("durandal/binder", function () {
         const unexpectedViewMessage = "Unexpected View Type";
         const viewName = "view name";
 
-        beforeEach(function () {
+        beforeEach(() => {
             settings = createSettings();
 
             view = {
@@ -29,7 +29,7 @@ describe("durandal/binder", function () {
             }
 
             if (!isSpy(system.error)) {
-                jest.spyOn(system, "error").mockImplementation(function (errorMessage) {
+                jest.spyOn(system, "error").mockImplementation((errorMessage) => {
                     throw errorMessage;
                 });
             }
@@ -37,7 +37,7 @@ describe("durandal/binder", function () {
             jest.spyOn(system, "log");
         });
 
-        it("logs and returns with null view", function () {
+        it("logs and returns with null view", () => {
             view = null;
 
             sutAction();
@@ -46,7 +46,7 @@ describe("durandal/binder", function () {
             expect(ko.applyBindings).not.toHaveBeenCalledWith(settings.bindingTarget, view);
         });
 
-        it("logs and returns with null obj", function () {
+        it("logs and returns with null obj", () => {
             settings.bindingTarget = null;
 
             sutAction();
@@ -55,7 +55,7 @@ describe("durandal/binder", function () {
             expect(ko.applyBindings).not.toHaveBeenCalledWith(settings.bindingTarget, view);
         });
 
-        it("logs and returns with no getAttribute function on view", function () {
+        it("logs and returns with no getAttribute function on view", () => {
             view.getAttribute = null;
 
             sutAction();
@@ -64,9 +64,9 @@ describe("durandal/binder", function () {
             expect(ko.applyBindings).not.toHaveBeenCalledWith(settings.bindingTarget, view);
         });
 
-        it("applies bindings with before and after hooks", function () {
+        it("applies bindings with before and after hooks", () => {
             let bindStatus = 0;
-            jest.spyOn(sut, "binding").mockImplementation(function (dataArg, viewArg) {
+            jest.spyOn(sut, "binding").mockImplementation((dataArg, viewArg) => {
                 expect(dataArg).toBe(settings.data);
                 expect(viewArg).toBe(view);
                 expect(bindStatus).toBe(0);
@@ -78,11 +78,13 @@ describe("durandal/binder", function () {
                 expect(bindStatus).toBe(0);
                 bindStatus = 1;
             }); */
-            ko.applyBindings.mockImplementation(function () {
+
+            ko.applyBindings.mockImplementation(() => {
                 expect(bindStatus).toBe(1);
                 bindStatus = 2;
             });
-            jest.spyOn(sut, "bindingComplete").mockImplementation(function (dataArg, viewArg) {
+
+            jest.spyOn(sut, "bindingComplete").mockImplementation((dataArg, viewArg) => {
                 expect(dataArg).toBe(settings.data);
                 expect(viewArg).toBe(view);
                 expect(bindStatus).toBe(2);
@@ -94,8 +96,8 @@ describe("durandal/binder", function () {
             expect(ko.applyBindings).toHaveBeenCalledWith(settings.bindingTarget, view);
         });
 
-        it("logs binding error", function () {
-            ko.applyBindings.mockImplementation(function () {
+        it("logs binding error", () => {
+            ko.applyBindings.mockImplementation(() => {
                 throw new Error("FakeError");
             });
 
@@ -104,51 +106,51 @@ describe("durandal/binder", function () {
             expect(system.log).toHaveBeenCalled();
         });
 
-        describe("with throw errors set", function () {
-            beforeEach(function () {
+        describe("with throw errors set", () => {
+            beforeEach(() => {
                 sut.throwOnErrors = true;
             });
 
-            it("throws and returns with null view", function () {
+            it("throws and returns with null view", () => {
                 view = null;
 
-                expect(function () {
+                expect(() => {
                     sutAction();
                 }).toThrowError(insufficientInfoMessage);
                 expect(ko.applyBindings).not.toHaveBeenCalledWith(settings.bindingTarget, view);
             });
 
-            it("throws and returns with null obj", function () {
+            it("throws and returns with null obj", () => {
                 settings.bindingTarget = null;
 
-                expect(function () {
+                expect(() => {
                     sutAction();
                 }).toThrowError(insufficientInfoMessage);
                 expect(ko.applyBindings).not.toHaveBeenCalledWith(settings.bindingTarget, view);
             });
 
-            it("throws and returns with no getAttribute function on view", function () {
+            it("throws and returns with no getAttribute function on view", () => {
                 view.getAttribute = null;
 
-                expect(function () {
+                expect(() => {
                     sutAction();
                 }).toThrowError(unexpectedViewMessage);
                 expect(ko.applyBindings).not.toHaveBeenCalledWith(settings.bindingTarget, view);
             });
 
-            it("throws binding error", function () {
-                ko.applyBindings.mockImplementation(function () {
+            it("throws binding error", () => {
+                ko.applyBindings.mockImplementation(() => {
                     throw new Error("FakeError");
                 });
 
-                expect(function () {
+                expect(() => {
                     sutAction();
                 }).toThrowError(/.*/);
             });
         });
     }
 
-    describe("bind", function () {
+    describe("bind", () => {
         function createSettings() {
             const target = {};
             return {
@@ -158,13 +160,13 @@ describe("durandal/binder", function () {
             };
         }
 
-        sharedBindingBehaviour(createSettings, function () {
+        sharedBindingBehaviour(createSettings, () => {
             sut.bind(settings.bindingTarget, view);
         });
     });
 
-    describe("bindContext", function () {
-        describe("child context used", function () {
+    describe("bindContext", () => {
+        describe("child context used", () => {
             function createSettings() {
                 const bindingObject = {};
                 const bindingContext = {
@@ -181,12 +183,12 @@ describe("durandal/binder", function () {
                 };
             }
 
-            sharedBindingBehaviour(createSettings, function () {
+            sharedBindingBehaviour(createSettings, () => {
                 sut.bindContext(settings.bindingTarget, view, settings.data);
             });
         });
 
-        describe("child context not used", function () {
+        describe("child context not used", () => {
             function createSettings() {
                 const bindingObject = {};
                 const bindingContext = {
@@ -202,7 +204,7 @@ describe("durandal/binder", function () {
                 };
             }
 
-            sharedBindingBehaviour(createSettings, function () {
+            sharedBindingBehaviour(createSettings, () => {
                 sut.bindContext(settings.bindingTarget, view, null);
             });
         });

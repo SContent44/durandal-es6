@@ -77,11 +77,11 @@ function ActivatorModule() {
 
             if (result && result.then) {
                 result.then(
-                    function () {
+                    () => {
                         settings.afterDeactivate(item, close, setter);
                         dfd.resolve(true);
                     },
-                    function (reason) {
+                    (reason) => {
                         if (reason) {
                             system.log(reason);
                         }
@@ -119,11 +119,11 @@ function ActivatorModule() {
 
         if (result && result.then) {
             result.then(
-                function () {
+                () => {
                     activeItem(newItem);
                     callback(true);
                 },
-                function (reason) {
+                (reason) => {
                     if (reason) {
                         system.log(`ERROR: ${reason.message}`, reason);
                     }
@@ -143,7 +143,7 @@ function ActivatorModule() {
         settings.lifecycleData = null;
 
         return system
-            .defer(function (dfd) {
+            .defer((dfd) => {
                 function continueCanDeactivate() {
                     if (item && item.canDeactivate && options.canDeactivate) {
                         let resultOrPromise;
@@ -157,11 +157,11 @@ function ActivatorModule() {
 
                         if (resultOrPromise.then) {
                             resultOrPromise.then(
-                                function (result) {
+                                (result) => {
                                     settings.lifecycleData = result;
                                     dfd.resolve(settings.interpretResponse(result));
                                 },
-                                function (reason) {
+                                (reason) => {
                                     if (reason) {
                                         system.log(`ERROR: ${reason.message}`, reason);
                                     }
@@ -180,7 +180,7 @@ function ActivatorModule() {
 
                 const childActivator = settings.findChildActivator(item);
                 if (childActivator) {
-                    childActivator.canDeactivate().then(function (result) {
+                    childActivator.canDeactivate().then((result) => {
                         if (result) {
                             continueCanDeactivate();
                         } else {
@@ -199,7 +199,7 @@ function ActivatorModule() {
         settings.lifecycleData = null;
 
         return system
-            .defer(function (dfd) {
+            .defer((dfd) => {
                 if (settings.areSameItem(activeItem(), newItem, activeData, newActivationData)) {
                     dfd.resolve(true);
                     return;
@@ -217,11 +217,11 @@ function ActivatorModule() {
 
                     if (resultOrPromise.then) {
                         resultOrPromise.then(
-                            function (result) {
+                            (result) => {
                                 settings.lifecycleData = result;
                                 dfd.resolve(settings.interpretResponse(result));
                             },
-                            function (reason) {
+                            (reason) => {
                                 if (reason) {
                                     system.log(`ERROR: ${reason.message}`, reason);
                                 }
@@ -301,8 +301,8 @@ function ActivatorModule() {
          */
         computed.deactivateItem = function (item, close) {
             return system
-                .defer(function (dfd) {
-                    computed.canDeactivateItem(item, close).then(function (canDeactivate) {
+                .defer((dfd) => {
+                    computed.canDeactivateItem(item, close).then((canDeactivate) => {
                         if (canDeactivate) {
                             deactivate(item, close, settings, dfd, activeItem);
                         } else {
@@ -338,7 +338,7 @@ function ActivatorModule() {
             computed.viaSetter = false;
 
             return system
-                .defer(function (dfd) {
+                .defer((dfd) => {
                     if (computed.isActivating()) {
                         dfd.resolve(false);
                         return;
@@ -355,21 +355,21 @@ function ActivatorModule() {
 
                     computed
                         .canDeactivateItem(currentItem, settings.closeOnDeactivate, options)
-                        .then(function (canDeactivate) {
+                        .then((canDeactivate) => {
                             if (canDeactivate) {
-                                computed.canActivateItem(newItem, newActivationData).then(function (canActivate) {
+                                computed.canActivateItem(newItem, newActivationData).then((canActivate) => {
                                     if (canActivate) {
                                         system
-                                            .defer(function (dfd2) {
+                                            .defer((dfd2) => {
                                                 deactivate(currentItem, settings.closeOnDeactivate, settings, dfd2);
                                             })
                                             .promise()
-                                            .then(function () {
+                                            .then(() => {
                                                 newItem = settings.beforeActivate(newItem, newActivationData);
                                                 activate(
                                                     newItem,
                                                     activeItem,
-                                                    function (result) {
+                                                    (result) => {
                                                         activeData = newActivationData;
                                                         computed.isActivating(false);
                                                         dfd.resolve(result);
@@ -523,7 +523,7 @@ function ActivatorModule() {
             computed.canDeactivate = function (close) {
                 if (close) {
                     return system
-                        .defer(function (dfd) {
+                        .defer((dfd) => {
                             const list = items();
                             const results = [];
 
@@ -539,7 +539,7 @@ function ActivatorModule() {
                             }
 
                             for (let i = 0; i < list.length; i += 1) {
-                                computed.canDeactivateItem(list[i], close).then(function (result) {
+                                computed.canDeactivateItem(list[i], close).then((result) => {
                                     results.push(result);
                                     if (results.length == list.length) {
                                         finish();
@@ -556,14 +556,14 @@ function ActivatorModule() {
             computed.deactivate = function (close) {
                 if (close) {
                     return system
-                        .defer(function (dfd) {
+                        .defer((dfd) => {
                             const list = items();
                             let results = 0;
                             const listLength = list.length;
 
                             function doDeactivate(item) {
-                                setTimeout(function () {
-                                    computed.deactivateItem(item, close).then(function () {
+                                setTimeout(() => {
+                                    computed.deactivateItem(item, close).then(() => {
                                         results += 1;
                                         items.remove(item);
                                         if (results == listLength) {

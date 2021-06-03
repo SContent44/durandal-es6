@@ -81,7 +81,7 @@ function CompositionModule() {
             compositionCompleteCallbacks = [];
 
             if (!error) {
-                setTimeout(function () {
+                setTimeout(() => {
                     let i = callBacks.length;
 
                     while (i--) {
@@ -117,7 +117,7 @@ function CompositionModule() {
                 }
 
                 if (result && result.then) {
-                    result.then(successCallback, function (reason) {
+                    result.then(successCallback, (reason) => {
                         onError(context, reason, element);
                         successCallback();
                     });
@@ -158,7 +158,7 @@ function CompositionModule() {
                 context.child.setAttribute(activeViewAttributeName, true);
 
                 if (context.composingNewView && context.model && context.model.detached) {
-                    ko.utils.domNodeDisposal.addDisposeCallback(context.child, function () {
+                    ko.utils.domNodeDisposal.addDisposeCallback(context.child, () => {
                         try {
                             context.model.detached(context.child, context.parent, context);
                         } catch (e2) {
@@ -308,9 +308,7 @@ function CompositionModule() {
                 case "fadeIn":
                 case "entrance":
                     transition = function fadeIn() {
-                        return import("../transitions/fadeIn").then((module) => {
-                            return module.default;
-                        });
+                        return import("../transitions/fadeIn").then((module) => module.default);
                     };
                     break;
                 default:
@@ -356,7 +354,7 @@ function CompositionModule() {
                             trigger: ko.observable(null),
                         };
 
-                        composition.current.complete(function () {
+                        composition.current.complete(() => {
                             if (config.init) {
                                 config.init(element, valueAccessor, allBindingsAccessor, viewModel, bindingContext);
                             }
@@ -455,10 +453,10 @@ function CompositionModule() {
 
                 system
                     .acquire(transitionModule)
-                    .then(function (transition) {
+                    .then((transition) => {
                         context.transition = transition;
 
-                        transition(context).then(function () {
+                        transition(context).then(() => {
                             if (!context.cacheViews) {
                                 if (!context.child) {
                                     ko.virtualElements.emptyNode(context.parent);
@@ -482,7 +480,7 @@ function CompositionModule() {
                             endComposition(context, element);
                         });
                     })
-                    .catch(function (err) {
+                    .catch((err) => {
                         onError(
                             context,
                             `Failed to load transition (${transitionModule}). Details: ${err.message}`,
@@ -632,7 +630,7 @@ function CompositionModule() {
             });
         },
         executeStrategy(context, element) {
-            context.strategy(context).then(function (child) {
+            context.strategy(context).then((child) => {
                 composition.bindAndShow(child, element, context);
             });
         },
@@ -643,7 +641,7 @@ function CompositionModule() {
             }
 
             if (context.view) {
-                viewLocator.locateView(context.view, context.viewElements).then(function (child) {
+                viewLocator.locateView(context.view, context.viewElements).then((child) => {
                     composition.bindAndShow(child, element, context);
                 });
                 return;
@@ -664,9 +662,7 @@ function CompositionModule() {
          */
         compose(element, settings, bindingContext, fromBinding) {
             if (!fromBinding) {
-                settings = composition.getSettings(function () {
-                    return settings;
-                }, element);
+                settings = composition.getSettings(() => settings, element);
             }
 
             Promise.resolve(settings).then((resolvedSettings) => {
@@ -689,12 +685,12 @@ function CompositionModule() {
                 compositionCount += 1;
 
                 if (settings.compositionComplete) {
-                    compositionCompleteCallbacks.push(function () {
+                    compositionCompleteCallbacks.push(() => {
                         settings.compositionComplete(settings.child, settings.parent, settings);
                     });
                 }
 
-                compositionCompleteCallbacks.push(function () {
+                compositionCompleteCallbacks.push(() => {
                     if (settings.composingNewView && settings.model && settings.model.compositionComplete) {
                         settings.model.compositionComplete(settings.child, settings.parent, settings);
                     }
@@ -718,18 +714,18 @@ function CompositionModule() {
                         settings.area = settings.area || "partial";
                         settings.preserveContext = true;
 
-                        viewLocator.locateView(settings.view, settings.viewElements).then(function (child) {
+                        viewLocator.locateView(settings.view, settings.viewElements).then((child) => {
                             composition.bindAndShow(child, element, settings);
                         });
                     }
                 } else if (system.isPromise(settings.model)) {
                     system
                         .acquire(settings.model)
-                        .then(function (module) {
+                        .then((module) => {
                             settings.model = system.resolveObject(module);
                             composition.inject(settings, element);
                         })
-                        .catch(function (err) {
+                        .catch((err) => {
                             onError(
                                 settings,
                                 `Failed to load composed module (${settings.model}). Details: ${err.message}`,

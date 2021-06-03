@@ -57,7 +57,7 @@ function WidgetModule() {
          * @param {string} kind The kind to create a custom binding handler for.
          */
         registerKind(kind) {
-            system.acquire(kind).then(function (module) {
+            system.acquire(kind).then((module) => {
                 const kindName = system.getModelName(module);
 
                 kindModuleMaps[kindName] = module;
@@ -112,9 +112,7 @@ function WidgetModule() {
          */
         create(element, settings, bindingContext, fromBinding) {
             if (!fromBinding) {
-                settings = widget.getSettings(function () {
-                    return settings;
-                }, element);
+                settings = widget.getSettings(() => settings, element);
             }
 
             const compositionSettings = widget.createCompositionSettings(element, settings);
