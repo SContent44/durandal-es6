@@ -17,6 +17,7 @@ import "lib/font-awesome/css/font-awesome.min.css";
 
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.min";
+import "animate.css/animate.compat.css";
 import fadeIn from "durandal/transitions/fadeIn";
 
 // Array of widgets to install

@@ -12,13 +12,12 @@
         "knockout",
         "spa"
     ],
-    "dependencies": {
-        "animate.css": "^4.1.0"
-    },
+    "dependencies": {},
     "peerDependencies": {
         "jquery": "^3.6.0",
         "jquery-migrate": "^3.3.2",
-        "knockout": "^3.5.1"
+        "knockout": "^3.5.1",
+        "animate.css": "^4.1.1"
     },
     "author": "Simon Buckley",
     "license": "MIT",

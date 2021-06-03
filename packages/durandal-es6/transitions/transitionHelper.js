@@ -1,8 +1,6 @@
 /* eslint-disable func-names */
 /* eslint-disable no-use-before-define */
 import $ from "jquery";
-import "animate.css/animate.compat.css";
-import system from "../core/system";
 
 const animationTypes = [
     "bounce",
