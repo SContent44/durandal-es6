@@ -5,7 +5,7 @@ import ko from "knockout";
 import "knockout.validation";
 
 import { app, system } from "durandal/core";
-import { router } from "durandal/plugins";
+import { router, dialog, widget } from "durandal/plugins";
 
 import ComponentSetup from "./Components";
 import Shell from "./viewmodels/shell/shell";
@@ -33,17 +33,13 @@ if (process.env.NODE_ENV === "development") {
 
 app.title = "Durandal Starter Kit";
 
-app.configurePlugins({
-    router: true,
-    dialog: true,
-    widget: widgets,
-});
+app.configurePlugins([{ module: router }, { module: dialog }, { module: widget, config: widgets }]);
 
 // Register components
 ComponentSetup();
 
 // Start the appliction
-app.start().then(() => {
+app.start().then(() =>
     // Show the app by setting the root view model for our application with a transition.
-    return app.setRoot(Shell, "fadeIn");
-});
+    app.setRoot(Shell, "fadeIn")
+);

@@ -31,9 +31,9 @@ function AppModule() {
 
         const pluginsToInstall = [];
 
-        pluginManifest.forEach(function (pluginToLoad) {
+        pluginManifest.forEach((pluginToLoad) => {
             pluginsToInstall.push(
-                system.acquire(pluginToLoad.module).then(function (pluginModule) {
+                system.acquire(pluginToLoad.module).then((pluginModule) => {
                     const plugin = system.resolveObject(pluginModule);
 
                     if (plugin.install) {
@@ -77,75 +77,13 @@ function AppModule() {
          * @method configurePlugins
          * @param {object} config Keys are plugin names. Values can be truthy, to simply install the plugin, or a configuration object to pass to the plugin.
          */
-        configurePlugins(config) {
-            const pluginIds = system.keys(config);
-
-            pluginIds.forEach(function (key, index) {
-                let pluginModule;
-
-                switch (key) {
-                    case "router":
-                        pluginModule = function router() {
-                            return import("../plugins/router").then((module) => {
-                                return module.default;
-                            });
-                        };
-                        break;
-                    case "widget":
-                        pluginModule = function widget() {
-                            return import("../plugins/widget").then((module) => {
-                                return module.default;
-                            });
-                        };
-                        break;
-                    case "dialog":
-                        pluginModule = function dialog() {
-                            return import("../plugins/dialog").then((module) => {
-                                return module.default;
-                            });
-                        };
-                        break;
-                    case "history":
-                        pluginModule = function history() {
-                            return import("../plugins/history").then((module) => {
-                                return module.default;
-                            });
-                        };
-                        break;
-                    case "http":
-                        pluginModule = function http() {
-                            return import("../plugins/http").then((module) => {
-                                return module.default;
-                            });
-                        };
-                        break;
-                    case "observable":
-                        pluginModule = function observable() {
-                            return import("../plugins/observable").then((module) => {
-                                return module.default;
-                            });
-                        };
-                        break;
-                    case "serializer":
-                        pluginModule = function serializer() {
-                            return import("../plugins/serializer").then((module) => {
-                                return module.default;
-                            });
-                        };
-                        break;
-                    default:
-                        pluginModule = function notDefined() {
-                            return undefined;
-                        };
-                        system.error(
-                            `The plugin ${key} is not in the list of registered plugins. Update the app.configurePlugins to include this plugin.`
-                        );
+        configurePlugins(configCollection) {
+            configCollection.forEach((config) => {
+                if (config.module) {
+                    pluginManifest.push(config);
+                } else {
+                    throw new Error("Plugin config missing pluginModule.");
                 }
-
-                pluginManifest.push({
-                    module: pluginModule,
-                    config: config[key],
-                });
             });
         },
         /**
@@ -161,8 +99,8 @@ function AppModule() {
             }
 
             return Promise.resolve(
-                documentReady(function () {
-                    loadPlugins().then(function () {
+                documentReady(() => {
+                    loadPlugins().then(() => {
                         system.log("Application:Started");
                     });
                 })
@@ -198,12 +136,12 @@ function AppModule() {
                             const result = settings.model.canActivate();
                             if (result && result.then) {
                                 result
-                                    .then(function (actualResult) {
+                                    .then((actualResult) => {
                                         if (actualResult) {
                                             composition.compose(hostElement, settings);
                                         }
                                     })
-                                    .catch(function (err) {
+                                    .catch((err) => {
                                         system.error(err);
                                     });
                             } else if (result) {
