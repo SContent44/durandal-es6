@@ -5,10 +5,13 @@ import { router } from "durandal/plugins";
 import viewTemplate from "./shell.html";
 import routes from "../routes";
 
+import fadeIn from "durandal/transitions/fadeIn";
+
 class ShellViewModel {
     constructor() {
         this.view = viewTemplate;
         this.modelName = "ShellViewModel";
+        this.transition = fadeIn;
 
         this.router = router;
         this.isExpanded = ko.observable(false);

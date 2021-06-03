@@ -296,30 +296,6 @@ function CompositionModule() {
          */
         composeBindings,
         /**
-         * Converts a transition name to its moduleId.
-         * @method convertTransitionToModule
-         * @param {string} name The name of the transtion.
-         * @return {string} The moduleId.
-         */
-        convertTransitionToModule(name) {
-            let transition;
-
-            switch (name) {
-                case "fadeIn":
-                case "entrance":
-                    transition = function fadeIn() {
-                        return import("../transitions/fadeIn").then((module) => module.default);
-                    };
-                    break;
-                default:
-                    system.error(
-                        `The transition ${name} is not in the list of registered transitions. Update the composition.convertTransitionToModule to include this transition.`
-                    );
-            }
-
-            return transition;
-        },
-        /**
          * The name of the transition to use in all compositions.
          * @property {string} defaultTransitionName
          * @default null
@@ -442,51 +418,29 @@ function CompositionModule() {
                 context.triggerAttach(context, element);
                 endComposition(context, element);
             } else if (shouldTransition(context)) {
-                let transitionModule;
-                if (typeof context.transition === "string") {
-                    // Reference for the "builtin" transitions
-                    transitionModule = this.convertTransitionToModule(context.transition);
-                } else {
-                    // Assume if it's not a string we've been passed the transition function that returns a transition.
-                    transitionModule = context.transition;
-                }
+                context.transition(context).then(() => {
+                    if (!context.cacheViews) {
+                        if (!context.child) {
+                            ko.virtualElements.emptyNode(context.parent);
+                        } else {
+                            removePreviousView(context);
+                        }
+                    } else if (context.activeView) {
+                        const instruction = binder.getBindingInstruction(context.activeView);
+                        if (instruction && instruction.cacheViews != undefined && !instruction.cacheViews) {
+                            ko.removeNode(context.activeView);
+                        } else {
+                            hide(context.activeView);
+                        }
+                    }
 
-                system
-                    .acquire(transitionModule)
-                    .then((transition) => {
-                        context.transition = transition;
+                    if (context.child) {
+                        show(context.child);
+                    }
 
-                        transition(context).then(() => {
-                            if (!context.cacheViews) {
-                                if (!context.child) {
-                                    ko.virtualElements.emptyNode(context.parent);
-                                } else {
-                                    removePreviousView(context);
-                                }
-                            } else if (context.activeView) {
-                                const instruction = binder.getBindingInstruction(context.activeView);
-                                if (instruction && instruction.cacheViews != undefined && !instruction.cacheViews) {
-                                    ko.removeNode(context.activeView);
-                                } else {
-                                    hide(context.activeView);
-                                }
-                            }
-
-                            if (context.child) {
-                                show(context.child);
-                            }
-
-                            context.triggerAttach(context, element);
-                            endComposition(context, element);
-                        });
-                    })
-                    .catch((err) => {
-                        onError(
-                            context,
-                            `Failed to load transition (${transitionModule}). Details: ${err.message}`,
-                            element
-                        );
-                    });
+                    context.triggerAttach(context, element);
+                    endComposition(context, element);
+                });
             } else {
                 if (context.child != context.activeView) {
                     if (context.cacheViews && context.activeView) {

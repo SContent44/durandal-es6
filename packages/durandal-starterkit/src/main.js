@@ -17,6 +17,7 @@ import "lib/font-awesome/css/font-awesome.min.css";
 
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.min";
+import fadeIn from "durandal/transitions/fadeIn";
 
 // Array of widgets to install
 import widgets from "./widgets";
@@ -41,5 +42,5 @@ ComponentSetup();
 // Start the appliction
 app.start().then(() =>
     // Show the app by setting the root view model for our application with a transition.
-    app.setRoot(Shell, "fadeIn")
+    app.setRoot(Shell, fadeIn)
 );
