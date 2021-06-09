@@ -82,7 +82,7 @@ function AppModule() {
                 if (config.module) {
                     pluginManifest.push(config);
                 } else {
-                    throw new Error("Plugin config missing pluginModule.");
+                    throw new Error("configurePlugins: Plugin config missing module to load.");
                 }
             });
         },

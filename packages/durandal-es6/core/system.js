@@ -245,8 +245,8 @@ function SystemModule() {
                 return Promise.resolve(moduleToResolve);
             }
 
-            return system.error(
-                "You are not using the durandal-es6 behaviour. Pass in a function that will resolve to return either a function, object, or a promise<functon|object>."
+            throw new TypeError(
+                `You are not using the durandal-es6 behaviour and passed in "${moduleToResolve}". Pass in a function that will resolve to return either a function, object, or a promise<functon|object>.`
             );
         },
         /**

@@ -46,18 +46,15 @@ function ViewLocatorModule() {
             }
 
             // No view or getView provided
-            const personalisedError = obj.modelName
-                ? `No view provided for view model: ${obj.modelName}`
-                : `No view provided for view mode`;
-            const noViewMessage = `Durandal.locateViewForObject: ${personalisedError}. Make sure that you a provide a view via a view property on the viewmodel (or via your custom getView function)`;
+            const personalisedError = `No view provided for view model${obj.modelName ? ` "${obj.modelName}"` : ""}`;
+            const noViewMessage = `Durandal.locateViewForObject: ${personalisedError}. Make sure that you a provide a view to your binding directly, as a view property on the model, or as a getView function on the model.`;
 
             if (system.debug()) {
-                system.log(noViewMessage);
+                system.log(noViewMessage, obj);
                 view = viewEngine.createFallbackView();
                 return this.locateView(view);
             }
 
-            // System.error is a noop in outside of debug mode so throw actual error.
             throw new Error(noViewMessage);
         },
         /**

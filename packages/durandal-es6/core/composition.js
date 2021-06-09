@@ -175,7 +175,7 @@ function CompositionModule() {
     }
 
     function shouldTransition(context) {
-        if (system.isString(context.transition) || system.isFunction(context.transition)) {
+        if (system.isFunction(context.transition)) {
             if (context.activeView) {
                 if (context.activeView == context.child) {
                     return false;
@@ -193,6 +193,12 @@ function CompositionModule() {
             }
 
             return true;
+        }
+
+        if (system.isString(context.transition)) {
+            system.error(
+                `You are not using the durandal-es6 behaviour and passed in "${context.transition}". Pass in the transition function directly.`
+            );
         }
 
         return false;

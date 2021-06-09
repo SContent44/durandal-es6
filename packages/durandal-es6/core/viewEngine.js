@@ -163,7 +163,7 @@ function ViewEngineModule() {
                 return element.cloneNode(true);
             }
 
-            throw new Error(
+            throw new TypeError(
                 "A non HTML string was passed to durandal-es6 viewEngine.createView. Ensure not using original Durandal Require.js behaviour"
             );
         },
