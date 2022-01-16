@@ -26,9 +26,9 @@
         "url": "https://github.com/SContent44/durandal-es6/"
     },
     "devDependencies": {
-        "@babel/core": "^7.14.3",
-        "@babel/preset-env": "^7.14.4",
-        "babel-jest": "^27.0.2",
-        "jest": "^27.0.3"
+        "@babel/core": "^7.16.7",
+        "@babel/preset-env": "^7.16.8",
+        "babel-jest": "^27.4.6",
+        "jest": "^27.4.7"
     }
 }
