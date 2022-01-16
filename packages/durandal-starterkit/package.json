@@ -18,13 +18,14 @@
     "author": "Simon Buckley",
     "license": "MIT",
     "dependencies": {
-        "bootstrap": "^3.4.1",
         "animate.css": "^4.1.1",
+        "bootstrap": "^3.4.1",
         "core-js": "^3.20.3",
         "jquery": "^3.6.0",
         "jquery-migrate": "^3.3.2",
         "knockout": "^3.5.1",
         "knockout.validation": "^2.0.4",
+        "regenerator-runtime": "^0.13.9",
         "whatwg-fetch": "^3.6.2"
     },
     "devDependencies": {
@@ -39,6 +40,7 @@
         "file-loader": "^6.2.0",
         "html-loader": "^3.1.0",
         "html-webpack-plugin": "^5.5.0",
+        "mini-css-extract-plugin": "2.4.5",
         "style-loader": "^3.3.1",
         "url-loader": "^4.1.1",
         "webpack": "^5.66.0",

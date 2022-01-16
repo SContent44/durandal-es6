@@ -1,3 +1,5 @@
+import "regenerator-runtime";
+
 import "jquery";
 import "jquery-migrate";
 
@@ -10,8 +12,8 @@ import { router, dialog, widget } from "durandal/plugins";
 import ComponentSetup from "./Components";
 import Shell from "./viewmodels/shell/shell";
 
-import "css/ie10mobile.css";
-import "css/starterkit.css";
+import "./css/ie10mobile.css";
+import "./css/starterkit.css";
 import "durandal/css/durandal.css";
 import "lib/font-awesome/css/font-awesome.min.css";
 

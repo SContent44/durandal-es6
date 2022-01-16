@@ -2,13 +2,33 @@ const path = require("path");
 const webpack = require("webpack");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
-const ExtractCssChunks = require("extract-css-chunks-webpack-plugin");
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
 module.exports = {
     entry: path.join(__dirname, "src", "main.js"),
     output: {
         path: path.join(__dirname, "/dist"),
         filename: "[name].[chunkhash:8].js",
+        environment: {
+            // The environment supports arrow functions ('() => { ... }').
+            arrowFunction: false,
+            // The environment supports BigInt as literal (123n).
+            bigIntLiteral: false,
+            // The environment supports const and let for variable declarations.
+            const: false,
+            // The environment supports destructuring ('{ a, b } = obj').
+            destructuring: false,
+            // The environment supports an async import() function to import EcmaScript modules.
+            dynamicImport: false,
+            // The environment supports 'for of' iteration ('for (const x of array) { ... }').
+            forOf: false,
+            // The environment supports ECMAScript Module syntax to import ECMAScript modules (import ... from '...').
+            module: false,
+            // The environment supports optional chaining ('obj?.a' or 'obj?.()').
+            optionalChaining: false,
+            // The environment supports template literals.
+            templateLiteral: false,
+        },
     },
     module: {
         rules: [
@@ -28,7 +48,7 @@ module.exports = {
                             [
                                 "@babel/preset-env",
                                 {
-                                    useBuiltIns: "usage",
+                                    useBuiltIns: "entry",
                                     corejs: 3,
                                     targets: [
                                         "Chrome >= 66",
@@ -60,7 +80,7 @@ module.exports = {
             {
                 test: /\.css$/i,
                 use: [
-                    ExtractCssChunks.loader,
+                    MiniCssExtractPlugin.loader,
                     {
                         loader: "css-loader",
                         options: {
@@ -70,32 +90,12 @@ module.exports = {
                 ],
             },
             {
-                test: /\.(png|woff|woff2|eot|ttf|svg)$/,
-                use: "url-loader?limit=100000",
+                test: /\.(png|jpg|gif|svg)$/,
+                type: "asset/resource",
             },
             {
-                test: /\.png$/,
-                use: "url-loader?limit=100000",
-            },
-            {
-                test: /\.jpg$/,
-                use: "file-loader",
-            },
-            {
-                test: /\.(woff|woff2) (\?v=\d+\.\d+\.\d+)?$/,
-                use: "url-loader?limit=10000&mimetype=application/font-woff",
-            },
-            {
-                test: /\.ttf(\?v=\d+\.\d+\.\d+)?$/,
-                use: "url-loader?limit=10000&mimetype=application/octet-stream",
-            },
-            {
-                test: /\.eot(\?v=\d+\.\d+\.\d+)?$/,
-                use: "file-loader",
-            },
-            {
-                test: /\.svg(\?v=\d+\.\d+\.\d+)?$/,
-                use: "url-loader?limit=10000&mimetype=image/svg+xml",
+                test: /.(ttf|otf|eot|woff(2)?)(\?[a-z0-9]+)?$/,
+                type: "asset/resource",
             },
         ],
     },
@@ -110,31 +110,13 @@ module.exports = {
             favicon: "./src/img/favicon.ico",
         }),
         new CleanWebpackPlugin(),
-        new ExtractCssChunks(),
+        new MiniCssExtractPlugin(),
     ],
     resolve: {
         extensions: [".js"],
-        modules: ["node_modules", "src"],
+        modules: [path.resolve(__dirname, "node_modules"), "src"],
         alias: {
             durandal: path.resolve(__dirname, "../durandal-es6"),
-        },
-    },
-    optimization: {
-        chunkIds: "named",
-        splitChunks: {
-            cacheGroups: {
-                commons: {
-                    chunks: "initial",
-                    minChunks: 2,
-                },
-                vendor: {
-                    test: /node_modules/,
-                    chunks: "initial",
-                    name: "vendor",
-                    priority: 10,
-                    enforce: true,
-                },
-            },
         },
     },
     devServer: {
